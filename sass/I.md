@@ -1,5 +1,7 @@
 # Sass
 
+> `Sass/Scss`基础篇。
+
 ## CSS预处理
 
 ### 定义
