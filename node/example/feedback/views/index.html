@@ -8,6 +8,12 @@
   <link rel="stylesheet" href="/public/css/main.css">
 </head>
 <body>
-  <h1>Hello World!</h1>
+  <a href="/post">发帖</a>
+  <ul>
+    {{each comments}}
+    <li>{{ $value.name }}：{{ $value.msg }}：{{ $value.date }}</li>
+    {{/each}}
+  </ul>
+  <script src="/public/js/main.js"></script>
 </body>
 </html>
