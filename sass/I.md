@@ -92,7 +92,7 @@ body{
 
 ## 环境安装
 
-### Windowd
+### Windows
 
 > 在`Windows`系统下需要先安装`Rudy(http://rubyinstaller.org/downloads)`
 
@@ -168,8 +168,8 @@ span{
 
 ```html
 <header>
-	<nav>
-    	<a>Home</a>
+  <nav>
+      <a>Home</a>
         <a>About</a>
         <a>Blog</a>
     </nav>
@@ -191,14 +191,13 @@ header nav a{
 - `Sass`使用选择器写为：
 
 ```scss
-nav{
-    a{
-        color: red;
-        
-        header & {
-            color: green;
-        }
+nav {
+  a {
+    color: red;
+    header & {
+      color: green;
     }
+  }
 }
 ```
 
@@ -233,7 +232,7 @@ nav{
 - `Sass`样式代码：
 
 ```scss
-.clearfix{
+.clearFix{
     &:before,
     &:after {
         content: "";
@@ -249,12 +248,12 @@ nav{
 - 编译后的`CSS`：
 
 ```css
-.clearfix:before,
-.clearfix:after {
+.clearFix:before,
+.clearFix:after {
     content: "";
     display: table;
 }
-.clearfix:after {
+.clearFix:after {
     clear: both;
     overflow: hidden;
 }
@@ -443,7 +442,7 @@ button{
 
 > 使用场景。
 
-#### 混合宏
+#### -混合宏
 
 - 缺点：
 
@@ -453,7 +452,7 @@ button{
 
 > 若代码块中涉及到变量，建议使用混合宏来创建相同的代码块。
 
-#### 继承
+#### -继承
 
 > 使用继承会将编译出来的`CSS`代码块通过组合选择器的方式合并到一起。
 >
@@ -463,7 +462,7 @@ button{
 
 > 若代码块不需要传任何变量参数，且有一个基类已经在文件中存在，建议使用继承。
 
-#### 占位符
+#### -占位符
 
 >编译出来的`CSS`代码和使用继承基本上是相同的，主要区别为：
 >
@@ -506,9 +505,9 @@ $properties: (margin, padding);
 
 ```scss
 @mixin generate-sizes($class, $small, $medium, $big){
-    .#{$class}-small{ font-size: $small; }
-	.#{$class}-medium{ font-size: $medium; }
-	.#{$class}-big{ font-size: $big }
+  .#{$class}-small{ font-size: $small; }
+  .#{$class}-medium{ font-size: $medium; }
+  .#{$class}-big{ font-size: $big }
 }
 
 @include generate-size("header-text", 12px, 20px, 40px);
@@ -576,8 +575,8 @@ $flag: "status";
 
 $flag: "status";
 .box{
-    @extend %updated-#{$flag};
-	@extend .selected-#{$flag};
+  @extend %updated-#{$flag};
+  @extend .selected-#{$flag};
 }
 
 // @extend 中可正常使用。
@@ -659,18 +658,18 @@ body.firefox .header:before{
 ```scss
 $full-height: 960px;
 $side-height: 100px;
-.box{
-    width: 20px + 8in;
-    height: $full-height - $side-height;
+.box {
+  width: 20px + 8in;
+  height: $full-height - $side-height;
 }
 ```
 
 - 编译出来的`CSS`：
 
 ```css
-.box{
-    width: 788px;
-    height: 860px;
+.box {
+  width: 788px;
+  height: 860px;
 }
 ```
 
@@ -678,7 +677,7 @@ $side-height: 100px;
 
 ```scss
 .box{
-    width: 20px + 1em;
+  width: 20px + 1em;
 }
 // 报错：Incompatible units: 'em' and ‘px'.
 ```
@@ -696,33 +695,33 @@ $side-height: 100px;
 
 ```scss
 $num: 200px;
-.box{
-    width: 10px * 2;
-    height: (100px / 5);
-    margin-left: 100px / 2 + 2in;
-    margin-top: round(1.5) / 2;
-    padding-right: $num / 10;
+.box {
+  width: 10px * 2;
+  height: (100px / 5);
+  margin-left: 100px / 2 + 2in;
+  margin-top: round(1.5) / 2;
+  padding-right: $num / 10;
 }
 ```
 
 - 编译后的`CSS`：
 
 ```css
-.box{
-    width: 20px;
-    height: 20px;
-    margin-left: 242px;
-    margin-top: 4;
-    padding-right: 20px;
+.box {
+  width: 20px;
+  height: 20px;
+  margin-left: 242px;
+  margin-top: 4;
+  padding-right: 20px;
 }
 ```
 
 - 同一单位或不同单位运算时会报错：
 
 ```scss
-.box{
-    width: 10px * 2px; // 报错：20px*px isn't a valid CSS value.
-    height: 20px * 4em; // 40em*px isn't a valid CSS value.
+.box {
+  width: 10px * 2px; // 报错：20px*px isn't a valid CSS value.
+  height: 20px * 4em; // 40em*px isn't a valid CSS value.
 }
 ```
 
@@ -738,7 +737,7 @@ $s-width: 220px;
 $gutter: 20px;
 
 .container{
-    width: $c-width + $s-width + $gutter;
+  width: $c-width + $s-width + $gutter;
 }
 ```
 
@@ -746,7 +745,7 @@ $gutter: 20px;
 
 ```css
 .container{
-    width: 960px;
+  width: 960px;
 }
 ```
 
@@ -758,7 +757,7 @@ $gutter: 20px;
 
 ```scss
 .box{
-    width: ((220px + 720px) - 11 * 20) / 12;
+  width: ((220px + 720px) - 11 * 20) / 12;
 }
 ```
 

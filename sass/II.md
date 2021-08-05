@@ -363,10 +363,10 @@ $list: adam john wynn mason kuroir;
 > 将一个不带单位的数字转换成百分比的形式。
 
 ```scss
-percentage(.2)	// 20%
-percentage(2px / 10px)	// 20%
-percentage(2em / 10em)	// 20%
-percentage(2em / 10px)	// 报错
+percentage(.2) // 20%
+percentage(2px / 10px) // 20%
+percentage(2em / 10em) // 20%
+percentage(2em / 10px) // 报错
 
 // SCSS
 .footer {
@@ -386,9 +386,9 @@ percentage(2em / 10px)	// 报错
 > - 可以携带单位的任何数值。
 
 ```scss
-round(12.3)	// 12
-round(2px / 3px)	// 1
-round(3px / 2em)	// 2px/em
+round(12.3) // 12
+round(2px / 3px) // 1
+round(3px / 2em) // 2px/em
 
 // SCSS
 .footer {
@@ -404,8 +404,8 @@ round(3px / 2em)	// 2px/em
 > 将一个数向上取整。
 
 ```scss
-ceil(2.0)	// 2
-ceil(2.1)	// 3
+ceil(2.0) // 2
+ceil(2.1) // 3
 
 // SCSS
 .footer {
@@ -423,8 +423,8 @@ ceil(2.1)	// 3
 > 向下取整。
 
 ```scss
-floor(2.1)	// 2
-floor(2.9)	// 2
+floor(2.1) // 2
+floor(2.9) // 2
 
 // SCSS
 .footer {
@@ -442,8 +442,8 @@ floor(2.9)	// 2
 > 返回一个数的绝对值。
 
 ```scss
-abs(-10)	// 10
-abs(-1px)	// 1px
+abs(-10) // 10
+abs(-1px) // 1px
 
 // SCSS
 .footer {
@@ -467,15 +467,15 @@ abs(-1px)	// 1px
 
 ```scss
 // min
-min(1, 2, 12px, 10, 30px)	// 1
+min(1, 2, 12px, 10, 30px) // 1
 // max
-max(1%, 100, 66%, 10, 3)	// 100
+max(1%, 100, 66%, 10, 3) // 100
 ```
 
 #### random
 
 ```scss
-random()	// 0.56231
+random() // 0.56231
 ```
 
 ### 列表函数
@@ -496,8 +496,8 @@ random()	// 0.56231
 > - 函数中的列表参数直接使用空格隔开，不能使用逗号。
 
 ```scss
-length(10px)	// 1
-length(10px 20px (border 1px solid) 2em)	// 4
+length(10px) // 1
+length(10px 20px (border 1px solid) 2em) // 4
 ```
 
 #### nth
@@ -508,8 +508,8 @@ length(10px 20px (border 1px solid) 2em)	// 4
 > - 注意：`$n`必须是大于`0`的整数。
 
 ```scss
-nth(10px 20px 30px,1)	// 10px
-nth((A,B,C), 2)	// B
+nth(10px 20px 30px,1) // 10px
+nth((A,B,C), 2) // B
 ```
 
 #### join
@@ -519,8 +519,8 @@ nth((A,B,C), 2)	// B
 > - 只能将两个列表连接成一个列表，两个以上将会报错。
 
 ```scss
-join(10px 20px, 30px 40px)	// (10px 20px 30px 40px)
-join((blue,red), (#abc #def))	// (#0000ff, #ff0000, #aabbcc, #ddeeff)
+join(10px 20px, 30px 40px) // (10px 20px 30px 40px)
+join((blue,red), (#abc #def)) // (#0000ff, #ff0000, #aabbcc, #ddeeff)
 ```
 
 - 需要连接多个列表时可将多个`join()`函数合并在一起使用。
@@ -532,7 +532,7 @@ join((blue, red), join((#abc #def), (#dee, #eff)))
 - `join()`中可设置`$separator`参数，用来给列表函数设置分隔符号，默认值是`auto`，可设置`comma`（逗号）和`space`（空格）
 
 ```scss
-join(blue, red, comma)	// (#0000ff, #ff0000)
+join(blue, red, comma) // (#0000ff, #ff0000)
 ```
 
 - 不设置`$separator`参数，会有多种情形发生。
@@ -551,13 +551,13 @@ join(blue, red, comma)	// (#0000ff, #ff0000)
 > - `space`以空格分隔列表项。
 
 ```scss
-append(10px 20px, 30px)	// (10px, 20px, 30px)
-append((10px, 20px), 30px)	// (10px, 20px, 30px)
-append(green, red)	// (#008000 #ff0000)
-append(red, (green, blue))	// (#ff0000 (#008000, #0000ff))
+append(10px 20px, 30px) // (10px, 20px, 30px)
+append((10px, 20px), 30px) // (10px, 20px, 30px)
+append(green, red) // (#008000 #ff0000)
+append(red, (green, blue)) // (#ff0000 (#008000, #0000ff))
 
-append((blue, green), red, comma)	// (#0000ff, #008000, #ff0000)
-append((blue, green), red, space)	// (#0000ff #008000 #ff0000)
+append((blue, green), red, comma) // (#0000ff, #008000, #ff0000)
+append((blue, green), red, space) // (#0000ff #008000 #ff0000)
 ```
 
 - 没有明确指定`$sepatator`参数值，其默认值是`auto`
@@ -587,10 +587,10 @@ zip(1px 2px 3px, solid, dashed, dotted, green, blue, red)
 > 如果指定的值不在列表中，那么返回的值将是`false`。
 
 ```scss
-index(1px solid red, 1px)	// 1
-index(1px solid red, solid)	// 2
-index(1px solid red, red)	// 3
-index(1px solid red, blue)	// false
+index(1px solid red, 1px) // 1
+index(1px solid red, solid) // 2
+index(1px solid red, red) // 3
+index(1px solid red, blue) // false
 ```
 
 ### Introspection函数
@@ -612,13 +612,13 @@ index(1px solid red, blue)	// false
 > - `color`为颜色型。
 
 ```scss
-type-of(100)	// "number"
-type-of(100px)	// "number"
-type-of("asdf")	// "string"
-type-of(asdf)	// "string"
-type-of(true)	// "bool"
-type-of(#fff)	// "color"
-type-of(blue)	// "color"
+type-of(100) // "number"
+type-of(100px) // "number"
+type-of("asdf") // "string"
+type-of(asdf) // "string"
+type-of(true) // "bool"
+type-of(#fff) // "color"
+type-of(blue) // "color"
 ```
 
 #### unit
@@ -626,30 +626,30 @@ type-of(blue)	// "color"
 > `unit()`函数主要是用来获取一个值所使用的单位，碰到复杂的计算时，其能根据运算得到一个"多单位组合"的值，不过只允许**乘/除**运算。
 
 ```scss
-unit(100)			// ""
-unit(100px)			// "px"
-unit(20%)			// "%"
-unit(1em)			// "em"
-unit(10px * 3em)	// "px*em"
-unit(10px / 3em)	// "px/em"
-unit(10px * 2em / 3cm / 1rem)	// "em/rem"
+unit(100) // ""
+unit(100px) // "px"
+unit(20%) // "%"
+unit(1em) // "em"
+unit(10px * 3em) // "px*em"
+unit(10px / 3em) // "px/em"
+unit(10px * 2em / 3cm / 1rem) // "em/rem"
 ```
 
 - 但**加/减**碰到不同单位时，`unit()`函数将会报错，除`px/cm/mm`运算之外。
 
 ```scss
-unit(1px + 1cm)		// "px"
-unit(1px - 1cm)		// "px"
-unit(1px + 1mm)		// "px"
-unit(10px * 2em - 3cm / 1rem)	// SyntaxError: Incompatible units: 'cm' and 'px*em'.
+unit(1px + 1cm) // "px"
+unit(1px - 1cm) // "px"
+unit(1px + 1mm) // "px"
+unit(10px * 2em - 3cm / 1rem) // SyntaxError: Incompatible units: 'cm' and 'px*em'.
 ```
 
 - `unit()`函数对于单位运算相对来说也是没有规律，而且有些单位无法整合成一个单位，对于我们在`CSS`中运用中并不合适。
 
 ```scss
-unit(10px * 3em)				// "em*px"
-unit(10px / 3em)				// "px/em"
-unit(10px * 2em / 3cm / 1rem)	// "em/rem"
+unit(10px * 3em) // "em*px"
+unit(10px / 3em) // "px/em"
+unit(10px * 2em / 3cm / 1rem) // "em/rem"
 // 以上运算出来的单位，对于在 CSS 中使用将是没有任何意义的。
 ```
 
@@ -658,13 +658,13 @@ unit(10px * 2em / 3cm / 1rem)	// "em/rem"
 > `unitless`相对来说简单明了，只是用来判断一个值是否带有单位，如果不带单位返回的值为`true`，带单位返回的值为`false`。
 
 ```scss
-unitless(100)	// true
-unitless(100px)	// false
-unitless(100em)	// false
-unitless(100%)	// false
-unitless(1 / 2)	// true
-unitless(1 / 2 + 2)	// true
-unitless(1px / 2 + 2)	// false
+unitless(100) // true
+unitless(100px) // false
+unitless(100em) // false
+unitless(100%) // false
+unitless(1 / 2) // true
+unitless(1 / 2 + 2) // true
+unitless(1px / 2 + 2) // false
 
 @mixin adjust-location($x, $y){
     @if unitless($x) {
@@ -688,9 +688,9 @@ unitless(1px / 2 + 2)	// false
 > `comparable()`函数主要用来判断两个数是否可以进行**加/减/合并**，如果可以返回`true`，否则返回`false`。
 
 ```scss
-comparable(2px, 1px)	// true
-comparable(2px, 1%)		// false
-comparable(2px, 1em)	// false
+comparable(2px, 1px) // true
+comparable(2px, 1%) // false
+comparable(2px, 1em) // false
 ```
 
 ### Miscellaneous函数
@@ -701,8 +701,8 @@ comparable(2px, 1em)	// false
 if($condition, $if-true, $if-false)
 // 当 $condition 成立时，返回的值为 $if-true，否则返回的是 $if-false 值。
 
-if(true, 1px, 2px)	// 1px
-if(false, 1px, 2px)	// 2px
+if(true, 1px, 2px) // 1px
+if(false, 1px, 2px) // 2px
 ```
 
 ### Map函数
@@ -714,9 +714,9 @@ if(false, 1px, 2px)	// 2px
 ```json
 {
     "employees": [
-    	{ "firstName": "John", "lastName": "Doe" },
-    	{ "firstName": "Anna", "lastName": "Smith" },
-    	{ "firstName": "Peter", "lastName": "Jones" }
+      { "firstName": "John", "lastName": "Doe" },
+      { "firstName": "Anna", "lastName": "Smith" },
+      { "firstName": "Peter", "lastName": "Jones" }
     ]
 }
 ```
@@ -727,9 +727,9 @@ if(false, 1px, 2px)	// 2px
 
 ```scss
 $map: (
-	$key1: value1,
-    $key2: value2,
-    $key3: value3
+  $key1: value1,
+  $key2: value2,
+  $key3: value3
 );
 ```
 
@@ -742,7 +742,7 @@ $primary-color: #22ae39 !default;
 
 // 使用 map 可以更好的管理：
 $color: (
-	default: #fff,
+  default: #fff,
     primary: #22ae39,
     negative: #d9534f
 );
@@ -752,9 +752,9 @@ $color: (
 
 ```scss
 $map: (
-	key1: value1,
+  key1: value1,
     key2: (
-    	key2-1: value2-1,
+      key2-1: value2-1,
         key2-2: value2-2
     ),
     key3: value3
@@ -809,32 +809,32 @@ $map: (
 ```scss
 // 假定一个 $colors 的 map：
 $colors: (
-	c1: #ea4c89,
-	c2: #3b5998,
-	c3: #171515,
-	c4: #db4437,
-	c5: #55acee
+  c1: #ea4c89,
+  c2: #3b5998,
+  c3: #171515,
+  c4: #db4437,
+  c5: #55acee
 );
 
 // 获取 c3 键值对应的值 #171515 就可以通过 map-get() 函数实现：
 .btn1 {
-	color: map-get($colors, c3);
+  color: map-get($colors, c3);
 }
 
 // 编译出来的 CSS：
 .btn1 {
-	color: #171515;
+  color: #171515;
 }
 
 // 假设要在 $colors 这个 map 上取没有的键值：
 .btn2 {
-	font-size: 12px;
-	color: map-get($colors, c6);
+  font-size: 12px;
+  color: map-get($colors, c6);
 }
 
 // 编译的 CSS：
 .btn2 {
-	font-size: 12px;
+  font-size: 12px;
 }
 
 ```
@@ -852,10 +852,10 @@ $colors: (
 $colors: (...);
 @if map-has-key($colors, c3) {
     .btn {
-    	color: map-get($colors, c3);
+      color: map-get($colors, c3);
     }        
 } @else {
-	@warn "No color found for faceboo in $social-colors map. Property ommitted.";      
+  @warn "No color found for faceboo in $social-colors map. Property ommitted.";      
 }
 
 // 编译出来的 CSS
@@ -892,11 +892,11 @@ $colors: (...);
 
 ```scss
 $colors: (
-	c1: #ea4c89,
-	c2: #3b5998,
-	c3: #171515,
-	c4: #db4437,
-	c5: #55acee
+  c1: #ea4c89,
+  c2: #3b5998,
+  c3: #171515,
+  c4: #db4437,
+  c5: #55acee
 );
 
 $list: map-key($colors);
@@ -1011,21 +1011,21 @@ $newmap: (
 
 ```scss
 $colors: (
-	c1: #ea4c89,
-	c2: #3b5998,
-	c3: #171515,
-	c4: #db4437,
-	c5: #55acee
+  c1: #ea4c89,
+  c2: #3b5998,
+  c3: #171515,
+  c4: #db4437,
+  c5: #55acee
 );
 
 $map: map-remove($colors, c2);
 
 // 得到一个新map：
 $map: (
-    c1: #ea4c89,
-	c3: #171515,
-	c4: #db4437,
-	c5: #55acee
+  c1: #ea4c89,
+  c3: #171515,
+  c4: #db4437,
+  c5: #55acee
 );
 ```
 
@@ -1041,11 +1041,11 @@ $map: (
 }
 
 @include map(
-	$dribble: #ea4c89,
-	$facebook: #3b5998,
-	$github: #171515,
-	$google: #db4437,
-	$twitter: #55acee
+ $dribble: #ea4c89,
+ $facebook: #3b5998,
+ $github: #171515,
+ $google: #db4437,
+ $twitter: #55acee
 );
 
 // 在命令终端可以看到输出的@debug信息：
@@ -1080,7 +1080,7 @@ $map: (
 
 ```scss
 // CSS
-color: rgba(#f36, .5);	// 在 CSS 中是无效写法。
+color: rgba(#f36, .5); // 在 CSS 中是无效写法。
 
 // SCSS
 $color: #f36;
@@ -1097,9 +1097,9 @@ $color: #f36;
 ```scss
 $color: #f36;
 
-red($color);	// 255
-green($color);	// 51
-blue($color);	// 102
+red($color); // 255
+green($color); // 51
+blue($color); // 102
 ```
 
 ##### Mix
@@ -1110,9 +1110,9 @@ blue($color);	// 102
 > - `$weight`是合并的比例，根据每个`RBG`的百分比来衡量，默认值是`50%`，意味着两个颜色各占一半，如果指定是`25%`，这意味着第一个颜色比例为`25%`，第二个颜色为`75%`。
 
 ```scss
-mix(#f00, #00f);				// #7f007f
-mix(#f00, #00f, 25%);			// #3f00bf
-mix(rgba(255, 0, 0, .5), #00f);	// rgba(63, 0, 191, .75)
+mix(#f00, #00f); // #7f007f
+mix(#f00, #00f, 25%); // #3f00bf
+mix(rgba(255, 0, 0, .5), #00f); // rgba(63, 0, 191, .75)
 ```
 
 #### HSL
@@ -1191,7 +1191,7 @@ $baseColor: #ad141e;
 $bg: #ad141e;
 
 .saturate {
-    background: saturate($bg, 30%);	// 在原色饱和度基础上增加饱和度。
+    background: saturate($bg, 30%); // 在原色饱和度基础上增加饱和度。
 }
 
 .desaturate {
@@ -1607,4 +1607,3 @@ a:hover, .hoverlink {
 
 // 编译时输出：你需要将15值设置在10以内的数 on line 7 at column 5
 ```
-
