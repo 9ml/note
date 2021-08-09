@@ -217,7 +217,36 @@ module.exports = add
 var 自定义变量名称 = require('模块')
 ```
 
-- 导出`exports`
+- 导出`exports`：
+
+> - `Node`中是模块作用域，默认文件中所有的成员只在当前文件模块中有效。
+> - 对于希望可以被其他模块访问的成员，需要把这些公开的成员挂载到`exports`接口对象中。
+> - 导出多个成员（必须在对象中）：
+
+```javascript
+exports.a = 123
+exports.b = 'hello'
+exports.c = function(a, b) {
+  return a + b
+}
+```
+
+> - 导出单个成员（函数、字符串）：
+
+```javascript
+module.exports = 123
+module.exports = function(a + b) {
+  return a +b
+}
+// 后者会覆盖前者，若需导出多个成员：
+module.exports = {
+  a: 123,
+  b: 'hello',
+  add: function(a + b) {
+    return a + b
+  }
+}
+```
 
 ## Express
 
