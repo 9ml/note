@@ -248,6 +248,16 @@ module.exports = {
 }
 ```
 
+> - 原理解析
+
+```javascript
+exports === module.exports // true
+
+exports.foo = 'bar'
+// 等价于
+module.exports.foo = 'bar'
+```
+
 ## Express
 
 > - 第三方`Web`开发框架
