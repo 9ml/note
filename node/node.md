@@ -200,9 +200,9 @@ module.exports = add
 - 使用`Node`编写应用程序就是在使用：
 
 > - `ECMAScript`：`BOM`、`DOM`除外
-> - 核心模块
-> - 第三方模块
-> - 自定义模块
+> - 核心模块：其本质也是文件，不过已经编译到了二进制文件中，可以直接按照名字加载。
+> - 第三方模块：通过`npm`下载的第三方文件包，使用`require('包名')`来加载，且不会与核心模块重名；找不到时会依次往上级目录查找，直到磁盘根目录，一个项目有且只有一个`node_modules`文件存放在项目的根目录。
+> - 自定义模块：自己编写的模块文件，使用相对路径引入。
 
 ## CommonJS模块规范
 
@@ -216,6 +216,9 @@ module.exports = add
 ```javascript
 var 自定义变量名称 = require('模块')
 ```
+
+- 优先从缓存加载
+- 判断模块标识
 
 - 导出`exports`：
 
@@ -248,17 +251,55 @@ module.exports = {
 }
 ```
 
-> - 原理解析
+> - 原理解析：
+> - 在`Node`中，每个模块内部都有自己的`module`对象，改`module`对象中有一个成员是`exports`，默认是一个空对象。
+> - 如果需要对外导出成员，需要把导出的成员挂载到`module.exports`中。
+> - `exports`是`module.exports`的一个引用。
 
 ```javascript
-exports === module.exports // true
+// var module = {
+//   exports: {
 
+//   }
+// }
+// 默认在代码最后有 return module.exports
+
+// var exports = module.exports 就相当于
+exports === module.exports // true
+// 直接使用 exports = 'foo' 会造成指向不同，无法使用
 exports.foo = 'bar'
 // 等价于
 module.exports.foo = 'bar'
 ```
 
+## npm
+
+> 全称：`node package manager`
+>
+> - 建议每个项目都要有一个`package.json`包描述文件，可以通过`npm init`命令初始化出来。
+> - 建议执行`npm install`包名时加上`--save`选项，可以将依赖项保存在`dependencies`中。
+
+- `npm`网站：`www.npmjs.com`
+
+> 搜索/发布依赖包资源
+
+- `npm`命令行工具
+
+> 可通过`npm --version`查看当前版本。
+> `npm install --global npm`升级版本。
+
+- `npm`被墙问题
+
+> - 安装淘宝的`cnpm`：`npm install --global cnpm`，然后使用`cnpm`命令。
+> - 若不想安装`cnpm`又想使用淘宝的服务器下载：
+>   - `npm i x --registry-https://registry.npm.taobao.org`
+>   - 或加入到配置文件中：`npm config set registry https://registry.npm.taobao.org`
+>   - 查看`npm`配置信息：`npm config list`
+
 ## Express
 
+> 原生的`http`在某些方面表现不足以应对开发需求，所有需要使用框架来加快效率，让代码高度统一。
+> `express`官网：`www.expressjs.com`
+>
 > - 第三方`Web`开发框架
 > - 高度封装了`http`模块，是开发者更加专注于业务，而非底层细节。
