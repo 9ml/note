@@ -303,3 +303,54 @@ module.exports.foo = 'bar'
 >
 > - 第三方`Web`开发框架
 > - 高度封装了`http`模块，是开发者更加专注于业务，而非底层细节。
+
+- 示例：
+
+```javascript
+// 安装：npm i express -S
+// 引包
+const express = require('express')
+
+// 创建服务器应用程序：http.createServer()
+const app = express()
+
+// 公开指定目录：当以 /public/ 开头时，去 ./public/ 目录中查找对接的资源：localhost:3000/public/img/1.jpg
+// 这种方式更容易辨识，推荐使用。
+app.use('/public/', express.static('./public/'))
+
+// 当以 /a/ 开头时，去 ./public/ 目录中查找对接的资源：localhost:3000/a/img/1.jpg
+// app.use('/a/', express.static('./public/'))
+
+// 第一个参数省略时，可以通过省略 /public/ 的方式来访问查找对接的资源：localhost:3000/img/1.jpg
+// app.use(express.static('./public/'))
+
+// 当服务器收到 get 请求 / 时执行回调处理函数
+app.get('/', (req, res) => {
+  res.send('Hello Express')
+})
+
+app.listen(3000, () => {
+  console.log('App in running')
+})
+```
+
+- 修改后服务器自动重启
+
+> 使用一个第三方命令行工具：`nodemon`来解决修改代码重启服务器。
+> `nodemon`是一个基于`Node`开发的一个第三方命令行工具，当文件修改时，它会自动重启服务。
+>
+> - 使用时需要单独安装：
+
+```shell
+npm install --global nodemon
+```
+
+> 使用：
+
+```shell
+# 原先启动服务器
+node app.js
+
+# 使用 nodemon
+nodemon app.js
+```
