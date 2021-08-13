@@ -354,3 +354,12 @@ node app.js
 # 使用 nodemon
 nodemon app.js
 ```
+
+### 在`express`中使用`art-template`模板引擎
+
+- 安装：
+
+```shell
+npm i --save art-template
+npm i --save express-art-template
+```
