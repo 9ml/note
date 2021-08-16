@@ -334,7 +334,7 @@ app.listen(3000, () => {
 })
 ```
 
-- 修改后服务器自动重启
+### 修改后服务器自动重启
 
 > 使用一个第三方命令行工具：`nodemon`来解决修改代码重启服务器。
 > `nodemon`是一个基于`Node`开发的一个第三方命令行工具，当文件修改时，它会自动重启服务。
@@ -357,9 +357,75 @@ nodemon app.js
 
 ### 在`express`中使用`art-template`模板引擎
 
+> 官网：`https://aui.github.io/art-template/zh-cn/index.html`
+
 - 安装：
 
 ```shell
 npm i --save art-template
 npm i --save express-art-template
+```
+
+- 配置
+
+```javascript
+// 配置使用 art-template 模板引擎
+// 表示当渲染以 .xxx 文件时，使用 express-art-template 模板引擎，默认是 .art 文件，为便捷可使用 .html 文件
+app.engine('html', require('express-art-template'))
+
+// express 为 response 提供了一个 render 方法，默认不可以使用，但是配置了模板引擎可以使用
+// 即：res.render('html模板名.art',{ 模板数据 })
+// 注意：第一个参数不能写路径，默认会在项目中 views 目录查找此模板文件
+// 如果想要修改默认的 views 目录，可使用：app.set('views', render 函数的默认路径)
+app.get('/', (req, res) => {
+  res.render('demo.html', {
+    title: 123
+  })
+  // 路由重定向
+  // res.redirect('/')
+})
+```
+
+### 在`express`中获取`GET`请求数据
+
+```javascript
+const express = require('express')
+const app = express()
+
+app.get('/get', (req, res) => {
+  console.log(req.query)
+  res.send(req.query)
+})
+
+```
+
+### 在`express`中获取`POST`请求数据
+
+> 在`express`中没有内置获取`post`请求体的`API`，需要借助第三方包：`body-parser`
+
+- 安装
+
+```shell
+npm install --save body-parser
+```
+
+- 配置
+
+```javascript
+const express = require('express')
+// 引包
+const bodyParser = require('body-parser')
+
+const app = express()
+
+// 配置 body-parser
+// 加入这个配置后，req 请求对象中会添加一个 body 属性
+app.use(bodyParser.urlencoded({ extended: false }))
+
+app.use(bodyParser.json())
+
+app.post('/post', (req, res) => {
+  console.log(req.body)
+  res.send(req.body)
+})
 ```
