@@ -21,7 +21,6 @@ app.use('/public/', express.static('./public/'))
 app.use('/node_modules/', express.static('./node_modules/'))
 app.engine('html', require('express-art-template'))
 
-
 // router(app)  // 自己封装函数使用，详见 router.js 注释部分
 // express 提供的方法：把路由挂载到 app 服务中
 app.use(router)

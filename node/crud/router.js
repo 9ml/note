@@ -5,7 +5,7 @@
  *    根据不同的请求方法及路径处理响应
  */
 
-const fs = require('fs')
+// const fs = require('fs')
 const express = require('express')
 
 const handleFile = require('./public/js/file')
@@ -46,8 +46,45 @@ router.get('/add', (req, res) => {
 
 // 添加学生
 router.post('/add', (req, res) => {
-  console.log(req.body)
+  handleFile.save('./db.json', 'students', req.body, result => {
+    if (result) {
+      return res.status(500).send('Server Error')
+    }
+    res.redirect('/')
+  })
 })
+
+// 修改学生页面渲染
+router.get('/edit', (req, res) => {
+  handleFile.finds('./db.json', 'students', req.query.id, (err, data) => {
+    if (err) {
+      return res.status(500).send('Server Error')
+    }
+    res.render('edit.html', {
+      data
+    })
+  })
+})
+
+// 修改学生
+router.post('/edit', (req, res) => {
+  handleFile.update('./db.json', 'students', req.body, (err, data) => {
+    if (err) {
+      return res.status(500).send('Server Error')
+    }
+    res.redirect('/')
+  })
+})
+
+// 删除学生
+router.get('/delete', (req, res) => {
+  handleFile.delete('./db.json', 'students', req.query.id, (err, data) => {
+    if (err) {
+      return res.status(500).send('Server Error')
+    }
+  })
+})
+
 
 // 3. 把 router 导出
 module.exports = router

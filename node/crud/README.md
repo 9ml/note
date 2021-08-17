@@ -15,4 +15,3 @@
 |  `GET`   |  `/edit`  |   `id`    |            无             |   渲染编辑页面   |
 |  `POST`  |  `/edit`  |    无     | `id/name/age/gender/sign` |   处理编辑请求   |
 |  `GET`   | `/delete` |   `id`    |            无             |   处理删除请求   |
-
