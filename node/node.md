@@ -278,6 +278,10 @@ module.exports.foo = 'bar'
 >
 > - 建议每个项目都要有一个`package.json`包描述文件，可以通过`npm init`命令初始化出来。
 > - 建议执行`npm install`包名时加上`--save`选项，可以将依赖项保存在`dependencies`中。
+> - `npm5`以后的版本安装包不需要加`--save`，会自动保存依赖。
+> - `package-lock.json`文件会报存`node_modules`中所有包的信息（版本、下载地址）。
+>   - 提升下载速度（重新`npm install`时）。
+>   - 锁定版本，防止自动升级到新版。
 
 - `npm`网站：`www.npmjs.com`
 
@@ -428,4 +432,272 @@ app.post('/post', (req, res) => {
   console.log(req.body)
   res.send(req.body)
 })
+```
+
+### 异步编程
+
+- 回调函数
+
+> 函数
+>
+> - 一种数据类型
+> - 参数
+> - 返回值
+
+```javascript
+// 1 不成立
+function add(x, y) {
+  console.log(x)
+  setTimeout(function() {
+    return x + y
+  }, 1000)
+  console.log(y)
+  // 到这里就执行结束了，不会等待定时器，直接返回默认值 undefined
+}
+console.log(add(1, 2))  // undefined
+
+// 2 不成立
+function add(x, y) {
+  var ret
+  console.log(x)
+  setTimeout(function() {
+    ret = x + y
+  }, 1000)
+  console.log(y)
+  // 到这里就执行结束了，不会等待定时器，直接返回默认值 undefined
+}
+console.log(add(1, 2))  // undefined
+
+// 3 回调函数
+function add(x, y, callback) {
+  // callback 就是回调函数
+  // var x = 10
+  // var y = 20
+  // var callback = function (res) { console.log(res) }
+  console.log(x)
+  setTimeout(function() {
+    callback(x + y)
+  }, 1000)
+  console.log(y)
+}
+add(10, 20, function(res) {
+  console.log(res)
+})
+```
+
+> 凡是需要得到一个函数内部异步操作的结果，都需要使用回调函数
+
+## `Mongodb`
+
+### 关系型数据库和非关系型数据库
+
+- 关系型数据库
+
+> 表就是关系，表与表之间存在关系。
+>
+> - 所有的关系型数据库都需要通过`sql`语言来操作。
+> - 所有的关系型数据库在操作之前都需要设计表结构。
+> - 数据表支持约束：
+>   - 唯一的
+>   - 主键
+>   - 默认值
+>   - 非空
+
+- 非关系型数据库
+
+> 非关系型数据库非常的灵活，有的非关系型数据库就是`key-value`键值对。
+> 但`Mongodb`是最像关系型数据库的非关系型数据库。
+
+| 关系型数据库 |  `Mongodb`   |
+| :----------: | :----------: |
+|    数据库    |    数据库    |
+|    数据表    | 集合（数组） |
+|    表记录    |   文档对象   |
+
+> - `Mongodb`不需要设计表结构，可以任意的往里面存数据，没有结构性。
+
+### 安装
+
+> 下载地址`https://www.mongodb.com/try/download/community`
+> 找到安装目录复制路径并配置环境变量。
+> `mongod --version`测试是否安装成功。
+
+### 启动&关闭
+
+- 启动
+
+> `mongodb`默认使用执行 mongod 命令所处盘符根目录下的`/data/db`作为自己的数据存储目录。
+> 所有第一次执行启动命令之前在根目录手动新建一个`/data/db`文件夹。
+
+```shell
+mongod
+```
+
+- 修改默认的数据存储目录
+
+```shell
+mongod --dbpath-数据存储目录路径
+```
+
+- 停止
+
+> 在开启服务的控制台，直接`Ctrl + C`即可停止服务。
+
+- 连接数据库
+
+> 打开控制台执行：
+
+```shell
+# 默认连接本机的 MongoDB 服务
+mongo
+```
+
+- 关闭连接
+
+```shell
+exit
+```
+
+### 基本命令
+
+- `show dbs`：查看显示数据库列表。
+- `db`：查看当前操作的数据库。
+- `use xxx`：切换到`xxx`数据库（如果没有会新建）。
+- `db.xxx.insertOne({"name":"Jack"})`：在当前数据库中的`xxx`集合插入数据。
+
+### 在`Node`中操作`MongoDB`数据库
+
+- 使用官方的`Mongodb`包操作数据库
+
+> `https://github.com/mongodb/node-mongodb-native`
+
+- 使用第三方`mongoose`来操作`MongoDB`数据库
+
+> 基于`MongoDB`包再一次做了封装。
+> 官网：`https://mongoosejs.com/`
+
+- 官方示例：
+
+```javascript
+const mongoose = require('mongoose');
+// 连接数据库
+mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true, useUnifiedTopology: true});
+
+// 创建一个模型，设计数据库
+// MongoDB 是动态的，非常的灵活，只需要在代码中设计数据库就可以了
+// MongoDB 这个包就可以让设计编写过程变得非常简单
+const Cat = mongoose.model('Cat', { name: String });
+// 实例化一个 Cat
+const kitty = new Cat({ name: 'Jack' });
+// 持久保存 Kitty 实例
+kitty.save().then(() => console.log('meow'));
+```
+
+- 设计`Schema`并发布
+
+```javascript
+const mongoose = require('mongoose')
+
+const Schema = mongoose.Schema
+
+// 1. 连接数据库
+mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true, useUnifiedTopology: true});
+
+// 2. 设计文档结构
+const userSchema = new Schema({
+  username: {
+    type: String,
+    required: true  // 约束，限制必填
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String
+  }
+})
+
+// 3. 将文档结构发布为模型
+/**
+ * mongoose.model 方法用来将一个架构发布为模型
+ * 第一个参数：传入一个大写名词单数用来表示你的集合名称，mongoose 会自动将大写名词的字符串生成小写复数的集合名词，例如 User 会生成 users
+ * 第二个参数：架构 Schema
+ * 返回值：模型构造函数
+ */
+const User = mongoose.model('User', userSchema);
+
+// 4. 根据这个构造函数操作 User 集合中的数据（增删改查）
+```
+
+- 增
+
+```javascript
+const admin = new User({
+  username: '小米',
+  password: '123456',
+  email: '123456@qq.com'
+})
+
+// 保存到数据库
+admin.save().then(() => { console.log('success') })
+```
+
+- 查
+
+```javascript
+// 查询所有
+User.find().then(res => { console.log(res) })
+// 条件查询
+User.find({
+  username: '小米'
+}).then(res => {
+  console.log(res)
+})
+// 多条件查询 + 查找一个
+User.findOne({
+  username: '小二',
+  password: '123456'
+}).then(res => {
+  console.log(res)
+})
+```
+
+- 改
+
+```javascript
+// 修改所有
+Model.update(conditions, doc, [options], [callback])
+// 指定条件修改一个
+Model.findOneAndUpdate([conditions], [update], [options], [callback])
+// 根据ID修改一个
+User.findByIdAndUpdate('611ccd6e777e743a484123ef', {
+  password: '654321'
+}, (err, data) => {
+  if (err) {
+    console.log(err)
+    console.log('失败')
+  } else {
+    console.log(data)
+    console.log('成功')
+  }
+}).then(res => {
+  console.log(res)
+})
+```
+
+- 删
+
+```javascript
+// 根据条件删除所有
+User.remove({
+  username: '小米'
+}).then(_ => {
+  console.log('success')
+})
+
+// 根据条件删除一个
+User.findOneAndRemove({ username: '张三'}).then(res => { console.log(res) })
+// 根据ID删除一个
+User.findByIdAndRemove('1').then(res => { console.log(res) })
 ```

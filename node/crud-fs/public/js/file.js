@@ -34,7 +34,7 @@ exports.save = (url, name, item, callback) => {
       return callback(err)
     }
     let fileData = JSON.parse(data)
-    item.id = fileData[name][fileData[name].length - 1].id + 1
+    item.id = fileData[name].length === 0 ? 1 : fileData[name][fileData[name].length - 1].id + 1
     fileData[name].push(item)
     fs.writeFile(url, JSON.stringify(fileData), (err, data) => {
       if (err) {
@@ -58,6 +58,7 @@ exports.update = (url, name, item, callback) => {
       return callback(err)
     }
     let fileData = JSON.parse(data)
+    item.id = parseInt(item.id)
     let getItem = fileData[name].find((i) => i.id === item.id)
     for (let key in item) {
       getItem[key] = item[key]

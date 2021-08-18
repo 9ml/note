@@ -56,7 +56,7 @@ router.post('/add', (req, res) => {
 
 // 修改学生页面渲染
 router.get('/edit', (req, res) => {
-  handleFile.finds('./db.json', 'students', req.query.id, (err, data) => {
+  handleFile.finds('./db.json', 'students', req.query.id * 1, (err, data) => {
     if (err) {
       return res.status(500).send('Server Error')
     }
@@ -82,6 +82,7 @@ router.get('/delete', (req, res) => {
     if (err) {
       return res.status(500).send('Server Error')
     }
+    res.redirect('/')
   })
 })
 
