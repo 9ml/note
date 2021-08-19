@@ -204,6 +204,17 @@ module.exports = add
 > - 第三方模块：通过`npm`下载的第三方文件包，使用`require('包名')`来加载，且不会与核心模块重名；找不到时会依次往上级目录查找，直到磁盘根目录，一个项目有且只有一个`node_modules`文件存放在项目的根目录。
 > - 自定义模块：自己编写的模块文件，使用相对路径引入。
 
+### path模块
+
+### Node中的其他成员
+
+> 在文件操作中，使用相对路径是不可靠的，因为在`Node`中文件操作路径被设计为相对于执行`Node`命令所处的路径。
+> 为了解决这个问题需要把相对路径改为绝对路径。
+> 动态获取路径，不受执行`node`命令所属路径影响：
+>
+> - `__dirname`：获取当前文件模块所属目录的绝对路径
+> - `__filename`：获取当前文件的绝对路径
+
 ## CommonJS模块规范
 
 - 加载`require`：
@@ -700,4 +711,213 @@ User.remove({
 User.findOneAndRemove({ username: '张三'}).then(res => { console.log(res) })
 // 根据ID删除一个
 User.findByIdAndRemove('1').then(res => { console.log(res) })
+```
+
+## 使用Node操作MySQL数据库
+
+### 安装`MySQL`
+
+```shell
+npm install --save mysql
+```
+
+### 使用
+
+```javascript
+var mysql = require('mysql');
+
+// 1. 创建连接
+var connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'root',
+  database: 'user'
+});
+
+// 连接数据库
+connection.connect();
+
+// 执行数据操作
+connection.query('SELECT * FROM `users`', function (error, results, fields) {
+  if (error) throw error;
+  console.log('The solution is: ', results);
+});
+
+// 新增数据
+// connection.query('INSERT INTO `users` VALUES(NULL, "admin", "123456")', (err, res, fields) => {
+//   if (err) throw err
+//   console.log(res)
+// })
+
+// 关闭连接
+connection.end();
+```
+
+## Promise
+
+> `callback hell`：回调地狱
+
+- 无法保证顺序的代码
+
+```javascript
+const fs = require('fs')
+
+// 以下代码同时执行，无法保证顺序
+fs.readFile('./a.txt', 'utf8', (err, data) => {
+  if (err) {
+    // return console.log('读取失败')
+    // 抛出异常：1. 组织程序的执行。2. 把错误消息打印到控制台。
+    throw err
+  }
+})
+
+fs.readFile('./b.txt', 'utf8', (err, data) => {
+  if (err) {
+    // return console.log('读取失败')
+    // 抛出异常：1. 组织程序的执行。2. 把错误消息打印到控制台。
+    throw err
+  }
+})
+
+fs.readFile('./c.txt', 'utf8', (err, data) => {
+  if (err) {
+    // return console.log('读取失败')
+    // 抛出异常：1. 组织程序的执行。2. 把错误消息打印到控制台。
+    throw err
+  }
+})
+```
+
+- 回调嵌套保证顺序
+
+```javascript
+const fs = require('fs')
+
+fs.readFile('./a.txt', 'utf8', (err, data) => {
+  if (err) {
+    throw err
+  }
+  fs.readFile('./b.txt', 'utf8', (err, data) => {
+    if (err) {
+      throw err
+    }
+    fs.readFile('./c.txt', 'utf8', (err, data) => {
+      if (err) {
+        throw err
+      }
+    })
+  })
+})
+```
+
+- 为了解决以上编码的回调地狱嵌套，在`ES6`中新增了一个`API`：`Promise`
+
+> `Promise`英文译为：承诺、保证。
+> 可以理解为`Promise`是一个容器，存放了将来可能执行的异步任务，其中有`3`种状态：
+>
+> - `Pending`：正在执行，`Pending`状态只能变成以下其中一种。
+> - `Resolved`：已解决，成功
+> - `Rejected`：失败
+
+- `Promise`基本语法
+
+```javascript
+// 为了解决以上编码的回调地狱嵌套，在 ES6 中新增了一个 API，Promise
+// Promise 是一个构造函数
+
+const fs = require("fs")
+
+console.log(1)
+// 1. 创建 Promise 容器，给别人一个承诺
+// Promise 容器一旦创建就开始执行里面的代码，本身不是异步，里面的任务是异步的
+let p1 = new Promise((resolve, reject) => {
+  console.log(2)
+  fs.readFile('./file/a.txt', 'utf8', (err, data) => {
+    console.log(3)
+    if (err) {
+      // 承诺容器中的任务失败了
+      // console.log(err)
+      // 把容器的 Pending 状态改为 Rejected：失败
+      reject(err)
+    }
+    // 承诺容器中的任务成功了
+    // console.log(data)
+    // 把容器的 Pending 状态改为 resolved：成功
+    resolve(data)
+  })
+})
+
+let p2 = new Promise((resolve, reject) => {
+  fs.readFile('./file/b.txt', 'utf8', (err, data) => {
+    if (err) {
+      reject(err)
+    }
+    resolve(data)
+  })
+})
+
+let p3 = new Promise((resolve, reject) => {
+  fs.readFile('./file/c.txt', 'utf8', (err, data) => {
+    if (err) {
+      reject(err)
+    }
+    resolve(data)
+  })
+})
+
+// p1 就是那个承诺
+// 当 p1 成功了，然后（then）做指定的操作
+// then 方法接收的 function 就是 Promise 容器中的 resolve 函数
+p1.then((res) => {
+  console.log(res)
+  // 当前函数中 return 的结果就可以在后面的 .then 函数中接收到
+  // return 'hello'
+  // 可以 return 一个 Promise 对象，当 return 一个 Promise 对象时，后续的 then 函数的参数会作为 p2 的 resolve
+  return p2
+}, (err) => { // err 就是 Promise 容器中的 reject 函数
+  console.log(err)
+}).then(res => {
+  console.log(res)
+  return p3
+}).then(res => {
+  console.log(res)
+})
+
+
+
+console.log(4)
+
+```
+
+- 封装`Promise API`
+
+```javascript
+// 封装 Promise API
+
+const fs = require('fs')
+
+function promiseReadFile(filePath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+        reject(err)
+      }
+      resolve(data)
+    })
+  })
+}
+
+promiseReadFile('./file/a.txt')
+  .then((res) => {
+    console.log(res)
+    return promiseReadFile('./file/b.txt')
+  })
+  .then((res) => {
+    console.log(res)
+    return promiseReadFile('./file/c.txt')
+  })
+  .then(res => {
+    console.log(res)
+  })
+
 ```
