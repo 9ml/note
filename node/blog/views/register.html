@@ -43,40 +43,51 @@
                   src="http://v.bootstrapmb.com/2020/11/fwha89194/img/signup/gmail.png" alt=""><span class="btn-text">Sign up with Google</span></a>
             </div>
             <div class="divider"><span class="or-text">or</span></div>
-            <form action="#" class="row login_form">
-              <div class="col-sm-6 form-group">
-                <div class="small_text">First name</div><input type="text" class="form-control" name="name" id="name"
-                  placeholder="Muhammad">
-              </div>
-              <div class="col-sm-6 form-group">
-                <div class="small_text">Last name</div><input type="text" class="form-control" name="lname" id="lname"
-                  placeholder="Jewel">
+            <!-- 表单具有默认的提交行为，默认是同步的，同步表单提交时浏览器会锁死等待服务端的响应结果 -->
+            <!-- 表单的同步提交之后，无论服务端响应什么都会直接把响应的结果覆盖掉当前页面 -->
+            <form id="register" class="row login_form">
+              <div class="col-lg-12 form-group">
+                <div class="small_text">邮箱</div>
+                <input type="email" class="form-control" name="email" placeholder="请填写邮箱">
               </div>
               <div class="col-lg-12 form-group">
-                <div class="small_text">Your email</div><input type="email" class="form-control" id="email"
-                  placeholder="info@KbDoc.com">
+                <div class="small_text">用户名</div>
+                <input type="text" class="form-control" name="name" placeholder="请填写用户名">
               </div>
               <div class="col-lg-12 form-group">
-                <div class="small_text">Password</div><input id="signup-password" name="signup-password" type="password"
-                  class="form-control" placeholder="5+ characters required" autocomplete="off">
+                <div class="small_text">密码</div>
+                <input name="password" type="password" class="form-control" placeholder="请填写密码" autocomplete="on">
               </div>
-              <div class="col-lg-12 form-group">
-                <div class="small_text">Confirm password</div><input id="confirm-password" name="confirm-password"
-                  type="password" class="form-control" placeholder="5+ characters required" autocomplete="off">
+              <div class="col-lg-12 text-center">
+                <button type="submit" class="btn action_btn thm_btn">
+                  确认注册
+                </button>
               </div>
-              <div class="col-lg-12 form-group">
-                <div class="check_box"><input type="checkbox" value="None" id="squared2" name="check"><label
-                    class="l_text" for="squared2">I accept the <span>politic of confidentiality</span></label></div>
-              </div>
-              <div class="col-lg-12 text-center"><button type="submit" class="btn action_btn thm_btn">Create an
-                  account</button></div>
             </form>
           </div>
         </div>
       </div>
     </section>
-  </div><!-- Optional JavaScript -->
-  <!-- jQuery first,then Popper.js,then Bootstrap JS -->
+  </div>
+  <div class="modal fade" id="myModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">提示</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          恭喜您注册成功，是否前去登录
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="login">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script src="http://v.bootstrapmb.com/2020/11/fwha89194/js/jquery-3.2.1.min.js"></script>
   <script src="http://v.bootstrapmb.com/2020/11/fwha89194/js/pre-loader.js"></script>
   <script src="http://v.bootstrapmb.com/2020/11/fwha89194/assets/bootstrap/js/popper.min.js"></script>
@@ -85,6 +96,28 @@
   <script src="http://v.bootstrapmb.com/2020/11/fwha89194/js/TweenMax.min.js"></script>
   <script src="http://v.bootstrapmb.com/2020/11/fwha89194/assets/wow/wow.min.js"></script>
   <script src="http://v.bootstrapmb.com/2020/11/fwha89194/js/main.js"></script>
+  <script>
+    $('#register').on('submit', function(e) {
+      e.preventDefault()
+      let formData = $(this).serialize()
+      $.ajax({
+        url: '/register',
+        method: 'POST',
+        data: formData,
+        dataType: 'json',
+        success: function(res) {
+          if (res.error === 0) {
+            $('#myModal').modal('show')
+          } else {
+            alert(res.message)
+          }
+        }
+      })
+    })
+    $('#login').on('click', function() {
+      window.location.href = '/'
+    })
+  </script>
 </body>
 
 </html>

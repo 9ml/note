@@ -445,6 +445,65 @@ app.post('/post', (req, res) => {
 })
 ```
 
+### 在`express`中配置使用`session`插件
+
+- 安装
+
+```shell
+npm i express-session
+```
+
+- 配置
+
+```javascript
+const session = require('express-session')
+
+// Express 框架默认不支持 Session 和 Cookie
+// 需要借助第三方中间件：express-session 来解决
+// npm i express-session
+// 通过 req.session 来访问和设置 Session 成员
+// 添加 session 数据：req.session.foo = 'bar'
+// 访问 session 数据：req.session.foo
+app.use(session({
+  secret: 'my-blog', // 自定义加密字符串，会在原有加密基础上和这个字符串拼接加密，提高安全性
+  resave: false,
+  saveUninitialized: true // 无论是否使用 session，都默认分配一把钥匙
+}))
+```
+
+- 使用
+
+```javascript
+// 添加 session 数据
+req.session.foo = 'bar'
+// 使用 session 数据
+req.session.foo
+```
+
+- 提示
+
+> 默认`Session`数据是内存存储的，服务器一旦重启即会丢失，真正的生产环境会把`Session`持久化存储。
+
+```javascript
+
+```
+
+### 在`express`中使用`md5`加密
+
+- 安装
+
+```shell
+npm i blueimp-md5
+```
+
+- 配置及使用
+
+```javascript
+const md5 = require('blueimp-md5')
+
+req.body.password = md5(md5(req.body.password))
+```
+
 ### 异步编程
 
 - 回调函数
@@ -538,7 +597,7 @@ add(10, 20, function(res) {
 - 启动
 
 > `mongodb`默认使用执行 mongod 命令所处盘符根目录下的`/data/db`作为自己的数据存储目录。
-> 所有第一次执行启动命令之前在根目录手动新建一个`/data/db`文件夹。
+> 所以第一次执行启动命令之前在根目录手动新建一个`/data/db`文件夹。
 
 ```shell
 mongod

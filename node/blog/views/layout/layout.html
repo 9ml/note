@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="http://v.bootstrapmb.com/2020/11/fwha89194/img/favicon.ico" type="image/x-icon"><!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="http://v.bootstrapmb.com/2020/11/fwha89194/assets/bootstrap/css/bootstrap.min.css"><!-- icon css-->
+  <link rel="stylesheet" href="http://v.bootstrapmb.com/2020/11/fwha89194/assets/elagent-icon/style.css">
+  <link rel="stylesheet" href="http://v.bootstrapmb.com/2020/11/fwha89194/assets/animation/animate.css">
+  <link rel="stylesheet" href="http://v.bootstrapmb.com/2020/11/fwha89194/css/style.css">
+  <link rel="stylesheet" href="http://v.bootstrapmb.com/2020/11/fwha89194/css/responsive.css">
+  {{ block 'head' }}{{ /block }}
+  <title>KbDoc</title>
+</head>
+
+<body data-scroll-animation="true">
+  <div id="preloader">
+    <div id="ctn-preloader" class="ctn-preloader">
+      <div class="round_spinner">
+        <div class="spinner"></div>
+        <div class="text"><img src="http://v.bootstrapmb.com/2020/11/fwha89194/img/spinner_logo.png" alt="">
+          <h4><span>kb</span>Doc</h4>
+        </div>
+      </div>
+      <h2 class="head">Did You Know?</h2>
+      <p></p>
+    </div>
+  </div>
+  <div class="body_wrapper">
+    {{ include './header.html' }}
+    <!-- 留一个坑 -->
+    {{ block 'content' }}{{ /block }}
+    {{ include './footer.html' }}
+  </div><!-- Back to top button --><a id="back-to-top" title="Back to Top"></a><!-- Optional JavaScript -->
+  <!-- jQuery first,then Popper.js,then Bootstrap JS -->
+  <script src="http://v.bootstrapmb.com/2020/11/fwha89194/js/jquery-3.2.1.min.js"></script>
+  <script src="http://v.bootstrapmb.com/2020/11/fwha89194/js/pre-loader.js"></script>
+  <script src="http://v.bootstrapmb.com/2020/11/fwha89194/assets/bootstrap/js/popper.min.js"></script>
+  <script src="http://v.bootstrapmb.com/2020/11/fwha89194/assets/bootstrap/js/bootstrap.min.js"></script>
+  <script src="http://v.bootstrapmb.com/2020/11/fwha89194/js/parallaxie.js"></script>
+  <script src="http://v.bootstrapmb.com/2020/11/fwha89194/js/TweenMax.min.js"></script>
+  <script src="http://v.bootstrapmb.com/2020/11/fwha89194/js/jquery.wavify.js"></script>
+  <script src="http://v.bootstrapmb.com/2020/11/fwha89194/assets/wow/wow.min.js"></script>
+  <script src="http://v.bootstrapmb.com/2020/11/fwha89194/assets/counterup/jquery.counterup.min.js"></script>
+  <script src="http://v.bootstrapmb.com/2020/11/fwha89194/assets/counterup/jquery.waypoints.min.js"></script>
+  <script src="http://v.bootstrapmb.com/2020/11/fwha89194/js/main.js"></script>
+  {{ block 'script' }}{{ /block }}
+</body>
+
+</html>
