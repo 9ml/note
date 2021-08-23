@@ -1,5 +1,9 @@
 # Blog
 
+> `npm i`
+> `node app.js`
+> `localhost:3000/`
+
 ## 目录结构
 
 > - `app.js`：项目入口模块。

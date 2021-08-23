@@ -19,7 +19,7 @@ router.get('/login', (req, res) => {
 })
 
 // 处理登录请求
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res, next) => {
   try {
     if (!await User.findOne({ email: req.body.email })) {
       return res.status(200).json({
@@ -47,10 +47,12 @@ router.post('/login', async (req, res) => {
       })
     })
   } catch(err) {
-    res.status(500).json({
-      error: 500,
-      message: err.message
-    })
+    // res.status(500).json({
+    //   error: 500,
+    //   message: err.message
+    // })
+    // 如果 next 传递参数，直接跳转至 app.js 错误处理函数
+    next(err)
   }
 })
 
@@ -60,7 +62,7 @@ router.get('/register', (req, res) => {
 })
 
 // 处理注册请求
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res, next) => {
   try {
     if (await User.findOne({ email: req.body.email })) {
       return res.status(200).json({
@@ -94,10 +96,8 @@ router.post('/register', async (req, res) => {
     // req.session.user = req.body
 
   } catch (err) {
-    res.status(500).json({
-      error: 500,
-      message: err.message
-    })
+    // 如果 next 传递参数，直接跳转至 app.js 错误处理函数
+    next(err)
   }
 })
 

@@ -557,6 +557,72 @@ add(10, 20, function(res) {
 
 > 凡是需要得到一个函数内部异步操作的结果，都需要使用回调函数
 
+### 中间件
+
+> 中间件的本质就是一个请求处理方法，我们把用户从请求到响应的整个过程分发到多个中间件中去处理，这样做的目的是提高代码的灵活性，动态可扩展。
+
+#### 应用程序级别中间件
+
+- 万能匹配，不关心任何请求路径和请求方法
+
+```javascript
+app.use(function(req, res) {
+  console.log('Time:', Date.now())
+  next()
+})
+```
+
+- 以`/xxx/`开头的
+
+```javascript
+app.use('/a', function(req, res) {
+  console.log('Time:', Date.now())
+  next()
+})
+```
+
+#### 路由级别的中间件
+
+- `GET`
+
+```javascript
+app.get('/', function(req, res) {
+  res.send('Hello World')
+})
+```
+
+- `POST`
+
+```javascript
+app.get('/', function(req, res) {
+  res.send('Hello World')
+})
+```
+
+#### 错误处理中间件
+
+```javascript
+app.use(function(err, req, res, next) {
+  console.log(err.stack)
+})
+```
+
+#### 内置中间件
+
+- `express.static`
+- `express.json`
+- `express.urlencoded`
+
+#### 第三方中间件
+
+- `body-parser`
+- `compression`
+- `cookie-parser`
+- `morgan`
+- `response-time`
+- `save-static`
+- `session`
+
 ## `Mongodb`
 
 ### 关系型数据库和非关系型数据库

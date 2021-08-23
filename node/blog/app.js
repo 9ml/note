@@ -33,6 +33,19 @@ app.use(session({
 
 app.use(router)
 
+// 配置 404 处理中间件
+app.use((req, res) => {
+  res.render('404.html')
+})
+
+// 配置全局错误处理中间件
+app.use((err, req, res, next) => {
+  res.status(500).json({
+    error: 500,
+    message: err.message
+  })
+})
+
 app.listen(3000, () => {
   console.log('Server is running.')
 })
