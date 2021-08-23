@@ -6,6 +6,7 @@ class InitManager {
     // 入口方法
     InitManager.app = app
     InitManager.initLoadRoutes()
+    InitManager.loadHttpException()
   }
 
   static initLoadRoutes() {
@@ -19,6 +20,11 @@ class InitManager {
         InitManager.app.use(router.routes())
       }
     }
+  }
+
+  // 全局挂载 loadHttpException 方便但不推荐
+  static loadHttpException() {
+    global.errors = require('./httpException')
   }
 }
 
