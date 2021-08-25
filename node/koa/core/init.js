@@ -7,6 +7,7 @@ class InitManager {
     InitManager.app = app
     InitManager.initLoadRoutes()
     InitManager.loadHttpException()
+    InitManager.loadConfig()
   }
 
   static initLoadRoutes() {
@@ -25,6 +26,12 @@ class InitManager {
   // 全局挂载 loadHttpException 方便但不推荐
   static loadHttpException() {
     global.errors = require('./httpException')
+  }
+
+  // 全局挂载 config 配置文件
+  static loadConfig(path = '') {
+    const configPath = path || `${process.cwd()}/config/config`
+    global.config = require(configPath)
   }
 }
 

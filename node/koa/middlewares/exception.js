@@ -19,6 +19,7 @@ const catchError = async (ctx, next) => {
      * 
      * 已知型错误：数据类型错误，可判断并处理错误
      * 未知型错误：程序潜在错误，无意识，开发者不知道，如连接数据库不正确
+     * 
      */
     // ctx.body = '服务器出错'
     // if (error.errorCode) {
@@ -30,6 +31,12 @@ const catchError = async (ctx, next) => {
     //   ctx.status = error.status
     // }
 
+    // 开发环境
+    if (global.config.environment === 'dev') {
+      throw error
+    }
+
+    // 生产环境
     if (error instanceof HttpException) {
       ctx.body = {
         message: error.message,
@@ -37,6 +44,14 @@ const catchError = async (ctx, next) => {
         request: `${ctx.method} ${ctx.path}`
       }
       ctx.status = error.status
+    } else {
+      ctx.body = {
+        // message: error.message,
+        message: 'We made a mistake O(∩_∩)O~',
+        error_code: 500,
+        request: `${ctx.method} ${ctx.path}`
+      }
+      ctx.status = 500
     }
   }
 }
