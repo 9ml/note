@@ -9,8 +9,6 @@ const app = new Koa()
 app.use(catchError)
 app.use(parser())
 
-require('./app/models/user')
-
 InitManager.initCore(app)
 
 app.listen(3000, () => {

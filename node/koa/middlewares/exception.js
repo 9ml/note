@@ -31,13 +31,15 @@ const catchError = async (ctx, next) => {
     //   ctx.status = error.status
     // }
 
-    // 开发环境
-    if (global.config.environment === 'dev') {
+    // 开发环境并且不是 HttpException 异常抛出异常
+    const isDev = global.config.environment === 'dev'
+    const isHttpException = error instanceof HttpException
+    if (isDev && !isHttpException) {
       throw error
     }
 
     // 生产环境
-    if (error instanceof HttpException) {
+    if (isHttpException) {
       ctx.body = {
         message: error.message,
         error_code: error.errorCode,

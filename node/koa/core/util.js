@@ -40,22 +40,22 @@ const findMembers = function (instance, {
 }
 
 const generateToken = function(uid, scope){
-    const secretKey = global.config.security.secretKey
-    const expiresIn = global.config.security.expiresIn
-    const token = jwt.sign({
-        uid,
-        scope
-    },secretKey,{
-        expiresIn
-    })
-    return token
+  const secretKey = global.config.security.secretKey
+  const expiresIn = global.config.security.expiresIn
+  const token = jwt.sign({
+    uid,
+    scope
+  }, secretKey, { // 可选配置项
+    expiresIn
+  })
+  return token
 }
 
 
 
 module.exports = {
-    findMembers,
-    generateToken,
+  findMembers,
+  generateToken
 }
 
 
