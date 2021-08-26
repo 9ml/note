@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>随机小方块</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    .map {
+      width: 100%;
+      height: 100vh;
+      background-color: #000;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <div class="map"></div>
+  <script>
+    // 产生随机数对象
+    ;(function(window) {
+      function Random() {}
+      Random.prototype.getRandom = function(min, max) {
+        return Math.floor(Math.random()*(max - min) + min)
+      }
+      window.Random = new Random()
+    })(window)
+
+    ;(function() {
+      let map = document.querySelector('.map')
+
+      function Food(width, height, color) {
+        this.width = width || 20
+        this.height = height || 20
+        this.color = color || 'white'
+        this.x = 0
+        this.y = 0
+        this.element = document.createElement('div')
+      }
+
+      Food.prototype.init = function(map) {
+        this.element.style.width = this.width + 'px'
+        this.element.style.height = this.height + 'px'
+        this.element.style.backgroundColor = this.color
+        this.element.style.position = 'absolute'
+        map.appendChild(this.element)
+        this.render(map)
+      }
+
+      Food.prototype.render = function(map) {
+        this.x = Random.getRandom(0, map.offsetWidth / this.width) * this.width
+        this.y = Random.getRandom(0, map.offsetHeight / this.height) * this.height
+        console.log(this.x)
+        console.log(this.y)
+        this.element.style.left = this.x + 'px'
+        this.element.style.top = this.y + 'px'
+      }
+
+      let fd = new Food(40, 40)
+      fd.init(map)
+    })()
+  </script>
+</body>
+</html>

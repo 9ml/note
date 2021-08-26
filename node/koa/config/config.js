@@ -13,7 +13,7 @@ module.exports = {
   },
   weChat: {
     appId: 'wx0be486ed43033afa',
-    appSecret: 'c7fe3f64123f843054fd8c80bd9f0577',
+    appSecret: 'xxx',
     loginUrl: 'https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code'
   }
 }
