@@ -21,6 +21,69 @@
 <body>
   <div class="map"></div>
   <script>
+
+    function f1(x, y) {
+      console.log(x + y)
+      console.log(this)
+      return '10000'
+    }
+
+    f1(10, 20) // 30 window
+
+    f1.apply(null) // window
+    f1.call(null) // window
+
+    f1.apply(null, [10, 20]) // 30 window
+    f1.call(null, 10, 20) // 30 window
+
+    let res1 = f1.apply(null, [10, 20])
+    let res2 = f1.call(null, 10, 20)
+    console.log(res1) // 10000
+    console.log(res2) // 10000
+
+
+    function f2(x, y) {
+      console.log(x + y + this + this.sex)
+    }
+
+    window.f2(10, 20) // 30 window undefined
+
+    let obj = {
+      age: 10,
+      sex: '男'
+    }
+
+    window.f2.apply(obj, [10, 20]) // 30 Object 男
+    window.f2.call(obj, 10, 20) // 30 Object 男
+    // apply 可以改变 this 的指向
+
+    /**
+     * 1. apply 和 call 方法中如果没有传入参数，或者是传入的参数是 null，那么调用该方法的函数对象中的 this 就是默认的 window
+     * 2. apple 和 call 都可以让函数或者方法来调用，传入的参数和函数调用的写法不一样，但是效果一样
+     * 
+     * apple 和 call 都可以改变 this 的指向，
+     * 
+    */
+    function Animal(name, age) {
+      this.name = name
+      this.age = age
+    }
+
+    Animal.prototype.eat = function(){
+      console.log('吃饭')
+    }
+    Animal.prototype.weight = '10kg'
+
+    function Dog(sex, name, age) {
+      Animal.call(this, name, age)
+      this.sex = sex
+    }
+
+    Dog.prototype = new Animal()
+
+    let xh = new Dog(1,2,3)
+    console.log(xh)
+
     // 产生随机数对象
     ;(function(window) {
       function Random() {}
