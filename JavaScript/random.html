@@ -57,13 +57,86 @@
     window.f2.call(obj, 10, 20) // 30 Object 男
     // apply 可以改变 this 的指向
 
+
+
+     // bind 应用
+
+     function ShowRandom() {
+      this.num = Math.random() * 10 + 1
+    }
+
+    ShowRandom.prototype.show1 = function() {
+      setInterval(this.show2.bind(this), 1000)
+    }
+
+    ShowRandom.prototype.show2 = function() {
+      console.log(this.num)
+    }
+
+    let getNum = new ShowRandom()
+    getNum.show1()
+
     /**
      * 1. apply 和 call 方法中如果没有传入参数，或者是传入的参数是 null，那么调用该方法的函数对象中的 this 就是默认的 window
      * 2. apple 和 call 都可以让函数或者方法来调用，传入的参数和函数调用的写法不一样，但是效果一样
      * 
-     * apple 和 call 都可以改变 this 的指向，
+     * apple 和 call 都可以改变 this 的指向
+     * apple 使用时是 function.apple(obj, [a, b,...])
+     * call  使用时是 function.call(obj, a, b,...)
+     * 
+     * bind 是用来复制了一份，使用的语法：
+     * 函数名字.bind(obj, 参数1, 参数2, ...) 返回值是复制之后的这个函数
+     * 方法名字.bind(对象，参数1, 参数2, ...) 返回值是复制之后的这个方法
+     * 
+     * 函数中有个 name 属性，函数的名字，name 是只读的，不能修改
+     * 函数中有个 argument 属性，代表实参的个数
+     * 函数中有个 length 属性，代表函数定义时形参的个数
+     * 函数中有个 caller 属性，代表的是调用者
+     * 
+     * 
+     * 函数作为参数使用时，如果是命名函数，那么只传入命名函数的名字，没有括号
+     * 
+     * 获取某个对象的数据类型
+     * 1. typeof
+     * 2. instanceof
+     * 3. Object.prototype.toString.call(对象)
      * 
     */
+    // 获取某个对象是不是你传入的数据类型
+    // [1, 2, 3] 是不是 "[Object Array]"
+    // type 是变量--- 是参数 ----"[Object Array]"
+    // obj 是变量--- 是参数 ----[1, 2, 3]
+    function getFun(type) {
+      return function(obj) {
+        return Object.prototype.toString.call(obj) === type
+      }
+    }
+
+    console.log(getFun("[object Array]")([1, 2, 3])) // true
+    
+    // 函数中其他成员
+    function fn(x, y) {
+      console.log(fn.name) // fn
+      console.log(fn.arguments) // 2
+      console.log(fn.length) // 2
+      console.log(fn.caller) // fn2
+    }
+
+
+    fn(1, 2)
+
+    function fn2() {
+      fn(3, 4)
+    }
+    fn2()
+
+   
+
+
+
+
+
+    // ---------------------------------------------------------------------------------------------
     function Animal(name, age) {
       this.name = name
       this.age = age
