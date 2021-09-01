@@ -1,65 +1,43 @@
+/**
+ * 读写内容
+ */
 import fs from 'fs'
 import path from 'path'
 
-// TS - .d.ts(翻译文件) - JS
 import superagent from 'superagent'
-import cheerio from 'cheerio'
 
-interface List {
-  title: string
-}
+import Analyzer from './analyzer'
 
-interface Data {
-  [propName: number]: List[]
+// import HtmlAnalyzer from './htmlAnalyzer'
+
+export interface Ana {
+  analyze: (html: string, filePath: string) => string
 }
 
 class Crowller {
-  private url = `http://www.dell-lee.com/`
   private filePath = path.resolve(__dirname, '../data/data.json')
   
-  constructor() {
+  constructor(private url: string, private analyzer: Ana) {
     this.init()
   }
 
-  async init() {
+  private async init() {
     const html = await this.getRawHtml()
-    const result = this.getInfo(html.text)
-    const data = this.getData(result)
-    this.writeFile(JSON.stringify(data))
+    const data = this.analyzer.analyze(html, this.filePath)
+    this.writeFile(data)
   }
 
-  async getRawHtml() {
-    return await superagent.get(this.url)
+  private async getRawHtml() {
+    return (await superagent.get(this.url)).text
   }
 
-  getInfo(html: string) {
-    const $ = cheerio.load(html)
-    const cItems = $('.course-item')
-    const list: List[] = []
-    cItems.map((index, item) => {
-      const desc = $(item).find('.course-desc')
-      const title = desc.eq(0).text()
-      list.push({
-        title
-      })
-    })
-    return list
+  private writeFile(data: string) {
+    fs.writeFileSync(this.filePath, data)
   }
-
-  getData(res: List[]) {
-    let data: Data = {}
-    if (fs.existsSync(this.filePath)) {
-      data = JSON.parse(fs.readFileSync(this.filePath, 'utf-8'))
-    }
-    data[new Date().getTime()] = res
-    return data
-  }
-
-  writeFile(data: string) {
-    fs.writeFileSync(this.filePath, JSON.stringify(data))
-  }
-
-
 }
 
-const crowller = new Crowller()
+const url = 'http://www.dell-lee.com/'
+// const analyzer = new Analyzer()
+// 单例模式
+const analyzer = Analyzer.getInstance()
+new Crowller(url, analyzer)
