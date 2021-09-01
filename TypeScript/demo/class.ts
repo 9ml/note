@@ -56,3 +56,15 @@ class Person2 {
 
 const person3 = new Person2('Tom')
 console.log(person3.name)
+
+
+class Animal {
+  constructor(private name: string) {  }
+  get getName() {
+    return this.name
+  }
+}
+
+const dog = new Animal('Tom')
+// dog.name // 无法获取
+dog.getName // getter 不需要使用 ()

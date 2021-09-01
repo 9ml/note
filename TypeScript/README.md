@@ -387,6 +387,7 @@ console.log(stu.getStuName())
 - `public`：表示允许属性和方法在类的内外被调用，属性和方法默认为`public`公有访问类型。
 - `private`：只允许在类的内部被调用，在类的外部无法使用。
 - `protected`：允许在类的内部及继承的子类中被调用。
+- `static`：将方法和属性直接挂载在类上面，而不是类的实例。
 
 ```typescript
 class Person {
@@ -446,4 +447,90 @@ class Student extends Person {
 }
 
 const stu = new Student(18)
+```
+
+- `Getter`和`Setter`使用
+
+```typescript
+class Animal {
+  constructor(private _name: string) {  }
+  get name() {
+    return this._name + ' Jack'
+  }
+  set name(name: string) {
+    const realName = name.split(' ')[0]
+    this._name = realName
+  }
+}
+
+const dog = new Animal('Tom')
+// dog.name // name 是私有属性 无法获取
+console.log(dog.name) //Tom Jack getter 不需要使用 ()
+dog.name = 'Sum Jump'
+console.log(dog.name)
+
+```
+
+- 设计模式：单例模式
+- 一个类只允许初始化一个实例
+
+```typescript
+class Demo {
+  private static instance: Demo
+  private constructor () { }
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new Demo()
+    }
+    return this.instance
+  }
+}
+
+const demo1 = Demo.getInstance()
+const demo2 = Demo.getInstance()
+```
+
+- 抽象类
+- `abstract`：将共用的属性和方法抽离出来，变成抽象的类，里面可以有抽象的方法或者实际的方法和属性
+- 抽象类，只能被继承，不能实例化
+- 抽象类中的抽象方法必须手动实现
+- 使用
+
+```typescript
+abstract class Geom {
+  width: number
+  getType() {
+    return 'Geom'
+  }
+  abstract getArea(): number
+}
+
+
+
+class Circle extends Geom {
+  getType() {
+    return 123
+  }
+}
+
+class Square {
+
+}
+
+```
+
+- `readonly`限制属性只能读，不能写
+
+```typescript
+class Person {
+  public readonly name: string
+  constructor(name: string) {
+    this.name = name
+  }
+}
+
+const person = new Person('Tom')
+// person.name = 'Jack' 
+console.log(person.name)
+
 ```
