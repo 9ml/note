@@ -6,7 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node ./src/crowller.ts",
-    "build": "tsc"
+    "dev:build": "tsc -w",
+    "dev:start": "nodemon node ./build/crowller.js",
+    "run:con": "concurrently npm run dev:build & npm run dev:start",
+    "sss:con": "concurrently npm run dev:*"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "data/*"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -18,6 +26,8 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.10",
+    "concurrently": "^6.2.1",
+    "nodemon": "^2.0.12",
     "superagent": "^6.1.0"
   }
 }

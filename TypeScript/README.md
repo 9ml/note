@@ -156,6 +156,147 @@ const list: [string, string, number][] = [
 ]
 ```
 
+#### 联合类型及类型保护
+
+```typescript
+interface Bird {
+  fly: boolean
+  sing: () => {}
+}
+
+interface Dog {
+  fly: boolean
+  bark: () => {}
+}
+
+function trailAnimal(animal: Bird | Dog) {
+  // animal.sing() 不严谨
+  // 类型断言
+  if (animal.fly) {
+    return (animal as Bird).sing()
+  }
+  (animal as Dog).bark()
+}
+
+// in 方法做类型保护
+function trailAnimal2(animal: Bird | Dog) {
+  if ('sing' in animal) {
+    return animal.sing()
+  }
+  animal.bark()
+}
+
+function add(x: number | string, y: number | string) {
+  // return x + y 
+  if (typeof x === 'string' || typeof y === 'string') {
+    return `${x}${y}`
+  }
+  return x + y
+}
+
+// 使用 instanceof 做类型保护 需要使用 class 类来定义，不要使用 interface
+class NumberObj {
+  count: number
+  constructor(num: number) {
+    this.count = num
+  }
+}
+
+function addSum(x: NumberObj | object, y: NumberObj | object) {
+  if (x instanceof NumberObj && y instanceof NumberObj) {
+    return x.count + y.count
+  }
+  return 0
+}
+
+addSum(new NumberObj(1), new NumberObj(2))
+```
+
+#### 枚举类型`Enum`
+
+- 默认值从`0`开始，可指定，指定后后面的值自动增加
+
+```typescript
+enum Status {
+  OFFLINE,
+  ONLINE,
+  DELETED,
+  ERROR = 6
+}
+
+console.log(Status.OFFLINE, Status[0]) // 0, OFFLINE
+```
+
+#### 泛型
+
+- 泛指的类型，可在函数或者类中使用泛型
+
+##### 函数泛型
+
+- 在函数的`()`前加一个或多个`<T>`，形参遍可指定此泛型，如下例
+
+```typescript
+function joins1(x: string | number, y: string | number) {
+  return `${x}${y}`
+}
+
+function joins2<T, P>(x: T, y: P) {
+  return `${x}${y}`
+}
+
+joins1(1, '2')
+joins2('1', 2)
+/**
+ * 需求：要求 x 与 y 的类型相同，都为 string 或都为 number
+ */
+function joins<A>(x: A, y: A) {
+  return `${x}${y}`
+}
+
+joins<string>('1', '2')
+joins<number>(2, 1)
+```
+
+##### 类泛型
+
+- 可通过`class`类继承接口或者类型。
+
+```typescript
+interface Item {
+  name: string
+}
+
+class DataManage1<T extends Item> {
+  constructor(private data: T[]) {  }
+  getItem(index: number): string {
+    return this.data[index].name
+  }
+}
+
+const data1 = new DataManage<Item>([{
+  name:'123'
+}])
+data1.getItem(0)
+
+
+class DataManage2<T extends number | string> {
+  constructor(private data: T[]) {  }
+  getItem(index: number): string {
+    return this.data[index].name
+  }
+}
+```
+
+##### 泛型类型
+
+- 泛型作为一个具体的类型注解
+
+```typescript
+const fn: <T>(data: T) => T = <T>() => {
+  return '123'
+}
+```
+
 ### 类型
 
 #### 类型注解
@@ -534,3 +675,9 @@ const person = new Person('Tom')
 console.log(person.name)
 
 ```
+
+#### 初始化配置文件
+
+- `tsc -init`：初始化编译配置文件`tsconfig.json`
+
+### 命名空间
