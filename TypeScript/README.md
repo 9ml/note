@@ -681,3 +681,9 @@ console.log(person.name)
 - `tsc -init`：初始化编译配置文件`tsconfig.json`
 
 ### 命名空间
+
+- `namespace`
+
+### 类的装饰器
+
+- 对类的装饰工具，装饰器本身是一个函数。
