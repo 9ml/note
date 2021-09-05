@@ -7,6 +7,7 @@ var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var cookie_session_1 = __importDefault(require("cookie-session"));
 require("./controller/LoginController");
+require("./controller/CrowllerController");
 var decorator_1 = require("./controller/decorator");
 // import router from './router'
 /**

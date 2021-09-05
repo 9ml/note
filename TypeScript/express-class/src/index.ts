@@ -3,7 +3,8 @@ import bodyParser from 'body-parser'
 import cookieSession from 'cookie-session'
 
 import './controller/LoginController'
-import { router } from './controller/decorator'
+import './controller/CrowllerController'
+import router from './router'
 
 // import router from './router'
 

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import 'reflect-metadata'
 
-import { controller, get, post } from './decorator'
+import { controller, get, post } from '../decorator'
 import { getResponse } from '../utils/util'
 
 interface RequestWithBody extends Request {
@@ -10,13 +10,16 @@ interface RequestWithBody extends Request {
   }
 }
 
-@controller
-class LoginController {
+@controller('v1')
+export class LoginController {
+  static isLogin(req: Request) {
+    return !!(req.session ? req.session.login : undefined)
+  }
 
   @post('/login')
   post(req: RequestWithBody, res: Response) {
     const { password } = req.body
-    const isLogin = req.session ? req.session.login : undefined
+    const isLogin = LoginController.isLogin(req)
     if (isLogin) {
       res.json(getResponse(null, '已经登录'))
     } else {
@@ -31,7 +34,6 @@ class LoginController {
     }
   }
 
-
   @get('/logout')
   logout(req: RequestWithBody, res: Response) {
     if (req.session) {
@@ -43,7 +45,7 @@ class LoginController {
 
   @get('/')
   home(req: RequestWithBody, res: Response) {
-    const isLogin = req.session ? req.session.login : undefined
+    const isLogin = LoginController.isLogin(req)
     if (isLogin) {
       return res.send(`
         <html>
