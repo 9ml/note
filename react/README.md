@@ -721,3 +721,208 @@ const ChildB = props => {
 }
 
 ```
+
+#### Context
+
+> 作用：跨组件传递数据，比如：主题、语言。
+
+##### 步骤
+
+- 调用`React.createContext()`创建`Provider`（提供数据）和`Consumer`（消费数据）两个组件。
+
+```javascript
+const { Provider, Consumer } = React.createContext()
+```
+
+- 使用`Provider`组件作为父节点。
+
+```javascript
+<Provider>
+ <div className="App">
+  <Child />
+ </div>
+</Provider>
+```
+
+- 设置`value`属性，表示要传递的数据。
+
+```javascript
+<Provider value="pink">
+</Provider>
+```
+
+- 调用`Consumer`组件接收数据。
+
+- 示例：
+
+```javascript
+// 创建 context 得到两个组件
+const { Provider, Consumer } = React.createContext()
+
+class App extends React.Component {
+  render() {
+    return (
+      <Provider value="pink">
+        <div className="App">
+          <Node />
+        </div>
+      </Provider>
+    )
+  }
+}
+
+const Node = props => {
+  return (
+    <div className="node">
+      <SubNode />
+    </div>
+  )
+}
+
+const SubNode = props => {
+  return (
+    <div className="subnode">
+      <Child />
+    </div>
+  )
+}
+
+const Child = props => {
+  return (
+    <div className="child">
+      <Consumer>
+        {
+          data => <span>父组件传递的数据：{ data }</span>
+        }
+      </Consumer>
+    </div>
+  )
+}
+```
+
+##### 总结
+
+- 如果两个组件是远房亲戚，比如嵌套多层时可以使用`Context`实现组件通讯。
+
+### Props深入
+
+#### children属性
+
+> 表示组件标签的子节点，当组件标签有子节点时，`props`就会有该属性。
+> `children`属性与普通的`props`一样，值可以是任意值：文本、`React`元素、组件、函数等。
+
+```javascript
+function Hello(props) {
+  return (
+    <div>
+      组件的子节点：{ props.children }
+    </div>
+  )
+}
+
+<Hello>我是子节点</Hello>
+```
+
+#### props校验
+
+- 对于组件来说，`props`是外来的，无法保证组件使用者传入什么格式的数据，如果传入的数据格式不对，可能会导致组件内部报错。
+- 关键问题：组件的使用者不知道明确的错误原因。
+
+> `props`校验：允许在创建组件的时候就指定`props`的类型、格式等。
+> 作用：捕获使用组件时因为`props`导致的错误，给出明确的错误提示，增加组件的健壮性。
+
+##### props校验使用
+
+- 安装包`prop-types`
+
+```shell
+npm i props-types
+yarn add prop-types
+```
+
+- 导入`prop-types`包
+- 使用`组件名.propTypes = {}`来给组件的`props`条件校验规则。
+- 校验规则通过`propTypes`对象来指定。
+
+```javascript
+import PropTypes from 'prop-types'
+
+const App = props => {
+  const arr = props.colors
+  const lis = arr.map((item, index) => <li key={ item.id }>{ item.name }</li>)
+  return <ul>{ lis }</ul>
+}
+
+// 添加 props 校验
+App.propTypes = {
+  colors: PropTypes.array
+}
+
+React.render(
+  <App colors={ [{
+    id: 1,
+    name: 'red'
+  }] } />,
+  root
+)
+```
+
+##### 约束规则
+
+- 常见类型：
+  - `array`：数组
+  - `bool`：布尔值
+  - `func`：函数
+  - `number`：数值
+  - `object`：对象
+  - `string`：字符串
+- `React`元素类型：
+  - `element`
+- 必填项：
+  - `isRequired`
+- 特定结构的对象：
+  - `shape({})`
+
+```javascript
+App.propTypes = {
+  // 常见类型
+  list: PropTypes.array,
+  isTrue: PropTypes.bool,
+  fn: PropTypes.func,
+  num: PropTypes.number,
+  obj: PropTypes.object,
+  str: PropTypes.string,
+  // 元素类型
+  html: PropTypes.element,
+  // 必填项
+  sure: PropTypes.bool.isRequired,
+  // 特定结构的对象
+  optionalObjectWithShape: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string
+  })
+}
+```
+
+##### props默认值
+
+- 通过`Child.defaultProps = {  }`设置默认值。
+- 作用：给`props`设置默认值，在未传入`props`时生效，传入时将替换为传入的值。
+
+```javascript
+const App = props => {
+  return (
+    <div>
+      <h1>此处展示props的默认值：{ props.pageSize }</h1>
+    </div>
+  )
+}
+
+// 添加默认值
+App.defaultProps = {
+  pageSize: 10
+}
+
+React.render(<App />, root)
+
+```
