@@ -1,0 +1,13 @@
+.mains {
+  width: 600px;
+  border: 1px solid #000;
+}
+
+.m-item {
+  width: 90%;
+  margin: 10px auto;
+}
+
+.m-i-item {
+  width: 100%;
+}

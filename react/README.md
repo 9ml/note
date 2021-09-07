@@ -346,6 +346,7 @@ class App extends React.Component {
 > `state`值是对象，表示一个组件中可以有多个数据。
 
 ```javascript
+// 完整写法
 class Hello extends React.Component {
   constructor() {
     super()
@@ -359,4 +360,364 @@ class Hello extends React.Component {
     )
   }
 }
+
+// 简化语法
+class Hello extends React.Component {
+  state = {
+    count: 0
+  }
+  render() {
+    return (
+      <div>有状态组件</div>
+    )
+  }
+}
+```
+
+#### setState
+
+- 组件中的状态是可以改变的
+- 语法：`this.setState({ data })`
+- 注意：不要直接修改`state`中的值，这是错误的。
+- 作用：修改`state`、更新`UI`。
+- 思想：数据驱动视图。
+
+```javascript
+class Hello extends React.Component {
+  state = {
+    count: 0
+  }
+  handleAdd() {
+    // this 指向为 undefined
+    this.setState({
+      count: this.state.count ++
+    })
+  }
+  render() {
+    return (
+      <div>
+        <h1>计数器：{ this.state.count }</h1>
+        <button onClick={ this.handleAdd }>+1</button>
+      </div>
+    )
+  }
+}
+```
+
+#### this指向
+
+> 解决事件函数中`this`指向问题
+
+##### 箭头函数
+
+- 利用箭头函数自身不绑定`this`的特点。
+
+```javascript
+class Hello extends React.Component {
+  state = {
+    count: 0
+  }
+  handleAdd() {
+    this.setState({
+      count: this.state.count ++
+    })
+  }
+  render() {
+    return (
+      <div>
+        <h1>计数器：{ this.state.count }</h1>
+        <button onClick={ () => this.handleAdd }>+1</button>
+      </div>
+    )
+  }
+}
+```
+
+##### `Function.prototype.bind()`
+
+- 利用`ES5`中的`bind`方法，将事件处理程序中的`this`与组件实例绑定到一起
+
+```javascript
+class Hello extends React.Component {
+  constructor() {
+    super()
+    this.handleAdd = this.handleAdd.bind(this)
+  }
+  state = {
+    count: 0
+  }
+  handleAdd() {
+    this.setState({
+      count: this.state.count ++
+    })
+  }.bind(this)
+  render() {
+    return (
+      <div>
+        <h1>计数器：{ this.state.count }</h1>
+        <button onClick={ this.handleAdd }>+1</button>
+      </div>
+    )
+  }
+}
+```
+
+##### `class`的实例方法
+
+- 利用箭头函数形式的`class`实例方法
+- 推荐使用
+
+```javascript
+class Hello extends React.Component {
+  state = {
+    count: 0
+  }
+  handleAdd = () => {
+    this.setState({
+      count: this.state.count ++
+    })
+  }
+  render() {
+    return (
+      <div>
+        <h1>计数器：{ this.state.count }</h1>
+        <button onClick={ this.handleAdd }>+1</button>
+      </div>
+    )
+  }
+}
+```
+
+### 表单处理
+
+#### 受控组件
+
+- `HTML`中的表单元素是可输入的，也就是有自己的可变状态，而`React`中可变状态通常保存在`state`中，并且只能通过`setState`方法来修改。
+- `React`将`state`与表单元素值`value`绑定到一起，由`state`的值来控制表单元素的值。
+- 受控组件：其值受到`React`控制的表单元素。
+- 推荐使用
+
+##### 使用步骤
+
+- 在`state`中添加一个状态，作为表单元素的`value`值（控制表单元素值的来源）
+- 给表单元素绑定`onChange`事件，将表单元素的值设置为`state`的值（控制表单元素值的变化）
+
+```javascript
+class Input extends React.Component {
+  state = {
+    text: ''
+  }
+  render() {
+    return (
+      <input type="text" value={ this.state.text } onChange={ e => this.setState({ text: e.target.value }) } />
+    )
+  }
+}
+```
+
+##### 优化
+
+> 每个表单元素都有一个单独的事件处理程序太过繁琐。
+
+- 优化：使用一个事件处理程序同时处理多个表单元素。
+  - 给表单元素添加`name`属性，名称与`state`相同
+  - 根据表单元素类型获取对应的值
+  - 在事件处理程序中通过`[name]`来修改对应的`state`
+
+```javascript
+class Input extends React.Component {
+  state = {
+    text: ''
+  }
+  handleInput = e => {
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value
+    this.setState({
+      e.target.name: value
+    })
+  }
+  render() {
+    return (
+      <input type="text" name="text" value={ this.state.text } onChange={ this.handleInput } />
+    )
+  }
+}
+```
+
+#### 非受控组件
+
+- 借助于`ref`，使用原生`DOM`方式来获取表单元素值
+- `ref`作用：获取`DOM`或者组件
+
+##### 使用步骤-ref
+
+- 调用`React.createRef()`方法创建一个`ref`对象。
+- 将创建好的`ref`对象添加到文本框中。
+- 通过`ref`对象获取文本框的值。
+
+```javascript
+export default class App extends React.Component {
+  constructor() {
+    super()
+    // 创建 Ref
+    this.txtRef = React.createRef()
+  }
+  getValue = () => {
+    console.log(this.txtRef.current.value)
+  }
+  render() {
+    return (
+      <div>
+        <input type="text" ref={ this.txtRef } />
+        <button onClick={ this.getValue }>获取input值</button>
+      </div>
+    )
+  }
+}
+```
+
+## 组件进阶
+
+### 组件通讯
+
+> 组件是独立且封闭的单元，默认情况下只能使用组件自己的数据。在组件化过程中，将一个完整的功能拆分成多个组件以更好的完成整个应用功能。
+> 在这个过程中，多个组件之间不可避免的要共享某些数据，为了实现这些功能，就需要打破组件的独立封闭性，让其与外界沟通，这个过程就叫做组件通讯。
+> 组件是封闭的，要接收外部的数据应该通过`props`来实现。
+> `props`的作用：接收传递给组件的数据。
+
+- 传递数据：给组件标签添加属性
+- 接收数据：类组件通过`this.props`接收数据；函数组件通过参数`props`接收数据。
+
+```javascript
+<Hello name="Jack" age={ 19 } />
+
+// 函数组件接收数据
+function Hello(props) {
+  console.log(props.name, props.age)
+}
+
+// 类组件接收数据
+class Hello extends React.Component {
+  render() {
+    console.log(this.props.name, this.props.age)
+  }
+}
+```
+
+#### props特点
+
+- 可以给组件传递任意类型的数据。
+- `props`是**只读**的对象，只能读取属性的值，无法修改对象。
+- 注意：使用类组件时，如果写了构造函数`constructor`，应该将`props`传递给`super()`，否则无法在构造函数中获取到`props`
+
+#### 父组件 => 子组件
+
+- 父组件提供要传递的`state`数据
+- 给子组件标签添加属性，值为`state`中的数据。
+- 子组件通过`props`接收父组件中传递的数据。
+
+```javascript
+class Parent extends React.Component {
+  state = {
+    lastName: '王'
+  }
+  render() {
+    return (
+      <div className="parent">
+        父组件
+        <Child name={ this.state.lastName } />
+      </div>
+    )
+  }
+}
+
+const Child = (props) => {
+  return (
+    <div>
+      <p>子组件，接收到父组件的数据：{ props.name }</p>
+    </div>
+  )
+}
+```
+
+#### 子组件 => 父组件
+
+> 思路：利用回调函数，父组件提供回调，子组件调用，将要传递的数据作为回调函数的参数。
+>
+> - 父组件提供一个回调函数，用于接收数据。
+> - 将该函数作为属性的值，传递给子组件。
+> - 子组件调用`props`传递的回调函数，并将要传递的数据作为参数。
+
+```javascript
+class Parent extends React.Component {
+  getMsg = msg => {
+    console.log('接收到子组件的数据：', msg)
+  }
+  render() {
+    return (
+      <div>
+       父组件
+       <Child getMsg={ this.getMsg } />
+      </div>
+    )
+  }
+}
+
+class Child extends React.Component {
+  state = {
+    msg: '刷抖音'
+  }
+  handleClick = () => {
+    // 子组件调用父组件传递过来的回调函数
+    this.props.getMsg(this.state.msg)
+  }
+  render() {
+    return (
+      <div>
+        子组件：<button onClick={ this.handleClick }>点击给父组件传递数据</button>
+      </div>
+    )
+  }
+}
+```
+
+#### 兄弟组件
+
+> 将共享状态提升到最近的公共父组件中，由公共父组件管理这个状态：状态提升。
+> 公共父组件职责：
+>
+> - 提供共享状态。
+> - 提供操作共享状态的方法。
+> 要通讯的子组件只需要通过`props`接收状态或操作状态的方法。
+
+```javascript
+class Parent extends React.Component {
+  // 提供共享状态
+  state = {
+    count: 0
+  }
+  // 提供修改状态的方法
+  addCount = () => {
+    this.setState({
+      count: this.state.count + 1
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <ChildA count={ this.state.count } />
+        <ChildB add={ this.addCount } />
+      </div>
+    )
+  }
+}
+
+const ChildA = props => {
+  return <h1>计数器：{ props.count }</h1>
+}
+
+const ChildB = props => {
+  return <button onClick={ () => props.add() }>+1</button>
+}
+
 ```
