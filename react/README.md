@@ -1118,6 +1118,9 @@ class App extends React.Component {
 
 ## React原理
 
+- 工作角度：应用第一，原理第二。
+- 原理有助于更好的理解`React`的自身运行机制。
+
 ### setState 说明
 
 #### setState 更新数据
@@ -1262,4 +1265,130 @@ class App extends React.Component {
     return null
   }
 }
+```
+
+#### 纯组件
+
+> 纯组件：`PureComponent`与`React.Component`功能相似。
+> 区别：`PureComponent`内部自动实现了`shouldComponentUpdate`钩子函数，无需手动比较。
+> 原理：纯组件内部通过分别对比前后两次`props`和`state`的值，来判断是否重新渲染组件。
+> 
+>
+> - 对于值类型来说：比较两个值是否相同，直接赋值即可
+> - 对于引用类型来说：只对比对象的引用地址是否相同，修改时需直接修改对象，不要修改对象中单个属性，否则不会重新渲染。
+> - 注意：`state`或`props`中属性值为引用类型时，应该创建新数据，不要直接修改原数据，否则不会重新渲染。
+
+```javascript
+class App extends React.PureComponent {
+  state = {
+    number: 0
+  }
+  handleClick = () => {
+    this.setState(() => {
+      return {
+        number: Math.floor(Math.random() * 3)
+      }
+    })
+  }
+  render() {
+    console.log('执行了render')
+    return (
+      <div>
+        <h1>随机数：{ this.state.number }</h1>
+        <button onClick={ this.handleClick }>生成随机数</button>
+      </div>
+    )
+  }
+}
+```
+
+- 说明：纯组件内部的对比是`shallow compare`浅层对比。
+- 对于值类型来说：比较两个值是否相同，直接赋值即可。
+- 对于引用类型来说：只对比对象的引用地址是否相同。
+- 注意：`state`或`props`中属性值为引用类型时，应该创建新数据，不要直接修改原数据，否则不会重新渲染。
+- 正确做法是创建新数据，不要用`push/unshift`等直接修改当前数组的方法，应该用`concat/slice`等返回新数组的方法。
+
+```javascript
+handleClick = () => {
+  // 正确做法：创建新对象
+  const newObj = {...this.state.obj, number: 4}
+  const newArr = [...this.state.arr, {num: 1}]
+  this.setState(() => {
+    return {
+      obj: newObj,
+      arr: newArr
+    }
+  })
+}
+```
+
+### 虚拟DOM和Diff算法
+
+- `React`更新视图的思想是：只要`state`变化就重新渲染视图。
+- 特点：思路非常清晰。
+- 问题：组件中只有一个`DOM`元素需要更新时，也得把整个组件的内容重新渲染到页面中吗？不是
+- 理想状态：部分更新，只更新变化的地方。
+- `React`是通过虚拟`DOM`配合`Diff`算法来实现部分更新的。
+
+#### 虚拟DOM
+
+> 虚拟`DOM`：本质上就是一个`JS`对象，用来描述你希望在屏幕上看到的内容`UI`。
+> `state + JSX => 虚拟 DOM`
+> 虚拟`DOM`的真正价值从来都不是性能，而是让`React`脱离了浏览器的束缚。
+
+```javascript
+// 虚拟 DOM 对象
+const element = {
+  type: 'h1',
+  props: {
+    className: 'demo',
+    children: 'Hello World'
+  }
+}
+// 生成 HTML 结构
+<h1 class="demo">
+  Hello World
+</h1>
+```
+
+#### Diff算法
+
+- 初次渲染时，`React`会根据初始`state(Model)`，创建一个虚拟`DOM`对象（树）。
+- 根据虚拟`DOM`生成真正的`DOM`渲染到页面中。
+- 当数据发生变化后（`setState()`），`React`会重新根据新的数据创建新的虚拟`DOM`对象（树）。
+- `React`内部会将新的虚拟`DOM`对象与旧虚拟`DOM`对象使用`Diff`算法对比（找不同），得到需要更新的内容。
+
+#### 代码示例
+
+- 组件`render()`调用后，根据状态和`JSX`结构生成虚拟`DOM`对象。
+- `render()`方法调用并不意味着浏览器中的重新渲染。
+- `render()`方法调用仅仅说明要进行`Diff`算法对比新旧两个虚拟`DOM`对象。
+
+```javascript
+render() {
+  const el = (
+    <div>
+      <h1>生成随机数</h1>
+      <p>{ this.state.number }</p>
+      <button onClick={ this.handleClick }>重新生成</button>
+    </div>
+  )
+  console.log(el)
+  return el
+}
+
+// 虚拟 DOM 对象
+{
+  type: 'div',
+  props: {
+    children: [
+      { type: 'h1', props: { children: '随机数' } },
+      { type: 'p', props: { children: 0 } }
+    ]
+  }
+}
+
+// this.state.number 变化后只更新变化的内容
+{ type: 'p', props: { children: 1 } }
+
 ```

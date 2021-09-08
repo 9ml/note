@@ -15,6 +15,8 @@ import withMouse from './higher-order-component'
 import DemoA from './setState/demo';
 import ShouldComponentUpdate from './components/shouldComponentUpdate'
 
+import Random from './components/random';
+
 import reportWebVitals from './reportWebVitals';
 
 const Position = props => (
@@ -42,6 +44,7 @@ ReactDOM.render(
     <MousePosition></MousePosition>
     <DemoA></DemoA>
     <ShouldComponentUpdate></ShouldComponentUpdate>
+    <Random></Random>
   </React.StrictMode>,
   document.getElementById('root')
 );
