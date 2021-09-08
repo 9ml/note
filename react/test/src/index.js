@@ -9,8 +9,19 @@ import Demo from './form/Demo';
 
 import HelloA from './child/function-props'
 import HelloB from './child/class-props'
+import Mouse from './render-props'
+import withMouse from './higher-order-component'
+
+import DemoA from './setState/demo';
+import ShouldComponentUpdate from './components/shouldComponentUpdate'
 
 import reportWebVitals from './reportWebVitals';
+
+const Position = props => (
+  <p> 鼠标当前的位置：{ props.x }, { props.y } </p>
+)
+
+const MousePosition =  withMouse(Position)
 
 ReactDOM.render(
   <React.StrictMode>
@@ -21,6 +32,16 @@ ReactDOM.render(
     <Demo />
     <HelloA name="Jack" age={ 19 } />
     <HelloB name="Jack" age={ 19 } color={ ['red', 'blue', 'green'] } fn={ () => console.log('组件通讯') } tag={<p>组件通讯</p>} />
+    <Mouse children={ mouse => (<p>鼠标位置：{mouse.x}，{mouse.y}</p>) } />
+    {/* <Mouse children={ mouse => (
+      <div style={{ width: '50px', height: '50px', backgroundColor: '#000', position: 'absolute', top: mouse.y - 25, left: mouse.x - 25 }}></div>
+    ) } /> */}
+    <Mouse>
+      { mouse => (<div style={{ width: '50px', height: '50px', backgroundColor: '#000', position: 'absolute', top: mouse.y - 25, left: mouse.x - 25 }}></div>)  }
+    </Mouse>
+    <MousePosition></MousePosition>
+    <DemoA></DemoA>
+    <ShouldComponentUpdate></ShouldComponentUpdate>
   </React.StrictMode>,
   document.getElementById('root')
 );

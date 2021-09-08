@@ -836,7 +836,7 @@ function Hello(props) {
 - 安装包`prop-types`
 
 ```shell
-npm i props-types
+npm i prop-types
 yarn add prop-types
 ```
 
@@ -925,4 +925,341 @@ App.defaultProps = {
 
 React.render(<App />, root)
 
+```
+
+### 组件的生命周期
+
+> 组件的生命周期有助于理解组件的运行方式，完成更复杂的组件功能、分析组件错误原因等。
+> 组件从被创建到挂载到页面中运行，再到组件不用时卸载的过程叫做组件的生命周期。
+> 生命周期的每个阶段总是伴随着一些方法调用，这些方法就是生命周期的钩子函数。
+> 钩子函数的作用：为开发人员在不同阶段操作组件提供了时机。
+> 只有类组件才有生命周期，共分为三个阶段。
+
+- 每个阶段的执行时机。
+- 每个阶段钩子函数的执行顺序。
+- 每个阶段钩子函数的作用。
+
+#### 创建时
+
+> 创建时（挂载阶段）
+
+- 执行时机：组件创建时（页面加载时）
+- 执行顺序：`constructor()` => `render()` => `componentDidMount`
+  - `constructor`：创建组件时最先执行，可以用来初始化`state`、为事件处理程序绑定`this`执行。
+  - `render`：每次组件渲染都会触发，可以用来渲染`UI`（注意：不能调用`setState()`）
+  - `componentDidMount`：组件挂载（完成`DOM`渲染）后触发，可以用来发送网络请求、操作`DOM`。
+
+#### 更新时
+
+> 更新时（更新阶段）
+
+- 执行时机：组件更新时
+- 执行顺序：`render()` => `componentDidUpdate`
+  - `render()`：组件更新时渲染`UI`，与挂载阶段是同一个`render`。
+  - `componentDidUpdate()`：更新渲染完成后触发，可以用来发送网络请求、操作`DOM`，如果需要`setState()`必须放在一个`if`条件中。
+- 触发时机：`setState()`、`forceUpdate()`、组件接收到新的`props`，组件就会重新渲染。
+
+#### 卸载时
+
+> 卸载时（卸载阶段）
+
+- 执行时机：组件从页面中消失时触发。
+- 执行顺序：`componentWillUnmount`
+  - `componentWillUnmount`：组件卸载，从页面中消失；可以执行清理工作，如定时器等。
+
+#### 不常用钩子函数
+
+## render props & 组件高级
+
+> 如果两个组件中部分功能相似或相同，该如何处理？
+> 处理方式：复用相似的功能，如函数封装
+> 复用`state`和操作`state`的方法，组件状态逻辑
+> 两种方式：
+>
+> - `render props`模式
+> - 高阶组件`HOC`
+> 这两种方式不是新的`API`，而是利用`React`自身特点的编码技巧演化而成的固定模式。
+
+- 思路：将要复用的`state`和操作`state`的方法封装到一个组件中。
+- 使用组件时添加一个值为函数的`props`，通过函数的参数来获取到复用的`state`，需在组件内部实现。
+- 使用该函数的返回值作为要渲染的`UI`内容，需在组件内部实现。
+
+```javascript
+<Mouse render={ mouse => (
+  <p>鼠标当前的位置 { mouse.x }, { mouse.y } </p>
+) } />
+```
+
+### render props 使用步骤
+
+- 创建`Child`组件，在组件中提供复用的状态逻辑代码（1. 状态；2. 操作状态的方法）。
+- 将要复用的状态作为`props.render(state)`方法的参数，暴露到组件外部。
+- 使用`props.render()`的返回值作为要渲染的内容。
+- 注意：并不是该模式叫`render props`就必须使用名为`render`的`prop`，可以使用任意名称的`prop`
+  - 只是把`prop`是一个函数并且告诉组件要渲染什么内容的技术叫做：`render props`。
+  - 推荐使用`children`代替`render`属性。
+
+```javascript
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <Mouse children={ mouse => (<p>鼠标的位置：{mouse.x}, {mouse.y}</p>) } />
+        { /* 根据子节点 children 属性可替换为： */ }
+        <Mouse>
+          { (x, y) => (<p>鼠标的位置：{x}, {y}</p>) }
+        </Mouse>
+      </div>
+    )
+  }
+}
+
+class Mouse extends React.Component {
+  state = {
+    x: 0,
+    y: 0
+  }
+  handleMove = e => {
+    this.setState({
+      x: e.clientX,
+      y: e.clientY
+    })
+  }
+  // 监听鼠标移动事件
+  componentDidMount() {
+    window.addEventListener('mousemove', this.handleMouseMove)
+  }
+  // 组件卸载时移除事件绑定
+  componentWillUnmount() {
+    window.removeEventListener('mousemove', this.handleMouseMove)
+  }
+  render() {
+    return this.props.children(this.state)
+  }
+}
+// 添加 props 校验
+Mouse.propTypes = {
+  children: PropTypes.func.isRequired
+}
+```
+
+### 高阶组件
+
+> 高阶组件：`HOC: Higher-OrderComponent`，是一个函数，接收要包装的组件，返回增强后的组件。
+> 高阶组件内部会创建一个类组件，在这个类组件中提供复用的状态逻辑代码，通过`prop`将复用的状态传递给被包装组件`WrappedComponent`
+> 目的：实现状态逻辑复用。
+> 采用包装（装饰）模式，相当于手机壳，通过包装组件来增强组件功能。
+
+#### 高阶组件使用步骤
+
+- 创建一个函数，名称约定以`with`开头。
+- 指定函数参数，参数应该以大写字母开头，作为要渲染的组件。
+- 在函数内部创建一个类组件，提供复用的状态逻辑代码并返回。
+- 在该组件中渲染参数组件，同时将状态通过`prop`传递给参数组件。
+- 调用该高阶组件，传入要增强的组件，通过返回值拿到增强后的组件并渲染到页面中。
+- 示例：
+
+```javascript
+function withMouse(WrappedComponent) {
+  class Mouse extends React.Component {
+    state = {
+      x: 0,
+      y: 0
+    }
+    handleMouseMove = e => {
+      this.setState({
+        x: e.clientX,
+        y: e.clientY
+      })
+    }
+    componentDidMount() {
+      window.addEventListener('mousemove', this.handleMouseMove)
+    }
+    componentWillUnmount() {
+      window.removeEventListener('mousemove', this.handleMouseMove)
+    }
+    render() {
+      return <WrappedComponent {...this.state} {...this.props}></WrappedComponent>
+    }
+  }
+
+  Mouse.displayName = `WithMouse${getDisplayName(WrappedComponent)}`
+  return Mouse
+}
+
+function getDisplayName() {
+  return WrappedComponent.displayName || WrappedComponent.name || 'Component'
+}
+
+const Position = props => {
+  return ( <p>鼠标当前位置：{ props.x }, { props.y }</p> )
+}
+
+const MovePosition = withMouse(Position)
+
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <MovePosition />
+      </div>
+    )
+  }
+}
+
+```
+
+#### displayName
+
+- 使用高阶组件存在的问题：得到的两个组件名称相同。
+- 原因：默认情况下，`React`使用组件名称作为`displayName`
+- 解决方法：为高阶组件设置`displayName`便于调试时区分不同的组件。
+- 作用：用于设置调试信息。
+
+## React原理
+
+### setState 说明
+
+#### setState 更新数据
+
+> `setState()`是异步更新数据的。
+> 注意：使用该语法时，后面的`setState()`不要依赖于前面的`setState()`。
+> 可以调用多个`setState()`，只会触发一次`render()`渲染方法，提升性能。
+
+```javascript
+export default class DemoA extends React.Component {
+  state = {
+    count: 1
+  }
+  handleClick = () => {
+    // this.setState({
+    //   count: this.state.count + 1
+    // })
+    // console.log('count:', this.state.count) // 1：异步更新数据
+    // this.setState({
+    //   count: this.state.count + 1
+    // })
+    // console.log('count:', this.state.count) // 1：异步更新数据
+
+    // 推荐语法
+    this.setState((state, props) => {
+      return {
+        count: state.count + 1
+      }
+    })
+    console.log(this.state.count) // 1：异步更新数据
+    this.setState((state, props) => {
+      console.log('第二次调用sate：', state)  // { count: 2 }
+      return {
+        count: state.count + 1
+      }
+    })
+    console.log(this.state.count) // 2：异步更新数据
+  }
+
+  render() {
+    console.warn('触发了render')
+    return (
+      <div>
+        <h1>计数器：{ this.state.count }</h1>
+        <button onClick={ this.handleClick }>+1</button>
+      </div>
+    )
+  }
+}
+```
+
+#### setState 推荐语法
+
+> 多次调用时推荐使用`setState((state, props) => {})`语法，此语法也是异步更新`state`的。
+>
+> 参数`state`：表示最新的`state`数据。
+> 参数`props`：表示最新的`props`数据。
+
+```javascript
+this.setState((state, props) => {
+  return {
+    count: state.count + 1
+  }
+})
+```
+
+#### setState 第二个参数
+
+> 场景：在状态更新后（页面完成重新渲染后）理解执行某个操作。
+> 语法：`setState(updater, [,]])`
+> 相似于`componentDidUpdate`
+
+```javascript
+this.setState(
+  (state, props) => {},
+  () => { console.log('立即执行的函数') }
+)
+```
+
+### JSX的转化过程
+
+> `JSX` => `createElement()` => `React元素`
+> `JSX`仅仅是`createElement()`方法的**语法糖**，简化语法。
+> `JSX`会被`@babel/preset-react`插件编译为`createElement()`方法。
+> `React`元素是一个对象，用来描述你希望在屏幕上看到的内容。
+
+```javascript
+const element_JSX = <h1 className="demo">Hello World</h1>
+console.log(element_JSX) // 打印结果相同
+
+const element_create = React.createElement('h1',
+  {
+    className: 'demo'
+  },
+  'Hello World'
+)
+console.log(element_create) // 打印结果相同
+```
+
+### 组件更新机制
+
+- `setState()`的两个作用：
+  - 修改`state`数据
+  - 更新组件渲染`UI`视图
+- 组件更新过程
+
+> 父组件重新渲染时，也会重新渲染子组件。但是只会渲染当前组件子树（当前组件及其所有子组件）。
+
+### 组件性能优化
+
+#### 减轻 state
+
+> `state`只存储跟组件渲染相关的数据。
+> 注意：不用做渲染的数据不要放在`state`中。
+> 需要在多个方法中用到的数据应该放在`this`中。
+
+#### 避免不必要的重新渲染
+
+- 组件更新机制：父组件更新会引起子组件也被更新。
+- 如果子组件没有任何变化也会被重新渲染，需要避免不必要的重新渲染。
+- 解决方式：使用钩子函数`shouldComponentUpdate(nextProps, nextState)`
+- 作用：通过返回值决定该组件是否重新渲染，返回`true`表示重新渲染，`false`表示不重新渲染。
+- 触发时机：更新阶段的钩子函数，组件重新渲染前执行（`shouldComponentUpdate => render`）。
+- 参数`nextProps`：表示最新的`props`。
+- 参数`nextState`：表示最新的`state`。
+
+```javascript
+class App extends React.Component {
+  // 钩子函数
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('最新的props:', nextProps)
+    console.log('最新的state:', nextState) // 最新的状态
+    console.log('最新的state:', this.state.count) // 更新前的状态
+    // 根据条件判断
+    if (nextState.count === this.state.count) {
+      // 返回 false 阻止组件重新渲染，render 不会执行
+      return false
+    }
+    return true
+  }
+  render() {
+    return null
+  }
+}
 ```
