@@ -687,3 +687,10 @@ console.log(person.name)
 ### 类的装饰器
 
 - 对类的装饰工具，装饰器本身是一个函数。
+
+## React
+
+- `React`中使用`TypeScript`
+
+> 若已安装旧版`React`推荐命令行运行`npm uninstall create-react-app -g`全局卸载一下。
+> 运行`npx create-react-app my-app --template typescript`创建`TypeScript`语言的模板项目。
