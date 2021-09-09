@@ -1272,7 +1272,6 @@ class App extends React.Component {
 > 纯组件：`PureComponent`与`React.Component`功能相似。
 > 区别：`PureComponent`内部自动实现了`shouldComponentUpdate`钩子函数，无需手动比较。
 > 原理：纯组件内部通过分别对比前后两次`props`和`state`的值，来判断是否重新渲染组件。
-> 
 >
 > - 对于值类型来说：比较两个值是否相同，直接赋值即可
 > - 对于引用类型来说：只对比对象的引用地址是否相同，修改时需直接修改对象，不要修改对象中单个属性，否则不会重新渲染。
@@ -1392,3 +1391,125 @@ render() {
 { type: 'p', props: { children: 1 } }
 
 ```
+
+## 路由
+
+> 现代的前端应用大多都是`SPA`（单页面应用程序），也就是只有一个`HTML`页面的程序。因为它的用户体验更好、对服务器的压力更小，所以更受欢迎。为了有效的使用单个页面来管理多页面的功能，前端路由应运而生。
+> `React`路由的一切都是组件，可以像思考组件一样思考路由。
+
+- 前端路由的功能：让用户从一个视图（页面）导航到另一个视图（页面）。
+- 前端路由是一套映射规则，在`React`中，是`URL`路径与组件的对应关系，就是在配置路径和组件（配对）。
+
+### 路由基本使用
+
+- 安装路由
+
+```shell
+npm i react-router-dom
+yarn add react-router-dom
+```
+
+- 导入路由的三个核心组件：`Router/Route/Link`
+
+```javascript
+// as 别名
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+```
+
+- 使用`Router`组件包裹整个应用。
+
+```javascript
+<Router>
+  <div className="App">
+
+  </div>
+</Router>
+```
+
+- 使用`Link`组件作为导航菜单（路由入口）
+
+```javascript
+<Link to="/first">
+  页面一
+</Link>
+```
+
+- 使用`Route`组件配置路由规则`path`和要展示的组件`component`（路由出口）
+
+```javascript
+const First = () => <p>页面一的内容</p>
+<Router>
+  <div>
+    <Link to="/first">页面一</Link>
+    <Route path="/first" component={ First }>
+  </div>
+</Router>
+```
+
+#### 常用组件说明
+
+- `Router`组件：包裹整个应用，一个`React`应用只需要使用一次。
+- 两种常用`Router`：`HashRouter`和`BrowserRouter`（推荐）：
+  - `HashRouter`：使用`URL`的哈希值实现（`localhost:3000/#/first`）
+  - `BrowserRouter`：使用`H5`的`history API`实现（`localhost:3000/first`）
+- `Link`组件：用于指定导航链接（`a`标签）
+  - `to`属性：浏览器中的`pathname`(`location.pathname`)
+- `Route`组件：指定路由展示组件相关信息。
+  - `path`属性：路由规则
+  - `component`属性：展示的组件
+
+### 路由执行过程
+
+- 点击`link`组件（`a`标签），修改了浏览器地址栏中的`url`。
+- `React`路由监听到地址栏`url`的变化。
+- `React`路由内部遍历所有的`Route`组件，使用路由规则（`path`）与`pathname`进行匹配。
+- 当路由规则（`path`）能够匹配地址栏中的`pathname`时，就展示该`Route`组件的内容（`component`）。
+
+### 编程式导航
+
+> 通过`JavaScript`代码来实现页面跳转。
+> `history`：`React`路由提供的，用于获取浏览器历史记录的相关信息。
+> `push(path)`：跳转到某个页面，参数`path`表示要跳转的路径。
+> `go(n)`：前进或后退到某个页面，参数`n`表示前进或后退的页面数据（比如：`-1`表示后退到上一个页面）。
+
+```javascript
+class Login extends React.Component {
+  handleLogin = () => {
+    this.props.history.push('/login')
+  }
+  handleBack = () => {
+    this.props.go(-1)
+  }
+}
+```
+
+### 默认路由
+
+> 默认路由：进入页面时就会匹配的路由，`path`为：`/`。
+
+```javascript
+<Route path="/" component={ Index } >
+```
+
+### 路由匹配模式
+
+#### 模糊匹配模式
+
+> 路由跳转时，默认路由`/`也会被匹配成功。
+> 默认情况下，`React`路由是**模糊匹配模式**。
+> 模糊匹配规则：只有`pathname`以`path`开头就会匹配成功。
+> `/`：所有的`pathname`都能够匹配。
+> `/first`：`/first`、`/first/a`、`/first/a/b...`能够匹配。
+
+#### 精确匹配
+
+> 精确匹配：只有当`path`和`pathname`完全匹配时才会展示该路由。
+> 给`Route`组件添加`exact`属性，让其变为精确匹配模式，推荐使用精确匹配模式。
+
+```javascript
+<Router exact path="/" component={ Index } />
+```
+
+### 嵌套路由
+
+> 嵌套路由：路由内部包含路由，嵌套路由的`path`格式要以父路由的`path`开头。

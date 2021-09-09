@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import './index.css';
 import App from './App';
 import Add from './Add';
@@ -25,6 +26,8 @@ const Position = props => (
 
 const MousePosition =  withMouse(Position)
 
+const First = () => (<p>页面一的内容</p>)
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
@@ -45,6 +48,13 @@ ReactDOM.render(
     <DemoA></DemoA>
     <ShouldComponentUpdate></ShouldComponentUpdate>
     <Random></Random>
+
+    <Router>
+      <Link to="/first">
+        页面一
+      </Link>
+      <Route path="/first" component={ First }></Route>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
