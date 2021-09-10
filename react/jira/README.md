@@ -109,3 +109,28 @@ yarn add json-server -D
 ```
 
 - 在`package.json`添加`scripts`脚本：`"server": "json-server __json_server_mock__/db.json --watch"`
+
+- 根目录新建`.env`文件并配置生产环境请求服务器地址
+
+```text
+REACT_APP_API_URL = http://online.com
+```
+
+- 根目录新建`.env.development`文件并配置开发环境请求服务器地址
+
+```text
+REACT_APP_API_URL = http://localhost:3001
+```
+
+- 使用：
+
+> `package`会自动判断当前运行环境，当`npm start`时，会从`.env.development`中获取开发环境`Ulr`，而当`npm build`打包时会从`.evn`生产环境中读取`Url`。
+
+```javascript
+const Url = process.env.REACT_APP_API_URL
+```
+
+#### 强类型
+
+> 使用`JS`过程中，大部分错误都是`runtime`（运行时）的时候发现的。
+> 而希望在静态代码中就能找到其中的一些错误时，就需要使用强类型语言 => `TypeScript`。

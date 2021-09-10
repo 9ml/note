@@ -694,3 +694,7 @@ console.log(person.name)
 
 > 若已安装旧版`React`推荐命令行运行`npm uninstall create-react-app -g`全局卸载一下。
 > 运行`npx create-react-app my-app --template typescript`创建`TypeScript`语言的模板项目。
+
+```shell
+npx create-react-app react-project --template typescript --use-npm
+```
