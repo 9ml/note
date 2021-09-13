@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 每个构造函数都有一个 prototype 原型属性，默认为空对象 Object 的实例对象
+    function Person(params) {}
+    // prototype 空对象上添加属性
+    Person.prototype.say = function () {
+      console.log('Hello')
+    }
+    // 创建实例对象
+    var tom = new Person()
+    // tom.__proto__ 指向与 Person 的 prototype 相同，所以可以访问 Person.prototype 中的属性和方法
+    tom.say()
+    console.log(tom.__proto__ === Person.prototype) // true
+
+    // Object 为实例对象，自然有 __proto__ 属性，指向的是构造函数 Object 的 prototype
+    console.log(Person.prototype.__proto__ === Object.prototype) // true
+    
+    // function Person 等于 new Function()，那么 Funtion 就是一个构造函数，Function.prototype 指向自己的 __proto__
+    console.log(Function.prototype === Function.__proto__) // true
+
+    // Object 是 var Object = new Function()，所有
+    console.log(Function.prototype.__proto__ === Object.prototype) // true
+
+    // 那么构造函数 Object.prototype.__proto__ 指向是什么？
+    console.log(Object.prototype.__proto__) // null
+  </script>
+</body>
+</html>
