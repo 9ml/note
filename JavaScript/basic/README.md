@@ -684,3 +684,140 @@ console.log(Function.prototype.__proto__ === Object.prototype) // true
 ```javascript
 console.log(Function.prototype === Function.__proto__) // true
 ```
+
+#### 原型链属性问题
+
+- 读取对象的属性时：会自动到原型链中查找
+- 设置对象的属性时：不会查找原型链，如果当前对象没有此属性，直接添加此属性并设置值
+- 方法一般定义在原型中，属性一般通过构造函数定义在对象本身上
+
+```javascript
+function Fn() {
+
+}
+Fn.prototype.str = 'Tom'
+var fn1 = new Fn()
+console.log(fn1.str) // Tom
+
+var fn2 = new Fn()
+fn2.str = 'Jack'
+console.log(fn1.str, fn2.str) // Tom Jack
+```
+
+### instanceof
+
+> `obj instanceof Object`判断`obj`对象是否为`Object`的实例对象
+
+- `instanceof`是如何去判断的?
+  - 表达式：`A instanceof B`
+  - 如果构造函数`B`的显式原型对象`prototype`在实例对象`A`的原型链上，返回`true`，否则返回`false`
+- `Function`是通过`new`自己产生的实例
+
+```javascript
+// 案例一
+function Fn() {
+
+}
+var fn = new Fn()
+
+console.log(fn instanceof Fn) // fn.__proto__ === Function.prototype => true
+console.log(fn instanceof Object) // fn.__proto__ === Function.prototype => true
+
+// 案例二
+console.log(Object instanceof Function) // Object.__proto__ === Function.prototype => true
+console.log(Object instanceof Object) // Object.__proto__ === Object.prototype => true
+console.log(Function instanceof Function) // Function.__proto__ === Function.prototype => true
+console.log(Function instanceof Object) // Function.__proto__ === Object.prototype => true
+
+function Fn() {  }
+console.log(Object instanceof Fn)  // Object.__proto__ === Fn.prototype => false
+```
+
+### 测试题
+
+```javascript
+// 1. 
+function Fn() {}
+Fn.prototype.n = 1
+
+var b = new Fn()
+
+A.prototype = {
+  n: 2,
+  m: 3
+}
+
+var c = new Fn()
+
+console.log(b.n, b.m, c.n, c.m) // 1, undefined, 2, 3
+
+// 2.
+var F = function() {}
+
+Object.prototype.a = function() {
+  console.log('a()')
+}
+
+Function.prototype.b = function() {
+  console.log('b()')
+}
+
+var f = new F()
+
+f.a() // a()
+f.b() // 报错：未定义
+F.b() // a()
+F.b() // b()
+
+```
+
+## 变量提升与函数提升
+
+- 变量声明提升
+  - 通过`var`声明的变量，在定义语句之前就可以访问到，值为`undefined`
+- 函数声明提升
+  - 通过`function`声明的函数，在之前就可以直接调用，值为函数定义（对象）
+- 变量提升和函数提升是如何产生的？
+
+```javascript
+fn() // 函数提升 可以调用
+var a = 3
+function fn() {
+  // var a 变量提升
+  console.log(a) // 声明了但未赋值就是 undefined
+  var a = 4 // a = 4
+}
+
+func() // 此时是变量提升而非函数提升，不能调用此函数
+
+var func = function() {
+  console.log('Func')
+}
+```
+
+## 执行上下文
+
+### 代码分类
+
+- 全局代码
+- 函数代码
+
+### 全局执行上下文
+
+- 在执行全局代码前将`window`确定为全局执行上下文
+- 对全局数据进行预处理
+  - `var`定义的全局变量`=> undefined`，添加为`window`的属性
+  - `function`声明的全局函数`=> 赋值(fun)`，添加为`window`的方法
+  - `this => 赋值(window)`
+- 开始执行全局代码
+
+### 函数执行上下文
+
+- 在调用函数，准备执行函数体之前，创建对应的函数执行上下文对象
+- 对局部数据进行预处理
+  - 形参变量 => 赋值给实参 => 添加为执行上下文的属性
+  - `argument` => 赋值给实参列表 => 添加为执行上下文的属性
+  - `var`定义的局部变量 => `undefined` => 添加为执行上下文的属性
+  - `function`声明的函数 => 赋值给`fun` => 添加为执行上下文的属性
+  - `this` => 赋值给调用函数的对象
+- 开始执行函数体代码
