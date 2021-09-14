@@ -640,7 +640,7 @@ console.log(Function.prototype === Function.__proto__) // Function = new Functio
 
 var Object = new Function()
 
-console.log(Object.__proto__ === Function.prototype)
+console.log(Object.__proto__ === Function.prototype) // true
 
 console.log(Object.prototype.__proto__) // null
 
