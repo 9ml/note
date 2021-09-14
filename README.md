@@ -1,10 +1,8 @@
 # Note
 
-- 学习笔记。
+> 我的学习笔记。
 
-> - `Sass`
-> - `Node`
-> - `JavaScript`
-> - `TypeScript`
-> - `ES6`
-> - `Other`
+## WEB
+
+- 00-前端工具
+  - 01-VSCode的使用
