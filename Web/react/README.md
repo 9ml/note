@@ -185,7 +185,7 @@ const users = [
   {id: 1, name: '张三1'},
   {id: 2, name: '张三2'},
   {id: 3, name: '张三3'},
-  {id: 4, name: '张三4'},
+  {id: 4, name: '张三4'}
 ]
 
 const list = (
