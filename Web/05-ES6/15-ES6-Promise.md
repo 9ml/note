@@ -6,3 +6,21 @@
 - `Promise`构造函数：`Promise(excutor){}`
 - `Promise.prototype.then()`方法
 - `Promise.prototype.catch()`方法
+
+```javascript
+function post (url, data) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url,
+      method: 'Post',
+      data,
+      success: res => {
+        console.log(res)
+      },
+      fail: err => {
+        console.log(err)
+      }
+    })
+  })
+}
+```
