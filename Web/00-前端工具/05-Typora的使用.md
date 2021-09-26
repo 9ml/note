@@ -1,4 +1,10 @@
-/* 序号设置 */
+# MockDown
+
+> `MockDown`编辑器`Typora`的使用
+
+- 序号前缀
+
+```css
 body {
   counter-reset: h1;
 }
@@ -30,3 +36,4 @@ h4:before {
   content: counter(h1) "." counter(h2) "." counter(h3) ". ";
   /* content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) ". "; */
 }
+```
