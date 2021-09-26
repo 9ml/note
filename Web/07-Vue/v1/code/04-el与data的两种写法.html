@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>el与data的两种写法</title>
+  <!-- 引入Vue开发版 -->
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    Hello {{ name }}
+  </div>
+  <script>
+    const vm = new Vue({
+      // el 第一种写法：
+      // el: '#app',
+
+      // data 的第一种写法：对象式
+      // data: {
+      //   name: '9ml'
+      // }
+
+      // data 的第一种写法：函数式（使用组件时必须使用函数式，因为函数有作用域，可以防止全局数据污染）
+      data: function() {
+        console.log(this) // 普通函数 this 是 Vue 实例对象，箭头函数时 this 是 window，必须使用普通函数
+        return {
+          name: '9ml'
+        }
+      }
+    })
+    // el 第二种写法 挂载
+    vm.$mount('#app')
+
+    /**
+     * el 与 data 有两种写法：
+     * el：
+     *   1. new Vue 时配置 el 属性
+     *   2. 先创建 Vue 实例，随后再通过 vm.$mount('app') 指定 el 的值
+     * data：
+     *   1. 对象式
+     *   2. 函数式
+     *   注意：使用组件时必须使用函数式
+     * 原则：
+     *   由 Vue 管理的函数，一定不要写箭头函数，因为写了箭头函数 this 指向就不再是 Vue 实例了
+     * 
+    */
+  </script>
+</body>
+</html>

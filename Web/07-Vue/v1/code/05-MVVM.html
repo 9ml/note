@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MVVM</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <!-- V(View) -->
+  <div id="app">
+    <p>姓名：{{name}}</p>
+    <p>年龄：{{age}}</p>
+    <p>测试一下：{{$options}}</p>
+    <p>测试一下：{{$emit}}</p>
+    <button @click="change">长大了</button>
+  </div>
+  <script>
+    /**
+     * 发现：
+     * 1. data 中的所有属性最后都出现在了 vm 实例中
+     * 2. vm 实例中所有的属性及 Vue 原型上所有的属性，在 vue 模板中都可以直接使用
+    */
+    new Vue({ // VM(ViewModel)
+      el: '#app',
+      data: { // M(Model)
+        name: '9ml',
+        age: 18
+      },
+      methods: {
+        change() {
+          this.age ++
+        }
+      }
+    })
+  </script>
+</body>
+</html>

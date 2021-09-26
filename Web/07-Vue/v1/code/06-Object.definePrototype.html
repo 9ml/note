@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Object.definePrototype</title>
+</head>
+<body>
+  <h1>Object.definePrototype方法</h1>
+  <script>
+    let person = {
+      name: '张三',
+      sex: '男'
+    }
+    let number = 19
+    /**
+     * 传入三个参数：
+     *  1. 需要添加属性的对象
+     *  2. 需要添加的属性名
+     *  3. 属性的配置项
+    */
+    Object.defineProperty(person, 'age', {
+      // 基本配置项
+      // value: 18, // age 属性的值，默认不可枚举（遍历）
+      // enumerable: true, // 控制属性是否可以枚举（遍历），默认为 false
+      // writable: true, // 控制属性是否可以被修改，默认为 false
+      // configurable: true, // 控制属性是否可以被删除，默认为 false
+      
+      // 高级配置项
+      // 当读取 person 的 age 属性时，get(getter) 函数会触发，返回值就是 age 的值
+      get: function() {
+        console.log('触发了getter函数')
+        return number
+      },
+      // 当修改 person 的 age 属性时，set(setter) 函数会触发，且形参会收到修改的具体值
+      set: function(value) {
+        console.log('触发了setter函数，值为：' + value)
+        number = value
+      }
+    })
+
+    console.log(person)
+  </script>
+</body>
+</html>
