@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>事件修饰符</title>
+  <style>
+    *{
+      margin-top: 20px;
+    }
+    .demo_1 {
+      height: 50px;
+      background-color: skyblue;
+    }
+    .box1 {
+      padding: 5px;
+      background-color: skyblue;
+    }
+    .box2 {
+      padding: 5px;
+      background-color: pink;
+    }
+    .list {
+      width: 200px;
+      height: 200px;
+      background-color: peru;
+      overflow: auto;
+    }
+    li {
+      height: 100px;
+    }
+  </style>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <a href="https://www.baidu.com" @click.prevent="navTo">阻止默认行为</a>
+
+    <div class="demo_1" @click="showMsg">
+      <button @click.stop="showMsg">阻止事件冒泡</button>
+      <a href="https://www.baidu.com" @click.stop.prevent="navTo">阻止事件冒泡与默认行为</a>
+    </div>
+
+    <button @click.once="showMsg">事件只触发一次</button>
+
+    <!-- 使用事件捕捉模式 -->
+    <div class="box1" @click.capture="showInfo('divA')">
+      divA
+      <div class="box2" @click="showInfo('divB')">
+        divB
+      </div>
+    </div>
+
+    <!-- 只有 event.target 是当前操作的元素时才触发事件 -->
+    <div class="demo_1" @click.self="showMsg">
+      <button @click="showMsg">点击一下</button></button>
+    </div>
+
+    <!-- 事件的默认行为立即执行，无需等待事件回调执行完毕 -->
+    <!-- @scroll 是给滚动条添加的滚动事件 -->
+    <!-- @wheel 是给鼠标滚轮添加的滚动事件 -->
+    <ul @wheel.passlive="showScroll" class="list">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+    </ul>
+  </div>
+  <script>
+    /**
+     * Vue 中的事件修饰符
+     *   1. prevent：阻止默认事件
+     *   2. stop：阻止事件冒泡
+     *   3. once：事件只触发一次
+     *   4. capture：使用事件捕捉模式
+     *   5. self：只有 event.target 是当前操作的元素时才触发事件
+     *   6. passlive：事件的默认行为立即执行，无需等待事件回调执行完毕
+     * 
+    */
+    new Vue({
+      el: '#app',
+      methods: {
+        navTo(e) {
+          // e.preventDefault() 阻止默认行为
+          alert('阻止默认行为')
+        },
+        showMsg(e) {
+          // e.stopPropagation() 阻止事件冒泡
+          console.log(e.target)
+          alert('222')
+        },
+        showInfo(msg) {
+          console.log(msg)
+        },
+        showScroll(e) {
+          for (let i = 0; i < 10000; i++) {
+            console.log('#')
+          }
+          console.log('累死了')
+          // 中方法执行完成之后滚动条才会往下滚动
+        }
+      }
+    })
+  </script>
+</body>
+</html>
