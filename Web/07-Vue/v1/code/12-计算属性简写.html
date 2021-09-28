@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Computed</title>
+  <script src="../js/vue.js"></script>
+  <style>
+    .demo {
+      background-color: skyblue;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo">
+      <h2>姓名案例 - 计算属性简写</h2>
+      姓：<input type="text" v-model="firstName" /> <br />
+      名：<input type="text" v-model="lastName" /> <br />
+      全名：{{ fullName }}
+    </div>
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        firstName: '张',
+        lastName: '三'
+      },
+      computed: {
+        // 完整写法
+        // fullName: {
+        //   get() {
+        //     return `${this.cFirstName}-${this.cLastName}`
+        //   },
+        //   set(value) {
+        //     const arr = value.split('-')
+        //     this.cFirstName = arr[0]
+        //     this.cFirstName = arr[1]
+        //   }
+        // }
+        // 简写：不考虑 set 修改情况，将 fullName 整体作为 get 方法
+        fullName() {
+          return `${this.firstName}-${this.lastName}`
+        }
+      }
+    })
+  </script>
+</body>
+</html>

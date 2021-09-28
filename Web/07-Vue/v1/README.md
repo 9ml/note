@@ -90,3 +90,149 @@ Object.defineProperty(obj_2, 'x', {
 - 通过`Object.defineProperty()`把`data`对象中所有属性添加到`vm`实例上
 - 为每一个添加到`vm`上的属性都指定一个`getter`和`setter`方法
 - 在`getter`和`setter`内部去读写操作`data`中对应的属性
+- 图示：
+
+![数据代理](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/data-object-defineProperty.png)
+
+## 计算属性
+
+- `computed`
+
+### 定义
+
+> 计算属性是要用的属性不存在，需要通过已有的属性计算得来。
+
+### 原理
+
+> 底层借助了`Object.defineProperty()`方法提供的`getter`和`setter`
+
+- `getter`执行时机：
+  - 初次读取时会执行一次
+  - 当依赖的数据发生改变时调用执行
+
+```javascript
+new Vue({
+  data: {
+    firstName: '张',
+    lastName: '三'
+  },
+  computed: {
+    fullName: {
+      get() {
+        return `${this.firstName}-${this.lastName}`
+      },
+      set(value) {
+        const arr = value.split('-')
+        this.cFirstName = arr[0]
+        this.cFirstName = arr[1]
+      }
+    }
+  }
+})
+```
+
+### 优势
+
+> 与`methods`实现相比，计算属性`computed`内部有缓存机制，可复用，效率更高，调用方便
+
+### 备注
+
+- 计算属性最终会出现在`Vue`实例对象中，直接调用读取使用即可
+- 如果计算属性要被修改，则必须写`set`函数去响应修改，且`set`中要引起计算时依赖的数据发生改变
+
+## 监视属性
+
+- `watch`
+- 当被监视的属性变化时，`handler`回调函数自动调用进行相关操作
+  - `handler`函数有两个参数：`newValue`和`oldValue`
+- 监视的属性必须在`data`中存在才能进行监视
+- 监视的两种写法：
+
+```javascript
+// 1
+new Vue({
+  el: '#app',
+  data: {
+    isChange: true
+  },
+  watch: {
+    isChange: {
+      handler(newValue, oldValue) {
+        console.log('isChange change', newValue, oldValue)
+      }
+    }
+  }
+})
+
+// 2
+const vm = new Vue({
+  el: '#app',
+  data: {
+    isChange: true
+  }
+})
+vm.$watch('isChange', {
+  handler(newValue, oldValue) {
+    console.log('isChange change', newValue, oldValue)
+  }
+})
+```
+
+### 深度监视
+
+- `Vue`中的`watch`默认不监视对象内部值的改变
+- 配置`deep: true`可以监视对象内部值改变
+- 备注：
+  - `Vue`自身可以监视对象内部值的变化，但是`Vue`提供的`watch`默认不可以
+  - 使用`watch`时根据数据的具体结构来决定是否采用深度监视
+
+## 计算属性和监视属性的区别
+
+> `computed`和`watch`的区别
+
+- `computed`能完成的功能，`watch`都可以完成
+- `watch`能完成的功能，`computed`不一定能完成，如`watch`可以进行异步操作
+
+## 小原则
+
+- 所被`Vue`所管理的函数，最好写成普通函数，这样`this`的指向才是当前实例对象
+- 不被`Vue`所管理的函数最好写成回调函数，这样`this`的指向才是当前实例对象
+
+## 列表渲染内部原理
+
+> `v-for`中的`key`原理
+
+### 虚拟DOM中key的作用
+
+- `key`是虚拟`DOM`对象的标识，当状态中的数据发生变化时，`Vue`会根据**新数据**生成**新的虚拟`DOM`**
+- 随后`Vue`将**新虚拟`DOM`**与**旧虚拟`DOM`**进行差异比较
+
+### 对比规则
+
+- 旧虚拟`DOM`中找到了与新虚拟`DOM`相同的`key`:
+  - 若虚拟`DOM`中内容没变，为了节省性能会直接使用之前的真实`DOM`，不会重新渲染
+  - 若虚拟`DOM`中内部变了，则生成新的真实`DOM`，随后替换掉页面中之前的真实`DOM`
+- 旧虚拟`DOM`中未找到与新虚拟`DOM`相同的`key`：
+  - 创建新的真实`DOM`，随后渲染到页面中
+
+### 使用下标作为key的问题
+
+- 若对数据进行逆向添加、逆向删除等破坏顺序的操作时：
+  - 会产生没有毕要的真实`DOM`更新，页面效果没问题但效率低
+- 若结构中包含输入类的`DOM`时:
+  - 会产生错误的`DOM`更新，页面会出问题
+
+### 如何渲染key
+
+- 最好使用每条数据的唯一标识作为`key`，比如`id`、手机号、身份证号、学号等唯一值
+- 如果不存在对数据的逆向添加、逆向删除等破坏顺序的操作，仅用于渲染列表展示，使用下标`index`作为`key`是没有问题的
+
+### 图示
+
+- 将下标`index`作为`key`时：
+
+![将下标index作为key时](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/v-for-key-index.png)
+
+- 将唯一`id`作为`key`时：
+
+![将唯一id作为key时](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/v-for-key-id.png)

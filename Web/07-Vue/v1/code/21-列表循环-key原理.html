@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Key原理</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>遍历数组</h2>
+    <ul>
+      <li v-for="(p, index) in list" :key="p.id">
+        {{p.name}} -- {{p.age}} -- {{index}} <input type="text" />
+      </li>
+    </ul>
+    <button @click="add">添加</button>
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        list: [
+          {
+            id: 1,
+            name: '张三',
+            age: 18
+          },
+          {
+            id: 2,
+            name: '李四',
+            age: 18
+          },
+          {
+            id: 3,
+            name: '王五',
+            age: 18
+          }
+        ]
+      },
+      methods: {
+        add() {
+          let p = { id: 4, name: '刘六', age: 38 }
+          this.list = [p, ...this.list]
+        }
+      },
+    })
+  </script>
+</body>
+</html>

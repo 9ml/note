@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>姓名案例</title>
+  <script src="../js/vue.js"></script>
+  <style>
+    .demo {
+      background-color: skyblue;
+      padding: 20px 0;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo">
+      <h2>姓名案例 - 插值语法实现</h2>
+      姓：<input type="text" v-model="firstName" /> <br />
+      名：<input type="text" v-model="lastName" /> <br />
+      全名：{{ firstName }}-{{ lastName }}
+    </div>
+
+    <div class="demo">
+      <h2>姓名案例 - methods实现</h2>
+      姓：<input type="text" v-model="firstName" /> <br />
+      名：<input type="text" v-model="lastName" /> <br />
+      <!-- 调用方法没有缓存，会重复调用 -->
+      全名：{{ getFullName() }}
+      全名：{{ getFullName() }}
+      全名：{{ getFullName() }}
+      全名：{{ getFullName() }}
+      全名：{{ getFullName() }}
+    </div>
+
+    <div class="demo">
+      <h2>姓名案例 - 计算属性实现</h2>
+      姓：<input type="text" v-model="cFirstName" /> <br />
+      名：<input type="text" v-model="cLastName" /> <br />
+      <!-- 计算属性有缓存，只会调用一次 -->
+      全名：{{ fullName }}
+      全名：{{ fullName }}
+      全名：{{ fullName }}
+      全名：{{ fullName }}
+      全名：{{ fullName }}
+    </div>
+
+    <div class="demo">
+      <h2>测试</h2>
+      <!-- 修改 test 不会影响计算属性 fullName -->
+      <input type="text" v-model="test" /> <br /><br />
+      <button @click="updateFllName">修改计算属性fullName</button>
+    </div>
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        firstName: '张',
+        lastName: '三',
+        cFirstName: '张',
+        cLastName: '三',
+        test: ''
+      },
+      computed: {
+        fullName: {
+          /**
+           * 当读取 fullName 时，get 方法就会被调用，返回值就作为 fullName 的值
+           * 调用时机：
+           *   1. 初次读取 fullName 时
+           *   2. 所依赖的数据发生变化时
+          */
+          get() {
+            console.log('fullName.Get Function', this) // this 是 Vue 实例
+            return `${this.cFirstName}-${this.cLastName}`
+          },
+         // 当 fullName 被修改时 set 方法会被调用
+          set(value) {
+            console.log('fullName.Get Function', value)
+            const arr = value.split('-')
+            this.cFirstName = arr[0]
+            this.cFirstName = arr[1]
+          }
+        }
+      },
+      methods: {
+        // data 中数据发生变化时，Vue 模板引擎会重新解析，若插值语法调用了方法则每次解析都会重新调用一次，效率不高
+        getFullName() {
+          console.log('getFullName Function')
+          return `${this.firstName}-${this.lastName}`
+        },
+        // 测试修改计算属性 fullName
+        updateFllName() {
+          this.fullName = '李-四'
+        }
+      }
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>监视属性使用计算属性案例</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    姓：<input type="text" v-model="firstName" /> <br />
+    名：<input type="text" v-model="lastName" /> <br />
+    全名：{{fullName}}
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        firstName: '张',
+        lastName: '三',
+        fullName: ''
+      },
+      watch: {
+        firstName(newValue, oldValue) {
+          setTimeout(() => {
+            this.fullName = `${newValue}-${this.lastName}`
+          }, 1000)
+        },
+        lastName(newValue, oldValue) {
+          this.fullName = `${this.firstName}-${newValue}`
+        },
+      }
+    })
+  </script>
+</body>
+</html>

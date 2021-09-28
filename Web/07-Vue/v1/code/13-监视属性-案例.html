@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>监视属性</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>今天天气很{{hot}}}</h2>
+    <!-- 绑定事件时可以写一些简单的语句 -->
+    <!-- <button @click="hot = !hot">切换天气</button> -->
+    <button @click="changeWeather">切换天气</button>
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        hot: true
+      },
+      computed: {
+        info() {
+          return this.hot ? '热' : '冷'
+        }
+      },
+      methods: {
+        changeWeather() {
+          this.hot = !this.hot
+        }
+      }
+    })
+  </script>
+</body>
+</html>

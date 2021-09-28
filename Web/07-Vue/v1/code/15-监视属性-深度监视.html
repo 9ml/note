@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>深度监视</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>今天天气很{{hot}}</h2>
+    <button @click="changeWeather">切换天气</button>
+    <hr></hr>
+    <h2>A的值：{{ numbers.a }}</h2>
+    <button @click="numbers.a ++">A+</button>
+    <h2>B的值：{{ numbers.b }}</h2>
+    <button @click="numbers.b ++">B+</button>
+    <button @click="numbers = {a: 666, b: 999}">改变引用类型指向彻底改变numbers</button>
+  </div>
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        hot: true,
+        numbers: {
+          a: 1,
+          b: 1
+        }
+      },
+      computed: {
+        info() {
+          return this.hot ? '热' : '冷'
+        }
+      },
+      methods: {
+        changeWeather() {
+          this.hot = !this.hot
+        }
+      },
+      watch: {
+        hot: {
+          handler(newValue, oldValue) {
+            console.log('hot change', newValue, oldValue)
+          }
+        },
+        // 监视多级结构中某个属性的变化
+        // 'numbers.a': {
+        //   handler() {
+        //     console.log('numbers.a change')
+        //   }
+        // },
+        // 深度监视：监视多级结构中所有属性的变化
+        numbers: {
+          deep: true, // 默认为 false
+          handler() {
+            console.log('numbers change')
+          }
+        }
+      }
+    })
+  </script>
+</body>
+</html>

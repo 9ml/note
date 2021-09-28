@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>监视属性</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>今天天气很{{hot}}</h2>
+    <button @click="changeWeather">切换天气</button>
+  </div>
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        hot: true
+      },
+      computed: {
+        info() {
+          return this.hot ? '热' : '冷'
+        }
+      },
+      methods: {
+        changeWeather() {
+          this.hot = !this.hot
+        }
+      },
+      watch: {
+        hot: {
+          immediate: true, // 初始化时立即执行 handler 函数
+          // 但 hot 发送变化时调用执行
+          handler(newValue, oldValue) {
+            console.log('hot change', newValue, oldValue)
+          }
+        }
+      }
+    })
+    // vm.$watch('hot', {
+    //   immediate: true, // 初始化时立即执行 handler 函数
+    //   // 但 hot 发送变化时调用执行
+    //   handler(newValue, oldValue) {
+    //     console.log('hot change', newValue, oldValue)
+    //   }
+    // })
+    /**
+     * 如果很明确一开始就需要监视哪个属性，可以在实例里面使用 watch
+     * 如果一开始不明确需要监视哪个属性，后期可能会添加可以使用 $watch
+    */
+  </script>
+</body>
+</html>

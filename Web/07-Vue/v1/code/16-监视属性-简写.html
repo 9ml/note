@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>监视属性-简写</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>今天天气很{{hot}}</h2>
+    <button @click="changeWeather">切换天气</button>
+  </div>
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        hot: true
+      },
+      computed: {
+        info() {
+          return this.hot ? '热' : '冷'
+        }
+      },
+      methods: {
+        changeWeather() {
+          this.hot = !this.hot
+        }
+      },
+      watch: {
+        // 正常写法：需要使用 immediate 或 deep 配置项
+        hot: {
+          immediate: true,
+          deep: true,
+          handler(newValue, oldValue) {
+            console.log('hot change', newValue, oldValue)
+          }
+        },
+        // 简写：配置对象只需要 handler 响应方法时
+        hot(newValue, oldValue) {
+          console.log('hot change', newValue, oldValue)
+        }
+      }
+    })
+    // 正常写法：需要使用 immediate 或 deep 配置项
+    // vm.$watch('hot', {
+    //   immediate: true,
+    //   deep: true,
+    //   handler(newValue, oldValue) {
+    //     console.log('hot change', newValue, oldValue)
+    //   }
+    // })
+    // 简写：不能使用箭头函数，会改变 this 指向
+    // vm.$watch('hot', function(newValue, oldValue) {
+    //   console.log('hot change', newValue, oldValue)
+    // })
+  </script>
+</body>
+</html>
