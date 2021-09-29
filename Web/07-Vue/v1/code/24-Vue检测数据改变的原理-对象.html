@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>检测数据改变的原理-对象</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>姓名：{{name}}</h2>
+    <h2>年龄：{{age}}</h2>
+  </div>
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        name: '9ml',
+        age: 18,
+        // 每层对象中都有监视的 get 和 set 方法
+        form: {
+          username: 'root',
+          password: '123456',
+          msg: {
+            realName: '川',
+            realAge: 20
+          }
+        },
+        friends: [
+          {
+            name: 'Tom',
+            age: 22
+          }
+        ]
+      }
+    })
+    console.log(vm)
+  </script>
+</body>
+</html>

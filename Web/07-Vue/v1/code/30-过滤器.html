@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>过滤器</title>
+  <script src="../js/vue.js"></script>
+  <script src="../js/dayjs.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>显示格式化后的时间</h2>
+    <h3>现在的时间戳：{{time}}</h3>
+    <h3>使用computed：{{fmtTime}}</h3>
+    <h3>使用methods：{{getTime()}}</h3>
+    <h3>使用过滤器：{{time | timeFormat}}</h3>
+    <h3>使用过滤器传参：{{time | timeFormat('YYYY年MM月DD日 HH:mm:ss') | mySlice}}</h3>
+    <!-- 注意：不能配合 v-model 使用 -->
+    <input type="text" :value="msg | mySlice" />
+  </div>
+  <div id="root">
+    <h2>{{msg | mySlice}}</h2>
+  </div>
+  <script>
+    // 全局过滤器：必须在 new Vue 之前定义好全局过滤器
+    Vue.filter('mySlice', function(value) {
+      return value.slice(0, 4)
+    })
+
+    new Vue({
+      el: '#app',
+      data: {
+        time: Date.now(),
+        msg: '山东菏泽曹县NB666我哩宝贝'
+      },
+      computed: {
+        fmtTime() {
+          return dayjs(this.time).format('YYYY-MM-DD HH:mm:ss')
+        }
+      },
+      methods: {
+        getTime() {
+          return dayjs(this.time).format('YYYY-MM-DD HH:mm:ss')
+        }
+      },
+      // 局部过滤器
+      filters: {
+        timeFormat(value, str = 'YYYY-MM-DD HH:mm:ss') {
+          return dayjs(value).format(str)
+        },
+        // mySlice(value) {
+        //   return value.slice(0, 4)
+        // }
+      }
+    })
+
+    new Vue({
+      el: '#root',
+      data: {
+        msg: 'Hello World'
+      }
+    })
+  </script>
+</body>
+</html>

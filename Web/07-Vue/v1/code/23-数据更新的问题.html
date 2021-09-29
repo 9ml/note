@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据更新时的问题</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>人员列表</h2>
+    <button @click="clickMei">更新第一个的信息</button>
+    <ul>
+      <li v-for="p in list" :key="p.id">
+        {{p.name}}-{{p.age}}-{{p.sex}}
+      </li>
+    </ul>
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        list: [
+          { id: 1, name: '马冬梅', age: 38, sex: '女' },
+          { id: 2, name: '周冬雨', age: 20, sex: '女' },
+          { id: 3, name: '周杰伦', age: 40, sex: '男' },
+          { id: 4, name: '温兆伦', age: 50, sex: '男' }
+        ]
+      },
+      methods: {
+        clickMei() {
+          // this.list[0].name = '马老师' // 可以更新
+          // this.list[0].age = 50 // 可以更新
+          // this.list[0].sex = '男' // 可以更新
+          this.list[0] = { id: 1, name: '马老师', age: 50, sex: '男' } // 无法更新 Vue 没有检测到数据更新
+        }
+      }
+    })
+  </script>
+</body>
+</html>

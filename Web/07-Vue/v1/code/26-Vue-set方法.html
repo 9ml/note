@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue.set方法</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>用户</h1>
+    <h2>姓名：{{name}}</h2>
+    <h2>年龄：{{age}}</h2>
+    <h2 v-if="area">籍贯：{{area}}</h2>
+    <hr>
+    <h1>信息</h1>
+    <button @click="addSex">添加性别属性</button>
+    <h2>用户名：{{ form.username }}</h2>
+    <h2>密码：{{ form.password }}</h2>
+    <h2 v-if="form.sex">性别：{{ form.sex }}</h2>
+    <h2>真实姓名：{{ form.msg.realName }}，真实年龄：{{form.msg.realAge}}</h2>
+    <h2>朋友们</h2>
+    <ul>
+      <li v-for="(f, _f) in form.friends" :key="_f">{{f.name}}-{{f.age}}</li>
+    </ul>
+  </div>
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        name: '9ml',
+        age: 18,
+        form: {
+          username: 'root',
+          password: '123456',
+          msg: {
+            realName: '川',
+            realAge: 20
+          },
+          friends: [
+            {
+              name: 'Tom',
+              age: 22
+            },
+            {
+              name: 'Tony',
+              age: 32
+            }
+          ]
+        }
+      },
+      methods: {
+        addSex() {
+          // this.form.sex = '男'
+          // Vue.set(this.form, 'sex', '男')
+          this.$set(this.form, 'sex', '男')
+        }
+      },
+    })
+  </script>
+</body>
+</html>

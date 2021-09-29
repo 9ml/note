@@ -237,3 +237,67 @@ vm.$watch('isChange', {
 - 将唯一`id`作为`key`时：
 
 ![将唯一id作为key时](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/v-for-key-id.png)
+
+## Vue监视数据的原理
+
+- `Vue`会监视`data`中所有层次的数据
+
+### 监视对象
+
+- 通过`setter`实现监视，且要在`new Vue`时就传入要监视的数据
+  - 通过`obj.xxx`添加的属性，`Vue`默认不做响应式处理
+  - 如需给后添加的属性做响应式，需要使用如下`API`：
+
+```javascript
+Vue.set(target, key, value)
+vm.$set(target, key, value)
+```
+
+### 监视数组
+
+- 通过包裹数组更新元素的方法实现，本质就是做了如下两件事：
+  - 调用原生对应的方法对数组进行处理更新
+  - 重新解析模板，进而更新页面
+
+### 在Vue中修改数组
+
+- `API`:
+  - `push()`
+  - `pop()`
+  - `shift()`
+  - `unshift()`
+  - `splice()`
+  - `sort()`
+  - `reverse()`
+- `Vue.set(target, key, value)`或`vm.$set(target, key, value)`
+
+### 特别注意
+
+- `Vue.set()`和`vm.$set()`不能给`vm`或`vm`的根数据对象添加属性！！！
+- 将`Vue`实例中的`data`改为`_data`中的数据及`getter`和`setter`的形式叫做数据劫持
+
+## 收集表单中的数据
+
+- `<input type="text" />`中`v-model`收集的是`value`的值，用户输入的就是`value`值
+- `<input type="radio" />`中`v-model`收集的是`value`的值，需要给标签配置`value`值
+- `<input type="check" />`中
+  - 若没有配置`input`的`value`属性，那么收集的就是`checked`勾选`true`，未勾选`false`
+  - 配置`value`属性：
+    - `v-model`的初始化是非数组，那么收集的就是`checked`勾选`true`，未勾选`false`
+    - `v-model`的初始值是数组，那么收集的就是`value`组成的数组
+- `v-model`的三个修饰符
+  - `lazy`：失去焦点再收集数据
+  - `number`：输入字符串转为有效的数字
+  - `trim`：输入首尾的空格过滤
+
+## 过滤器
+
+- 定义：对要显示的数据进行特定格式化后再显示，适用于一些简单逻辑的处理
+- 语法：
+  - 注册过滤器：`Vue.filter(name, callback)`或`new Vue({filters: {...}})`
+  - 使用过滤器：`{{ xxx | 过滤器名 }}`或`v-bind:属性=" xxx | 过滤器名 "`
+- 备注：
+  - 使用过滤器也可以接收额外参数，多个过滤器之间可以串联
+  - 并没有改变原数据，是参数新的对象数据
+  - 过滤器不能搭配`v-model`使用
+  - 全局过滤器必须在`new Vue({})`创建实例之前定义好

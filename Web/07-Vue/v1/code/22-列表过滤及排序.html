@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>列表过滤</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>列表过滤-监视属性</h2>
+    <input type="text" v-model="keywords_w" placeholder="请输入名字">
+    <ul>
+      <li v-for="p in fList" :key="p.id">
+        {{p.name}}-{{p.age}}-{{p.sex}}
+      </li>
+    </ul>
+    <h2>列表过滤-计算属性</h2>
+    <input type="text" v-model="keywords_c" placeholder="请输入名字">
+    <button @click="handleSort(2)">年龄升序</button>
+    <button @click="handleSort(1)">年龄降序</button>
+    <button @click="handleSort(0)">原顺序</button>
+    <ul>
+      <li v-for="p in cList" :key="p.id">
+        {{p.name}}-{{p.age}}-{{p.sex}}
+      </li>
+    </ul>
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        list: [
+          { id: 1, name: '马冬梅', age: 38, sex: '女' },
+          { id: 2, name: '周冬雨', age: 20, sex: '女' },
+          { id: 3, name: '周杰伦', age: 40, sex: '男' },
+          { id: 4, name: '温兆伦', age: 50, sex: '男' }
+        ],
+        keywords_w: '',
+        keywords_c: '',
+        fList: [],
+        sortType: 0
+      },
+      computed: {
+        cList() {
+          const arr = this.list.filter(i => i.name.indexOf(this.keywords_c) !== -1)
+          if (this.sortType) {
+            arr.sort((a, b) => {
+              return this.sortType === 1 ? b.age -a.age : a.age - b.age
+            })
+          }
+          return arr
+        }
+      },
+      watch: {
+        keywords_w: {
+          immediate: true,
+          handler(newVal) {
+            this.fList = this.list.filter(i => i.name.indexOf(newVal) !== -1)
+          }
+        }
+      },
+      methods: {
+        handleSort(type) {
+          this.sortType = type
+        }
+      }
+    })
+  </script>
+</body>
+</html>

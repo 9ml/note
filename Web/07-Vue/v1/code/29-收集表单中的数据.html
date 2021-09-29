@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>收集表单中的数据</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <form @submit.prevent="submit">
+      <label>
+        账号：<input v-model.trim="account" type="text" />
+      </label>
+      <br>
+      <br>
+      <label>
+        密码：<input v-model="password" type="password" />
+      </label>
+      <br>
+      <br>
+      <label>
+        年龄：<input v-model.number="age" type="number" />
+      </label>
+      <br>
+      <br>
+      <label>
+        性别：
+        男<input type="radio" name="sex" v-model="sex" value="1" />
+        女<input type="radio" name="sex" v-model="sex" value="0" />
+      </label>
+      <br>
+      <br>
+      <label>
+        爱好：
+        抽烟<input type="checkbox" v-model="hobby" value="smoke" />
+        喝酒<input type="checkbox" v-model="hobby" value="drink" />
+        烫头<input type="checkbox" v-model="hobby" value="fair" />
+      </label>
+      <br>
+      <br>
+      <label>
+        所属校区：
+        <select v-model="city">
+          <option value="">请选择校区</option>
+          <option value="1">北京</option>
+          <option value="2">上海</option>
+          <option value="3">广州</option>
+        </select>
+      </label>
+      <br>
+      <br>
+      <label>
+        其他信息：
+        <textarea v-model.lazy="other" cols="30" rows="10"></textarea>
+      </label>
+      <br>
+      <br>
+      <label>
+        <input type="checkbox" v-model="agree" />阅读并加入<a href="https://www.baidu.com">《用户协议》</a>
+      </label>
+      <br>
+      <br>
+      <button>提交</button>
+    </form>
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        account: '',
+        password: '',
+        sex: '1',
+        hobby: [],
+        city: '1',
+        other: '',
+        agree: '',
+        age: ''
+      },
+      methods: {
+        submit() {
+
+        }
+      }
+    })
+  </script>
+</body>
+</html>

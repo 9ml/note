@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>检测数据改变的原理-数组</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>爱好</h2>
+    <ul>
+      <li v-for="(h, _h) in user.hobby" :key="_h">{{ h }}</li>
+    </ul>
+    <h2>朋友</h2>
+    <ul>
+      <li v-for="(f, _f) in user.friends" :key="_f">{{ f.name }} -- {{ f.age }}</li>
+    </ul>
+  </div>
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        user: {
+          hobby: ['唱', '跳', 'rap', '篮球'],
+          friends: [
+            { name: 'Tom', age: 22 }, { name: 'Tony', age: 32 }
+          ]
+        }
+      }
+    })
+    console.log(vm)
+  </script>
+</body>
+</html>
