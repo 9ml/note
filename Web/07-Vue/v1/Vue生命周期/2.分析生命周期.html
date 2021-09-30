@@ -19,17 +19,27 @@
           <h1>
             {{msg}} {{num}}
           </h1>
-          <button @click="num++">++</button>
+          <button @click="add">++</button>
           <button @click="bye">
-            BYE
+            销毁Vue实例
           </button>
+          <h1 v-text="num"></h1>
         </div>
       `,
       data: {
         msg: 'Hello World',
         num: 1
       },
+      watch: {
+        num() {
+          console.log('num++') // 销毁后无法监听
+        }
+      },
       methods: {
+        add() {
+          console.log('add')
+          this.num ++
+        },
         bye() {
           console.log('bye')
           this.$destroy()
@@ -65,7 +75,15 @@
         // console.log(this.num)
         // debugger;
       },
-      
+      beforeDestroy() {
+        console.log('beforeDestroy') // 此时 Vue 实例中的 data 和 methods 都可以正常使用，但是对数据的操作不会更新
+        console.log(this.num)
+        this.add()
+      },
+      destroyed() {
+        console.log('destroyed')
+
+      }
     })
   </script>
 </body>

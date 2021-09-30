@@ -11,6 +11,8 @@
 <body>
   <div id="app">
     <h2 :style="{opacity}">Hello World</h2>
+    <button @click="stop">点击停止变换</button>
+    <button @click="opacity = 1">设置透明度为1</button>
   </div>
   <script>
     const vm = new Vue({
@@ -20,10 +22,20 @@
       },
       // Vue 完成模板的解析并把初始的真实 DOM 元素放入页面后调用 mounted 挂载完成
       mounted() {
-        setInterval(() => {
+        this.timer = setInterval(() => {
+          console.log('timer')
           this.opacity -= 0.01
           if (this.opacity <= 0) this.opacity = 1
         }, 16)
+      },
+      methods: {
+        stop() {
+          this.$destroy()
+        }
+      },
+      beforeDestroy() {
+        console.log('clearInterval')
+        clearInterval(this.timer)
       }
     })
 
