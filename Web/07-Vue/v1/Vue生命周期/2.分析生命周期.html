@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/9ml/website@master/images/logo.ico" type="image/x-icon">
+  <title>分析生命周期</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      template: `
+        <div>
+          <h1>
+            {{msg}} {{num}}
+          </h1>
+          <button @click="num++">++</button>
+          <button @click="bye">
+            BYE
+          </button>
+        </div>
+      `,
+      data: {
+        msg: 'Hello World',
+        num: 1
+      },
+      methods: {
+        bye() {
+          console.log('bye')
+          this.$destroy()
+        }
+      },
+      beforeCreate() {
+        console.log('beforeCreate')
+        // console.log(this) 此时只初始化了生命周期及内置方法，但没有初始化 data 中的数据代理
+        // debugger;
+      },
+      created() {
+        console.log('created')
+        // console.log(this) 初始化完成 data 中的数据代理
+        // debugger;
+      },
+      beforeMount() {
+        console.log('beforeMount')
+        // console.log(this) 将虚拟 DOM 挂载到页面中，此时没有编译模板
+        // debugger;
+      },
+      mounted() {
+        console.log('mounted')
+        // console.log(this) 页面中的模板编译完成
+        // debugger;
+      },
+      beforeUpdate() {
+        console.log('beforeUpdate') // 此时 data 中的数据已经更新了，但页面中并没有更新
+        // console.log(this.num)
+        // debugger;
+      },
+      updated() {
+        console.log('beforeUpdate') // 此时 data 中的数据与页面保存一致，更新完成
+        // console.log(this.num)
+        // debugger;
+      },
+      
+    })
+  </script>
+</body>
+</html>

@@ -301,3 +301,102 @@ vm.$set(target, key, value)
   - 并没有改变原数据，是参数新的对象数据
   - 过滤器不能搭配`v-model`使用
   - 全局过滤器必须在`new Vue({})`创建实例之前定义好
+
+## 指令
+
+> `Vue`模板语法有`2`大类：
+>
+> - 插值语法：
+>   - 功能：用于解析标签体内容
+>   - 写法：`{{xxx}}`，`xxx`是`js`表达式，且可以直接读取到`data`中的所有属性
+> - 指令语法：
+>   - 功能：用于解析标签，包括标签属性、标签体内容、绑定事件等
+
+### 内置指令
+
+- `v-bind`：单向数据绑定，可简写为`:xxx`
+- `v-model`：双向数据绑定，完整写法为`v-model:value`
+- `v-for`：遍历数组/对象/字符串
+- `v-on`：绑定事件监听，可简写为`@xxx`
+- `v-if/v-else-if/v-lese`：条件渲染，动态控制`DOM`节点是否存在
+- `v-show`：添加渲染，动态控制`CSS`样式展示
+- `v-text`：向其所在的标签中插入文本，会替换节点中的内容
+- `v-html`：向指定节点中渲染包含`HTML`结构的内容，会替换掉节点中的内容
+  - 可以识别`HTML`结构
+  - 注意：在网站上动态渲染任何`HTML`结构是非常危险的，容易导致`XSS`攻击，一定要在可信的网站上使用，永远不要用在用户提交上
+- `v-cloak`：本质上是一个特殊属性，`Vue`实例创建完毕并接管容器后会删除`v-cloak`属性
+  - 使用`css`配合`v-cloak`可以解决网速过慢时页面展示出未经解析的模板代码的问题
+- `v-once`：`v-once`所在的节点在初次动态渲染后，就视为静态内容了，以后数据的改变不会引起`v-once`所在结构的更新，可以用于优化性能
+- `v-pre`：跳过所在节点的编译过程，可利用它跳过没有使用指令语法、没有使用插值语法的节点，会加快编译
+
+### 自定义指令
+
+#### 定义自定义指令
+
+- 局部指令
+  - `this`指向是`window`
+
+```javascript
+new Vue({
+  directive: {
+    // 完整写法
+    xxx: {
+      // 指令与元素成功绑定时调用
+      bind(element, binding) {
+        console.log('bing', this)
+      },
+      // 指令所在元素被插入页面时调用
+      inserted(element, binding) {
+        console.log('inserted', this)
+      },
+      // 指令所在的模板被重新解析时调用
+      update(element, binding) {
+        console.log('update', this)
+      }
+    },
+    // 简写：指令与元素成功绑定时 或 指令所在的模板被重新解析时调用
+    xxx(element, binding) {
+
+    }
+  }
+})
+```
+
+- 全局指令
+
+```javascript
+// 完整写法
+Vue.directive('xxx', {
+  // 指令与元素成功绑定时调用
+  bind(element, binding) {
+    console.log('bing', this)
+  },
+  // 指令所在元素被插入页面时调用
+  inserted(element, binding) {
+    console.log('inserted', this)
+  },
+  // 指令所在的模板被重新解析时调用
+  update(element, binding) {
+    console.log('update', this)
+  }
+})
+// 简写
+Vue.directive('xxx', function(element, binding) {
+  element.innerText = binding.value * 10
+})
+```
+
+- 自定义指令配置对象中常用的三个回调：
+  - `bind(){...}`：指令与元素成功绑定时调用
+  - `inserted(){...}`：指令所在元素被插入页面时调用
+  - `update(){...}`：指令所在模板结构被重新解析时调用
+- 备注：
+  - 指令定义时不加`v-`，但使用时需要加`v-`
+  - 自定义指令名如果是多个单词组合，要使用`aaa-bbb`命名方法，不用使用`aaaBbb`驼峰命名
+
+## Vue声明周期
+
+> 生命周期又名：生命周期回调函数、生命周期函数、生命周期钩子
+> 指的是`Vue`在关键时刻帮我们调用的一些特殊名称的函数
+> 生命周期函数的名字不可更改，但函数的具体内容是开发者根据需求编写的
+> 生命周期函数中的`this`指向的是`Vue`实例对象

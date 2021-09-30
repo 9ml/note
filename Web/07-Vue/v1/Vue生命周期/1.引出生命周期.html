@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/9ml/website@master/images/logo.ico" type="image/x-icon">
+  <title>引出生命周期</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2 :style="{opacity}">Hello World</h2>
+  </div>
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        opacity: 1
+      },
+      // Vue 完成模板的解析并把初始的真实 DOM 元素放入页面后调用 mounted 挂载完成
+      mounted() {
+        setInterval(() => {
+          this.opacity -= 0.01
+          if (this.opacity <= 0) this.opacity = 1
+        }, 16)
+      }
+    })
+
+    // setInterval(() => {
+    //   vm.opacity -= 0.01
+    //   if (vm.opacity <= 0) vm.opacity = 1
+    // }, 16)
+  </script>
+</body>
+</html>

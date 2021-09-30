@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自定义指令</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>当前的值<span v-text="num"></span></h2>
+    <h2>×10的值<span v-big-number="num"></span></h2>
+    <button @click="num++">++</button>
+    <hr />
+    <input type="text" v-binds:value="num" />
+  </div>
+  <script>
+    // 全局指令
+    Vue.directive('big-number', function(element, binding) {
+      element.innerText = binding.value * 10
+    })
+
+    new Vue({
+      el: '#app',
+      data: {
+        msg: 'Hello World',
+        num: 1
+      },
+      // 局部指令
+      directives: {
+        /**
+         * 自定义指令函数何时被调用？
+         *  1. 指令与元素成功绑定时
+         *  2. 指令所在的模板被重新解析时
+        */
+        // 'big-number'(element, binding) {
+        //   console.log(element, binding, this) // this 指向是 window
+        //   element.innerText = binding.value * 10
+        // },
+        // binds(element, binding) {
+        //   element.value = binding.value
+        //   element.focus() 指令与元素绑定时元素还没有插入到页面中，无法调用 focus() 方法
+        // }
+        binds: {
+          // 指令与元素成功绑定时调用
+          bind(element, binding) {
+            console.log('bing', this) // this 指向是 window
+            element.value = binding.value
+          },
+          // 指令所在元素被插入页面时调用
+          inserted(element, binding) {
+            console.log('inserted', this) // this 指向是 window
+            element.focus()
+          },
+          // 指令所在的模板被重新解析时调用
+          update(element, binding) {
+            console.log('update', this) // this 指向是 window
+            element.value = binding.value
+          }
+        }
+      }
+    })
+  </script>
+</body>
+</html>
