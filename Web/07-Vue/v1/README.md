@@ -410,4 +410,4 @@ Vue.directive('xxx', function(element, binding) {
 - 将要更新 ==> 调用`beforeUpdate`函数
 - 更新完成 ==> 调用`updated`函数
 - 将要销毁 ==> 调用`beforeDestroy`函数 ==> 重要的钩子函数
-- 销毁完毕 ==> 调用`destroyed`函数
+- 销毁完毕 ==> 调用`destroyed`函数111
