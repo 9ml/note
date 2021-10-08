@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>一个重要的内置关系</title>
+  <script src="../../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    {{msg}}
+    <user></user>
+  </div>
+  <script>
+    Vue.prototype.test = 100
+    // 创建 user 组件
+    const user = Vue.extend({
+      template: `
+        <div>
+          <h2>用户姓名：{{name}}</h2>
+          <h2>用户年龄：{{age}}</h2>
+          <button @click="getX">获取X</button>
+        </div>
+      `,
+      data() {
+        return {
+          name: '9ml',
+          age: 18
+        }
+      },
+      methods: {
+        getX() {
+          console.log(this.test)
+        }
+      }
+    })
+
+    new Vue({
+      el: '#app',
+      data: {
+        msg: 'Hello World'
+      },
+      components: {
+        user
+      }
+    })
+
+    console.log(user.prototype.__proto__ === Vue.prototype)
+  </script>
+</body>
+</html>

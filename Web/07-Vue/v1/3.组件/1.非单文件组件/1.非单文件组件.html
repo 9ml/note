@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>非单文件组件</title>
+  <script src="../../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- <h2>用户姓名：{{userName}}</h2>
+    <h2>用户年龄：{{userAge}}</h2> -->
+    <user></user>
+    <hr />
+    <student></student>
+    <hr />
+    <hello></hello>
+    <!-- <h2>学生姓名：{{studentName}}</h2>
+    <h2>学生年龄：{{studentAge}}</h2> -->
+  </div>
+  <script>
+    // 1. 创建 user 组件
+    const user = Vue.extend({
+      // el: '#user', // 没有 el 配置项，因为最终所有的组件都要被一个 vm 管理，由 vm 决定服务于哪个容器
+      template: `
+        <div>
+          <h2>用户姓名：{{userName}}</h2>
+          <h2>用户年龄：{{userAge}}</h2>
+        </div>
+      `,
+      data() {
+        return {
+          userName: '9ml',
+          userAge: 18
+        }
+      }
+    })
+    // 1. 创建 student 组件
+    const student = Vue.extend({
+      template: `
+        <div>
+          <h2>学生姓名：{{studentName}}</h2>
+          <h2>学生年龄：{{studentAge}}</h2>
+        </div>
+      `,
+      data() {
+        return {
+          studentName: 'Tom',
+          studentAge: 28
+        }
+      }
+    })
+    // 1. 创建 hello 组件
+    const hello = Vue.extend({
+      template: `
+        <div>
+          <h2>{{msg}}</h2>
+        </div>
+      `,
+      data() {
+        return {
+          msg: 'Hello World'
+        }
+      }
+    })
+    // 2. 全局注册组件
+    Vue.component('hello', hello)
+
+    new Vue({
+      el: '#app',
+      // 2. 局部注册组件
+      components: {
+        user,
+        student
+      }
+    })
+  </script>
+</body>
+</html>

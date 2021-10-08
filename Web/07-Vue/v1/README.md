@@ -401,7 +401,7 @@ Vue.directive('xxx', function(element, binding) {
 > 生命周期函数的名字不可更改，但函数的具体内容是开发者根据需求编写的
 > 生命周期函数中的`this`指向的是`Vue`实例对象
 
-### 生命周期阶段
+### 生命周期各个阶段
 
 - 将要创建 ==> 调用`beforeCreate`函数
 - 创建完成 ==> 调用`created`函数
@@ -410,4 +410,116 @@ Vue.directive('xxx', function(element, binding) {
 - 将要更新 ==> 调用`beforeUpdate`函数
 - 更新完成 ==> 调用`updated`函数
 - 将要销毁 ==> 调用`beforeDestroy`函数 ==> 重要的钩子函数
-- 销毁完毕 ==> 调用`destroyed`函数111
+- 销毁完毕 ==> 调用`destroyed`函数
+
+### 总结
+
+- 常用的生命周期钩子函数：
+  - `mounted`：发送`ajax`请求、启动定时任务、绑定自定义事件、订阅消息等初始化操作
+  - `beforeDestroy`：清除定时器、解绑自定义事件、取消订阅消息等收尾工作
+- 关于销毁`Vue`实例：
+  - 销毁后借助`Vue`开发者工具看不到任何信息
+  - 销毁后自定义事件会失效，但原生`DOM`事件依然有效
+  - 一般不会在`beforeDestroy`中操作数据，即使操作数据也不会再触发更新流程
+
+## 组件
+
+### 理解组件
+
+#### 传统方式编写应用
+
+![传统方式编写应用](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/components-a.jpg)
+
+- 存在的问题：
+  - 依赖关系混乱，不好维护
+  - 代码复用率不高
+
+#### 组件方式编写应用
+
+> 用来实现局部功能效果的代码集合
+
+![组件方式编写应用](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/components-b.jpg)
+![组件方式编写应用](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/components-c.jpg)
+
+- 优点：
+  - 复用代码
+  - 简化项目编码
+  - 提高运行效率
+
+- 模块化：
+  - 当应用中的`JS`都以模块来编写，那这个应用就是一个模块化应用
+- 组件化：
+  - 当应用中的功能都是多组件的方式编写的，那这个应用就是一个组件化的应用
+
+### 使用组件
+
+- `Vue`中使用组件的三个步骤：
+  - 定义组件（创建组件）
+  - 注册组件
+  - 使用组件（写组件标签）
+
+#### 定义组件
+
+- 使用`Vue.extend(options)`创建组件，其中`options`和`new Vue(options)`时传入的那个`options`几乎一致，区别如下：
+  - 不需要`el`配置项，因为最终所有组件都要经过一个`Vue`实例来管理，由实例中的`el`来决定服务于哪个容器
+  - `data`必须写成函数，避免组件被复用时，数据存在引用关系
+  - 使用`template`可以配置组件结构
+
+#### 注册组件
+
+- 局部注册：在`new Vue(options)`时传入`components`选项
+- 全局注册：使用`Vue.component('组件名', 组件)`
+
+#### 编写组件标签
+
+```html
+<hello></hello>
+```
+
+#### 注意点
+
+- 关于组件名：
+  - 一个单词组成：
+    - 第一种写法：`user`
+    - 第二种写法：`User`
+  - 多个单词组成：
+    - 第一种写法：`my-user`
+    - 第二种写法：`MyUser`，需要`Vue`脚手架支持
+  - 备注：
+    - 组件名尽可能回避`HTML`中已有的元素名称，例如：`p、h1、H1`等都不可以使用
+    - 可以使用`name`配置项指定组件在开发者工具中呈现的名字
+- 关于组件标签：
+  - 第一种写法：`<user></user>`
+  - 第二种写法：`<User></User>`
+  - 第三种写法：`<User />`，注意不使用脚手架时，这种写法会导致后续组件不能渲染
+- 简写方式：
+  - `const app = Vue.extend(options)`可简写为：`const app = options`
+
+### 非单文件组件
+
+> 一个组件中包含多个组件
+
+### 单文件组件
+
+> 一个组件中只包含一个组件
+
+### VueComponent
+
+- 组件本质是一个名为`VueComponent`的构造函数，且不是开发者定义的，是`Vue.extend`生成的
+- 开发者只需写`<user></user>`或`<user />`，`Vue`解析时会帮我们创建`user`组件的实例对象，及执行：`new VueComponent(options)`
+- 特别注意：每次调用`Vue.extend`时，返回的都是一个全新的`VueComponent`
+- 关于`this`指向：
+  - 组件配置中`data`函数、`methods`中的函数、`watch`中的函数、`computed`中的函数的`this`均是`VueComponent`实例对象
+  - `new Vue`中`data`函数、`methods`中的函数、`watch`中的函数、`computed`中的函数的`this`均是`Vue`实例对象
+- `VueComponent`的实例对象，简称`vc`也可成为组件实例对象
+- `Vue`的实例对象，简称`vm`。
+
+### 一个重要的内置关系
+
+> 让组件实例对象`vc`可以访问到`Vue`原型上的属性、方法
+
+```javascript
+VueComponent.prototype.__proto__ === Vue.prototype
+```
+
+[图示](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/VueComponent.jpg)

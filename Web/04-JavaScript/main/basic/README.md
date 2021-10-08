@@ -664,7 +664,7 @@ fn.sayAi() // 此时当成函数调用报错： Uncaught TypeError: fn.sayAi is 
 
 - 图解
 
-![](../img/prototype.png)
+![原型链](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/prototype.png)
 
 - 构造函数的显式原型`prototype`默认是空`Object`实例对象
   - 但是`Object`构造函数不满足，`Object`构造函数的显式原型`prototype`的隐式原型是原型链的尽头

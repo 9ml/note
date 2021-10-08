@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>注意点</title>
+  <script src="../../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <user-template></user-template>
+  </div>
+  <script>
+    const userTemplate = {
+      name: 'Test',
+      template: `
+        <div>
+          <h2>用户名：{{name}}</h2>  
+          <h2>年龄：{{age}}</h2>  
+        </div>
+      `,
+      data() {
+        return {
+          name: '9ml',
+          age: 18
+        }
+      }
+    }
+    new Vue({
+      el: '#app',
+      components: {
+        'user-template': userTemplate
+      }
+    })
+  </script>
+</body>
+</html>
