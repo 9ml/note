@@ -11,10 +11,12 @@
     "prettierignore",
     "prettierrc",
     "proto",
+    "READEME",
     "trunc",
     "txconfig",
     "typescipt",
     "unshift",
-    "USONB"
+    "USONB",
+    "Vuex"
   ]
 }

@@ -523,3 +523,7 @@ VueComponent.prototype.__proto__ === Vue.prototype
 ```
 
 [图示](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/VueComponent.jpg)
+
+## 脚手架
+
+[详看脚手架目录](./4.Vue脚手架/README.md)
