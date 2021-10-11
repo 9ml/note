@@ -1,5 +1,7 @@
 # Vue-v1
 
+[toc]
+
 ## MVVM
 
 - `M`：模型`Model`，对应`data`中的数据
@@ -401,6 +403,8 @@ Vue.directive('xxx', function(element, binding) {
 > 生命周期函数的名字不可更改，但函数的具体内容是开发者根据需求编写的
 > 生命周期函数中的`this`指向的是`Vue`实例对象
 
+[生命周期图解](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/lifecycle.png)
+
 ### 生命周期各个阶段
 
 - 将要创建 ==> 调用`beforeCreate`函数
@@ -527,3 +531,128 @@ VueComponent.prototype.__proto__ === Vue.prototype
 ## 脚手架
 
 [详看脚手架目录](./4.Vue脚手架/README.md)
+
+## ref属性
+
+- 被用来给元素或子组件注册引用信息，可理解为`id`的替代者
+- 应用在`HTML`标签上获取的是真实`DOM`元素
+- 应用在组件标签上是组件的实例对象`vc`
+- 使用方式：
+  - 标识：`<h1 ref="title">Hello World</h1>`
+  - 获取：`this.$refs.title`
+
+## props属性
+
+> 功能：让组件接收外部传过来的数据
+> `props`属性优先级高于`data`
+
+### 传递数据
+
+```template
+<Demo name="xxx" age="yyy" />
+```
+
+### 接收数据
+
+- 第一种方式：只接收数据
+
+```javascript
+props: ['name', 'age']
+```
+
+- 第二种方式：接收并限制数据类型
+
+```javascript
+props: {
+  name: String,
+  age: Number
+}
+```
+
+- 第三中方式：接收并限制数据类型、默认值、必要性
+
+```javascript
+props: {
+  name: {
+    type: String,
+    required: true // 必传
+  },
+  age: {
+    type: Number,
+    default: 99 // 默认值
+  }
+}
+```
+
+### props注意
+
+- `props`是只读的，`Vue`底层会监测你对`props`的修改，如果进行了修改会发出警告
+- 若业务需求需要修改，可以复制`props`的内容到`data`中，然后去修改`data`中的数据
+
+## mixin混合属性
+
+> `mixin`：混合、混入
+
+- 功能：可以把多个组件共用的配置提取成一个混入对象
+
+### 使用混合
+
+- 定义混合：
+
+```javascript
+export const show = {
+  data() {...},
+  methods: {...}
+}
+```
+
+- 使用混合
+
+```javascript
+import { xxx } from './mixin'
+// 全局混入
+Vue.mixin(xxx)
+// 局部混入
+mixin: [xxx]
+```
+
+## 插件
+
+- 功能：用于增强`Vue`
+- 本质：包含`install`方法的一个对象，`install`的第一个参数是`Vue`，后面的参数是插件使用者传递的数据
+- 定义插件：
+
+```javascript
+export default {
+  install(Vue) {
+    // 添加全局过滤器
+    Vue.filter(...)
+    // 添加全局指令
+    Vue.directive(...)
+    // 配置全局混入
+    Vue.mixin(...)
+    // 添加实例方法
+    Vue.prototype.$methods = () => {...}
+  }
+}
+```
+
+- 使用插件
+
+```javascript
+// 引入插件
+import plugins from './plugins'
+// 使用插件
+Vue.use(plugins)
+```
+
+## scoped样式属性
+
+- 功能：让样式局部生效，防止冲突
+- 写法：
+
+```html
+<style scoped>
+  ...
+</style>
+```
