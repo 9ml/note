@@ -656,3 +656,188 @@ Vue.use(plugins)
   ...
 </style>
 ```
+
+## TodoList案例
+
+### 组件编码流程
+
+- 拆分静态组件：组件要按照功能点拆分，命名不要与`HTML`元素冲突
+- 实现动态组件：考虑好数据的存放位置，数据是单个组件还是多个组件使用
+  - 单个组件：数据放在自身组件即可
+  - 多个组件：数据放在他们共同的父组件上 => 状态提升
+- 实现交互：从绑定事件开始
+
+### props适用情况
+
+- 父组件 => 子组件通信
+- 子组件 => 父组件通信 => 需要父给子一个方法，通过回调传参方式
+
+### 使用v-model时注意
+
+- `v-model`绑定的值不能是通过`props`传递过来的值，因为`props`中的数据是不能被修改的
+- `props`传过来的数据是引用类型时，修改其中属性的值`Vue`不会报错，但是不推荐这种做
+
+## WebStorage
+
+- 浏览器端通过`window.sessionStorage`和`window.localStorage`属性来实现本地存储机制
+- 存储内容大小一般在`5MB`左右
+
+### 相关API
+
+- `.setItem(key, value)`：该方法接收一个键和值作为参数，会把键值对添加到存储中，若键名已存在则更新对应的数据
+- `.getItem(key)`：该方法接收一个键名作为参数，返回键名对应的值
+- `.removeItem(key)`：该方法接收一个键名作为参数，并把该键名从存储中删除
+- `.clear()`：该方法会清空存储中的所有数据
+
+### WebStorage注意点
+
+- `sessionStorage`存储的内容会随着浏览器窗口关闭而清空
+- `localStorage`存储的内容需要手动清除才会消失，而且可跨窗口读取
+- `.getItem(key)`如果`key`的值不存在，返回值为`null`
+
+## 组件自定义事件
+
+- 一种组件间的通信方式，适用于：子组件 => 父组件
+
+### 使用场景
+
+- `A`是父组件，`B`是子组件，`B`组件需要向`A`组件传递数据，就要在`A`组件中给`B`组件绑定自定义事件，事件的回调在**父组件**中
+
+### 绑定自定义事件
+
+- 第一种方式：
+  - 在父组件中给子组件实例对象绑定`show`自定义事件，并定义事件的触发回调方法
+  - 子组件中通过`this.$emit('show', xxx)`向父组件中传参，参数可多个
+
+```html
+<!-- 父组件 -->
+<template>
+  <Demo @show="getMsg" />
+</template>
+<script>
+  new Vue({
+    methods: {
+      getMsg(msg) {
+        console.log(msg)
+      }
+    }
+  })
+</script>
+<!-- 子组件 -->
+<template>
+  <button @click="sendMsg">向父组件传参</button>
+</template>
+<script>
+  new Vue({
+    data() {
+      return {
+        msg: 'Hello World'
+      }
+    }
+    methods: {
+      sendMsg() {
+        this.$emit('show', this.msg)
+      }
+    }
+  })
+</script>
+```
+
+- 第二种方式:
+  - 在父组件中通过`ref`获取子组件的实例对象，并在`mounted`生命周期中通过`$on`绑定自定义事件触发函数
+  - 子组件中通过`this.$emit('show', xxx)`向父组件中传参，参数可多个
+
+```html
+<!-- 父组件 -->
+<template>
+  <Demo ref="demo" />
+</template>
+<script>
+  new Vue({
+    mounted() {
+      this.$refs.demo.$on('show', this.getMsg)
+    },
+    methods: {
+      getMsg(msg) {
+        console.log('msg')
+      }
+    }
+  })
+</script>
+<!-- 子组件 -->
+<template>
+  <button @click="sendMsg">向父组件传参</button>
+</template>
+<script>
+  new Vue({
+    data() {
+      return {
+        msg: 'Hello World'
+      }
+    }
+    methods: {
+      sendMsg() {
+        this.$emit('show', this.msg)
+      }
+    }
+  })
+</script>
+```
+
+### 组件自定义事件扩展
+
+- 若想让自定义事件只触发一次，可以使用`@show.once="getMsg"`或`this.$refs.demo.$once('show', this.getMsg)`绑定方法
+- 触发自定义事件：`this.$emit('xxx', 数据)`
+- 解绑自定义事件：
+  - 解绑单个：`this.$off('xxx')`
+  - 解绑多个：`this.$off(['xxx', 'yyy'])`
+  - 解绑全部：`this.$off()`
+- 组件上也可以绑定原生`DOM`事件，需要加事件修饰符`native`，如：`<Demo @click.native="xxx" />`
+- 注意：通过`this.$refs.demo.$on('show', 回调)`绑定自定义事件时，回调要么调用`methods`中的方面，要么使用箭头函数，否则回调函数中的`this`指向是组件的实例对象
+
+## 全局事件总线
+
+> `GlobalEventBus`：一种组件间通信的方式，适用于**任意组件间通信**
+
+### 安装全局事件总线
+
+```javascript
+// main.js
+new Vue({
+  ...
+  beforeCreate() {
+    Vue.prototype.$bus = this // 安装全局事件总线，$bus 就是当前应用的 vm
+  }
+  ...
+})
+```
+
+### 使用事件总线
+
+- 接收数据：`A`组件想接收数据，则在`A`组件中给`$bus`绑定自定义事件，事件的回调在`A`组件中
+
+```javascript
+mounted() {
+  this.$bus.$on('xxx', (data) => { ... })
+}
+```
+
+- 提供数据
+
+```javascript
+methods: {
+  doSomething() {
+    this.$bus.$emit('xxx', 数据)
+  }
+}
+```
+
+### 全局事件总线注意项
+
+- 在`beforeDestroy`钩子函数中用`$off`去解绑**当前组件所用到的事件**：
+
+```javascript
+beforeDestroy() {
+  this.$bus.$off('xxx')
+}
+```

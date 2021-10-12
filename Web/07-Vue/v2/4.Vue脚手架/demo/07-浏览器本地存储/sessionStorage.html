@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SessionStorage</title>
+</head>
+<body>
+  <h1>SessionStorage</h1>
+  <button onclick="saveData()">点击保存数据</button>
+  <br />
+  <br />
+  <button onclick="readData()">点击读取数据</button>
+  <br />
+  <br />
+  <button onclick="delData()">点击删除数据</button>
+  <br />
+  <br />
+  <button onclick="clearData()">点击清空数据</button>
+  <script>
+    let person = { name: 'Tom', age: 18 }
+    // 存储数据
+    function saveData() {
+      window.sessionStorage.setItem('msg', 'Hello World')
+      window.sessionStorage.setItem('num', 666)
+      window.sessionStorage.setItem('person', JSON.stringify(person))
+    }
+
+    // 读取数据
+    function readData() {
+      console.log(window.sessionStorage.getItem('msg'))
+      console.log(window.sessionStorage.getItem('num'))
+      console.log(JSON.parse(window.sessionStorage.getItem('person')))
+    }
+
+    // 删除数据
+    function delData() {
+      window.sessionStorage.removeItem('num')
+    }
+
+    // 清空数据
+    function clearData() {
+      window.sessionStorage.clear()
+    }
+  </script>
+</body>
+</html>

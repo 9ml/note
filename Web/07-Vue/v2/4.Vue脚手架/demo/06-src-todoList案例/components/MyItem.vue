@@ -6,17 +6,20 @@
       <!-- <input type="checkbox" v-model="item.done" /> -->
       <span>{{item.title}}</span>
     </label>
-    <button class="btn btn-danger" style="display:none">删除</button>
+    <button class="btn btn-danger" @click="handleDel(item.id)">删除</button>
   </li>
 </template>
 
 <script>
   export default {
     name: 'MyItem',
-    props: ['item', 'checkTodo'],
+    props: ['item', 'checkTodo', 'delTodo'],
     methods: {
       handleCheck(id) {
         this.checkTodo(id)
+      },
+      handleDel(id) {
+        if (confirm('确认删除吗？')) this.delTodo(id)
       }
     }
   }
@@ -56,5 +59,13 @@
 
   li:last-child {
     border-bottom: none;
+  }
+
+  li:hover {
+    background-color: #ddd;
+  }
+
+  li:hover button {
+    display: block;
   }
 </style>

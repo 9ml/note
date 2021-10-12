@@ -5,6 +5,7 @@
       :key="i.id"
       :item="i"
       :checkTodo="checkTodo"
+      :delTodo="delTodo"
     />
   </ul>
 </template>
@@ -13,7 +14,7 @@
   import MyItem from './MyItem'
   export default {
     name: 'MyList',
-    props: ['list', 'checkTodo'],
+    props: ['list', 'checkTodo', 'delTodo'],
     components: { MyItem }
   }
 </script>
