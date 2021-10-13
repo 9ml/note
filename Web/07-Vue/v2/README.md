@@ -901,7 +901,7 @@ export default {
 - 作用：在插入、更新或移除`DOM`元素时，在合适的时候给元素添加样式类名
 - 图示：
 
-![动画与过渡](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/transition.jpg)
+![动画与过渡](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/transition.png)
 
 - [官方示例](https://cn.vuejs.org/v2/guide/transitions.html)
 - 使用第三方动画库
