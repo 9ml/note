@@ -1,32 +1,36 @@
 <template>
-  <div class="app">
-    <h1>{{msg}}</h1>
-    <School />
-    <Student />
+  <div id="root">
+    <button @click="getInfoBD">获取百度信息</button>
+    <br />
+    <br />
+    <button @click="getInfoJD">获取京东信息</button>
   </div>
 </template>
 
 <script>
-import School from './components/School.vue'
-import Student from './components/Student.vue'
-
+import axios from 'axios'
 export default {
   name: 'App',
-  components: {
-    School,
-    Student
-  },
-  data() {
-    return {
-      msg: 'Hello World'
+  methods: {
+    getInfoBD() {
+      // axios.get('http://localhost:8080').then(res => {
+      //   console.log('请求成功', res)
+      // }, err => {
+      //   console.log('请求失败', err)
+      // })
+      axios.get('http://localhost:8080/api').then(res => {
+        console.log('请求成功', res)
+      }, err => {
+        console.log('请求失败', err)
+      })
+    },
+    getInfoJD() {
+      axios.get('http://localhost:8080/demo').then(res => {
+        console.log('请求成功', res)
+      }, err => {
+        console.log('请求失败', err)
+      })
     }
-  }
+  },
 }
 </script>
-
-<style scoped>
-  .app {
-    background-color: lightblue;
-    padding: 10px;
-  }
-</style>

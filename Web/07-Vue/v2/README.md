@@ -841,3 +841,120 @@ beforeDestroy() {
   this.$bus.$off('xxx')
 }
 ```
+
+## 消息订阅与发布
+
+> 一种组件间的通信方式，适用于**任意组件间通信**
+> 需要借助第三方库实现
+
+### 消息订阅与发布使用步骤
+
+- 安装`pubsub-js`第三方库：
+
+```shell
+npm i pubsub-js
+```
+
+- 消息订阅：
+  - 在需要订阅消息的页面引入`pubsub-js`
+  - 通过`pubsub.subscribe('msgName', (name, data) => { ... })`订阅消息，其中回调中有两个参数
+    - `name`：订阅消息的名称
+    - `data`：订阅消息发布的数据
+  - 注意：最好在组件销毁前取消订阅，需要通过`id`来取消订阅
+  - 示例：
+
+```javascript
+import pubsub from 'pubsub-js'
+export default {
+  mounted() {
+    this.pubId = pubsub.subscribe('msgName', (name, data) => { ... })
+  },
+  beforeDestroy() {
+    pubsub.unsubscribe(this.punId)
+  }
+}
+```
+
+- 消息发布：
+  - 在需要发布消息的页面引入`pubsub-js`
+  - 通过`pubsub.publish('msgName', data)`发布消息
+  - 示例：
+
+```javascript
+export default {
+  methods: {
+    doSomething() {
+      pubsub.publish('msgName', this.msg)
+    }
+  }
+}
+```
+
+## $nextTick函数
+
+- 作用：在下一次`DOM`更新结束后执行其指定的回调
+- 语法：`this.nextTick(回调函数)`
+- 当改变数据后，要基于更新后的`DOM`进行某些操作时，要在`nextTick`所指定的回调函数中执行
+
+## 过渡与动画
+
+- 作用：在插入、更新或移除`DOM`元素时，在合适的时候给元素添加样式类名
+- 图示：
+
+![动画与过渡](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/transition.jpg)
+
+- [官方示例](https://cn.vuejs.org/v2/guide/transitions.html)
+- 使用第三方动画库
+
+```shell
+npm i animate.css
+```
+
+## Vue脚手架配置代理
+
+### 方式一
+
+- 在`vue.config.js`中添加配置：
+
+```javascript
+module.exports = {
+  devServer: {
+    proxy: 'https://www.baidu.com'
+  }
+}
+```
+
+- 说明：
+  - 优点：配置简单，请求资源时直接发给前端即可
+  - 缺点：不能配置多个代理，不能灵活的控制请求是否走代理
+  - 工作方式：
+    - 当请求了前端已存在的资源时，会直接从前端拿去数据，不会转发给服务器
+    - 当请求了前端不存在的资源时，那么该请求会转发给服务器
+    - **优先匹配前端资源**
+
+### 方式二
+
+- 在`vue.config.js`中添加配置：
+
+```javascript
+devServer: {
+  proxy: {
+    '/api': {
+      target: 'https://www.baidu.com',
+      pathRewrite: {'^/api': ''}, // 根据正则匹配路径并重新
+      ws: true, // 支持 websocket，默认 true
+      changeOrigin: true // 控制请求头中的 host 值，默认 true
+    },
+    '/demo': {
+      target: 'https://www.jd.com',
+      pathRewrite: {'^/demo': ''},
+      ws: true,
+      changeOrigin: true
+    }
+  }
+}
+```
+
+- 说明：
+  - 优点：可以配置多个代理，且可以灵活的控制请求是否走代理
+  - 缺点：配置略微繁琐，请求资源时必须加前缀
