@@ -832,6 +832,10 @@ methods: {
 }
 ```
 
+- 图示
+
+![全局事件总线](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/$bus.png)
+
 ### 全局事件总线注意项
 
 - 在`beforeDestroy`钩子函数中用`$off`去解绑**当前组件所用到的事件**：
@@ -958,3 +962,124 @@ devServer: {
 - 说明：
   - 优点：可以配置多个代理，且可以灵活的控制请求是否走代理
   - 缺点：配置略微繁琐，请求资源时必须加前缀
+
+## Vue-resource
+
+- 安装
+
+```shell
+npm i vue-resource
+```
+
+- `main.js`配置
+
+```javascript
+// 引入
+import vueResource from 'vue-resource'
+// 使用
+Vue.use(vueResource)
+```
+
+- 使用
+
+```javascript
+getData() {
+  this.$http.get('https://www.xxx.com').then(res => {
+    console.log('请求成功', res)
+  }, err => {
+    console.log('请求失败', err)
+  })
+}
+```
+
+## 插槽
+
+- 作用：让父组件可以想子组件指定位置插入`HTML`结构，也是一种组件间的通信方式，适用于：`父 => 子`
+- 分类：
+  - 默认插槽
+  - 具名插槽
+  - 作用域插槽
+
+### 默认插槽
+
+```html
+<!-- 父组件中 -->
+<Demo>
+  <div>HTML结构</div>
+</Demo>
+
+<!-- 子组件中 -->
+<template>
+  <div>
+    <slot>当组件没有传递具体的结构时展示</slot>
+  </div>
+</template>
+
+```
+
+### 具名插槽
+
+```html
+<!-- 父组件中 -->
+<Demo>
+  <template slot="header">
+    <div>HTML结构1</div>
+  </template>
+  <template v-slot:footer>
+    <div>HTML结构2</div>
+  </template>
+</Demo>
+
+<!-- 子组件中 -->
+<template>
+  <div>
+    <slot name="header">当组件没有传递具体的结构时展示</slot>
+    <slot name="footer">当组件没有传递具体的结构时展示</slot>
+  </div>
+</template>
+```
+
+### 作用域插槽
+
+- 说明：数据在子组件中，但根据数据生成的结构要在父组件中决定，需要在父组件中获取子组件中的数据进行插槽内容渲染
+- 可结合具名插槽使用
+
+```html
+<!-- 父组件中 -->
+<Demo>
+  <template scope="data">
+    <div>{{data.msg}}</div>
+  </template>
+</Demo>
+<Demo>
+  <template scope="{msg}">
+    <div>{{msg}}</div>
+  </template>
+</Demo>
+<Demo>
+  <template slot-scope="{msg}">
+    <div>{{msg}}</div>
+  </template>
+</Demo>
+
+<!-- 子组件中 -->
+<template>
+  <div>
+    <slot :msg="data">当组件没有传递具体的结构时展示</slot>
+  </div>
+</template>
+```
+
+## Vuex
+
+- 概念：专门在`Vue`中实现**集中式状态、数据管理**的一个`Vue`插件，对`Vue`应用中多个组件的共享状态进行集中式的管理：**读、写**
+- 一种组件间通信的方式，适用于任意组件间通信
+- [Github](https://github.com/vuejs/vuex)
+- 图示
+
+![Vuex](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/vuex.jpg)
+
+### Vuex使用时机
+
+- 多个组件依赖同一状态
+- 来自不同组件的行为需要变更同一状态
