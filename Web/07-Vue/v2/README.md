@@ -1075,7 +1075,7 @@ getData() {
 - 概念：专门在`Vue`中实现**集中式状态、数据管理**的一个`Vue`插件，对`Vue`应用中多个组件的共享状态进行集中式的管理：**读、写**
 - 一种组件间通信的方式，适用于任意组件间通信
 - [Github](https://github.com/vuejs/vuex)
-- 图示
+- 图示：
 
 ![Vuex](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/vuex.jpg)
 
@@ -1083,3 +1083,195 @@ getData() {
 
 - 多个组件依赖同一状态
 - 来自不同组件的行为需要变更同一状态
+
+### Vuex工作原理
+
+- `Vuex`分为三部分：
+  - `Actions`：用来处理异步回调获取数据的模块，如调用后端`API`，如果没有异步操作可跳过`Actions`直接调用`Mutations`中的方法处理数据
+  - `Mutations`：用来处理`State`中数据的模块
+  - `State`：用来存储数据的模块，类型组件中的`data`属性
+
+![Vuex](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/vuex.png)
+
+### 搭建Vuex
+
+- 安装`Vuex`:
+
+```shell
+npm i vuex
+```
+
+- 应用`Vuex`并创建`store`：
+  - 需要在`Vue.use(Vuex)`应用`Vuex`之后才能创建`store`实例，且模块化会将`import`语句提前，所有没有在`main.js`中应用`Vuex`
+  - 在`src`目录新建`store`文件夹，并在文件夹中新建`index.js`文件，并编写如下内容：
+
+```javascript
+// 引入 Vue
+import Vue from 'vue'
+// 引入 Vuex
+import Vuex from 'vuex'
+// 应用 Vuex
+Vue.use(Vuex)
+// 创建 actions => 响应组件中的动作
+const actions = { ... }
+// 创建 mutations => 操作 state 中的数据
+const mutations = { ... }
+// 创建 state => 存储数据
+const state = { ... }
+// 创建并导出 store
+export default new Vuex.Store({
+  actions,
+  mutations,
+  state
+})
+```
+
+- 在`main.js`中将`store`挂载到`Vue`中
+  - 注意：应用`Vuex`与创建`store`实例的顺序问题，不用在`main.js`中应用`Vuex`，因为`import`的`store`会先执行
+
+```javascript
+import store from './store'
+new Vue({
+  el: '#app',
+  store
+})
+```
+
+### Vuex基本使用
+
+- 组件中读取`Vuex`中的数据：
+  - `$store.state.value`
+- 组件中修改`Vuex`中的数据：
+  - `$store.dispatch('actions中的方法名', 参数数据)`
+  - `$store.commit('mutations中的方法名', 参数数据)`
+- 若没有网络请求或其他业务逻辑，组件中可以越过`actions`，直接使用`commit`调用`mutations`中的方法
+
+- 组件中示例代码：
+
+```javascript
+export default {
+  data: {
+    n: 1
+  },
+  methods: {
+    add() {
+      this.$store.commit('addNormal', this.n)
+    },
+    addByWait() {
+      this.$store.dispatch('addWait', this.n)
+    }
+  }
+}
+```
+
+- `store`中示例代码：
+
+```javascript
+// 创建并导出 store
+export default new Store({
+  actions: {
+    // 响应动作调用操作 mutations 中的事件
+    addWait() {
+      setTimeout(() => {
+        context.commit('addNormal', value)
+      }, 1000)
+    }
+  },
+  mutations: {
+    // 执行事件
+    addNormal(state, value) {
+      state.sum =+ value
+    }
+  },
+  state: {
+    sum: 0
+  }
+})
+```
+
+### Getters
+
+- 概念：用来加工`state`中的数据，相似于组件中的`computed`计算属性，当`state`中的数据需要加工时使用
+- 在`store`中配置`getters`:
+
+```javascript
+export default new Store({
+  getters: {
+    newSum(state) {
+      return state.sum * 10
+    }
+  }
+})
+```
+
+- 组件中读取数据：`this.$store.getters.newSum`
+
+### Vuex中Map方法的使用
+
+- 注意：使用以下`map`方法需要先在组件中引入：`import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'`
+
+#### mapState方法
+
+- 用于映射`state`中的数据为计算属性，共有两种写法：
+  - 对象写法：`{key: value}`形式，`key`和`value`一致或不一致时都可使用，页面中使用`key`获取数据
+  - 数组写法：`['xxx', 'yyy']`，数组中的元素要与`state`中的属性名一致，页面中使用数组中元素获取数据
+- 示例：
+
+```javascript
+computed: {
+  // 对象写法
+  ...mapState({getName: 'name', getAge: 'age'})
+  // 数组写法
+  ...mapState(['name', 'age'])
+}
+```
+
+#### mapGetters方法
+
+- 用于映射`getters`中的数据为计算属性，共有两种写法：
+  - 对象写法：与上述`mapState`方法一致
+  - 数组写法：与上述`mapState`方法一致
+- 示例：
+
+```javascript
+computed: {
+  // 对象写法
+  ...mapGetters({newName: 'name', newAge: 'age'})
+  // 数组写法
+  ...mapGetters(['name', 'age'])
+}
+```
+
+#### mapActions方法
+
+- 用于生成与`actions`对话的方法，即包含`$store.dispatch(xxx)`的函数，共有两种写法：
+  - 对象写法：`{key: value}`形式，`key`和`value`一致或不一致时都可使用，其中`key`用于页面中的绑定事件处理函数
+  - 数组写法：`['xxx', 'yyy']`，数组中的元素要与`state`中的属性名一致，数组中元素用于页面中的绑定事件处理函数
+- 注意：如需传参要在页面绑定事件时传递参数，如`<button @click="getName(xxx)">获取名字</button>`，否则参数是默认的事件对象`$event`
+- 示例：
+
+```javascript
+methods: {
+  // 对象写法
+  ...mapActions({getName: 'getUserName', getAge: 'getUserAge'})
+  // 数组写法
+  ...mapActions(['getName', 'getAge'])
+}
+```
+
+#### mapMutations
+
+- 用于生成与`mutations`对话的方法，即包含`$store.commit(xxx)`的函数，共有两种写法：
+  - 对象写法：与上述`mapActions`方法一致
+  - 数组写法：与上述`mapActions`方法一致
+- 传参：与上述`mapActions`方法一致
+- 示例：
+
+```javascript
+methods: {
+  // 对象写法
+  ...mapMutations({update: 'handleUpdate', del: 'handleDel'})
+  // 数组写法
+  ...mapMutations(['update', 'del'])
+}
+```
