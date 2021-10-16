@@ -1275,3 +1275,151 @@ methods: {
   ...mapMutations(['update', 'del'])
 }
 ```
+
+### Vuex模块化
+
+- 目的：让代码更好维护，让多种数据分类更加明确
+
+#### 模块化使用步骤
+
+- 在`store`文件夹新建`modules`文件夹
+- 在`modules`文件夹中新建不同模块的`.js`文件
+- 在`.js`文件中分别配置`actions`、`mutations`和`state`等并导出模块，需要开启命名空间：`namespaced: true`
+- 在`store/index.js`文件中分别引入模块，并配置到`modules`对象中
+- 代码示例：
+
+```javascript
+// store/modules/count.js 文件
+export default {
+  namespaced: true,
+  actions: {
+    addWait(context, value) {
+      setTimeout(() => {
+        context.commit('ADD', value)
+      }, 1000)
+    }
+  },
+  mutations: {
+    ADD(state, value) {
+      state.sum += value
+    }
+  },
+  state: {
+    sum: 0
+  },
+  getters: {
+    bigSum(state) {
+      return state.sum * 10
+    }
+  }
+}
+
+// store/index.js 文件
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+import count from './modules/count.js'
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+  modules: {
+    // count: count
+    count
+  }
+})
+
+```
+
+#### 使用不同模块中的方法
+
+- 组件中获取模块`count`中`state`的数据
+
+```javascript
+computed: {
+  // 直接获取
+  sum() {
+    return this.$store.state.count.sum
+  }
+  // 使用 mapState 获取
+  ...mapState('count', ['sum'])
+}
+```
+
+- 组件中获取模块`count`中`getters`的数据
+
+```javascript
+computed: {
+  // 直接获取
+  bigSum() {
+    return this.$state.getters('count/bigSum')
+  }
+  // 使用 mapGetters 获取
+  ...mapGetters('count', [' '])
+}
+```
+
+- 组件中调用模块`count`中`actions`的方法
+
+```javascript
+methods: {
+  // 直接调用
+  handleAddWait() {
+    this.$store.dispatch('count/addWait')
+  }
+  // 使用 mapActions 调用
+  ...mapActions('count', { handleAddWait: 'addWait' })
+}
+```
+
+- 组件中调用模块`count`中`mutations`的方法
+
+```javascript
+methods: {
+  // 直接调用
+  handleAdd() {
+    this.$store.commit('count/ADD')
+  }
+  // 使用 mapMutations 调用
+  ...mapMutations('count', { handleAdd: 'ADD' })
+}
+```
+
+## 路由
+
+- 现实生活中的路由：
+
+![生活中的路由](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/router-live.png)
+
+- `Vue`中的路由：
+  - 为了完成`SPA(single page web application)`单页面应用
+
+![Vue中的路由](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/router-vue.png)
+
+### 理解
+
+#### Vue-router
+
+- `Vue`的一个插件库，专门用来实现`SPA`应用
+
+#### SPA应用
+
+- 单页面`WEB`应用（`single page web application`）：`SPA`
+- 整个应用只有**一个完整的页面**
+- 点击页面中的导航链接**不会刷新页面**，只会做页面的**局部更新**
+- 数据需要通过`AJAX`请求获取
+
+#### 路由的理解
+
+- 路由：一个路由就是一组映射关系：`key-value`
+  - `key`：路由
+  - `value`是`function`或`component`
+
+#### 路由的分类
+
+- 后端路由：
+  - 理解：`value`是`function`，用于处理客户端提交的请求
+  - 工作流程：服务器接收到一个请求时，根据**请求路径**找到匹配的**函数**来处理请求，返回响应数据
+- 前端路由：
+  - 理解：`value`是`component`，用于展示页面
+  - 工作流程：当浏览器的路径改变时，对应的组件就会展示
