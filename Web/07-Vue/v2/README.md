@@ -1422,4 +1422,345 @@ methods: {
   - 工作流程：服务器接收到一个请求时，根据**请求路径**找到匹配的**函数**来处理请求，返回响应数据
 - 前端路由：
   - 理解：`value`是`component`，用于展示页面
-  - 工作流程：当浏览器的路径改变时，对应的组件就会展示1111
+  - 工作流程：当浏览器的路径改变时，对应的组件就会展示
+
+### 路由的基本使用
+
+#### 安装路由
+
+```shell
+npm i vue-router
+```
+
+#### 创建路由
+
+- 在`src`中新建`router`文件夹并新建`index.js`文件用于创建路由
+
+```javascript
+// 引入路由
+import VueRouter from "vue-router"
+
+// 引入组件
+import About from '../components/About.vue'
+import Home from '../components/Home.vue'
+
+// 创建路由并导出
+export default new VueRouter({
+  routes: [
+    {
+      path: '/about',
+      component: About
+    },
+    {
+      path: '/home',
+      component: Home
+    }
+  ]
+})
+```
+
+#### 使用路由
+
+- 在`main.js`中引入并使用
+
+```javascript
+// 引入 Vue
+import Vue from 'Vue'
+// 引入根组件 App
+import App from './App'
+// 引入 VueRouter
+import VueRouter from 'vue-router'
+import router from './router'
+// 使用
+Vue.use(VueRouter)
+
+new Vue({
+  router,
+  render: h() => h(App)
+}).$mount('#app')
+```
+
+#### 切换路由
+
+- 在组件中实现路由切换
+  - `active-class`可实现高亮样式
+
+```html
+<router-link active-class="active" to="/about">About</router-link>
+<router-link active-class="active" to="/home">Home</router-link>
+```
+
+#### 展示路由
+
+- 在组件中指定展示路由的位置
+
+```html
+<router-view></router-view>
+```
+
+#### 使用路由注意点
+
+- 路由组件通常存放在`pages`文件夹中，一般组件通常存放在`components`文件夹中
+- 通过切换隐藏了的路由组件，默认是被销毁掉的，需要的时候再去重新挂载
+- 每个组件都有自己的`$route`属性，存储自己的路由信息
+- 整个应用只有一个`router`，可以通过组件的`$router`属性获取
+
+### 嵌套（多级）路由
+
+- 配置路由规则使用`children`配置项
+  - `children`配置中的`path`不要加`/`
+  - 跳转要写完整路径：`<router-link to="/home/news">News</router-link>`
+
+```javascript
+export default new VueRouter({
+  routes: [
+    // 一级路由
+    {
+      path: '/about',
+      component: About
+    },
+    {
+      path: '/home',
+      component: Home,
+      // 二级路由
+      children: [
+        {
+          path: 'news', // 不要写 /news
+          component: News
+        },
+        {
+          path: 'message', // 不要写 /message
+          component: Message
+        }
+      ]
+    }
+  ]
+})
+```
+
+### 路由传参
+
+- 路由跳转携带参数，共有两种传参方式：
+  - `query`传参
+  - `params`传参
+
+#### query传参
+
+- 跳转传递参数
+
+```html
+<!-- 字符串写法 -->
+<router-link :to="`/home/message/detail?id=${this.id}&name=${this.name}`"></router-link>
+<!-- 对象写法 -->
+<router-link :to="{
+  path: '/home/message/detail',
+  query: {
+    id: this.id,
+    name: this.name
+  }
+}"></router-link>
+```
+
+- 接收参数
+
+```javascript
+mounted() {
+  console.log(this.$route.query.id)
+  console.log(this.$route.query.title)
+}
+```
+
+#### params传参
+
+- `router`配置
+  - 注意：使用`params`传参时，配置路由匹配规则`path`中需要拼接`/:xxx`用于声明接收`params`
+
+```javascript
+export default new VueRouter({
+  routes: [
+    {
+      path: '/home',
+      component: Home,
+      children: [
+        {
+          path: 'message',
+          component: Message,
+          children: [
+            {
+              name: 'hello', // 给路由命名
+              path: 'details/:id/:title', // 使用占位符声明接收 params 参数
+              component: Details
+            }
+          ]
+        }
+      ]
+    }
+  ]
+})
+```
+
+- 跳转传递参数
+  - 注意：`params`传参的对象写法只能使用`name`跳转，不能使用`path`跳转
+
+```html
+<!-- 字符串写法 -->
+<router-link :to="`/home/message/detail/${this.id}/${this.name}`"></router-link>
+<!-- 对象写法 -->
+<router-link :to="{
+  <!-- path: '/home/message/detail', -->
+  name: 'hello',
+  params: {
+    id: this.id,
+    name: this.name
+  }
+}"></router-link>
+```
+
+- 接收参数
+
+```javascript
+mounted() {
+  console.log(this.$route.params.id)
+  console.log(this.$route.params.title)
+}
+```
+
+### 命名路由
+
+- 作用：可以简化路由的跳转
+- 使用：在配置项中添加`name`属性：
+
+```javascript
+export default new VueRouter({
+  routes: [
+    {
+      path: '/home',
+      component: Home,
+      children: [
+        {
+          path: 'message',
+          component: Message,
+          children: [
+            {
+              name: 'hello', // 给路由命名
+              path: 'details',
+              component: Details
+            }
+          ]
+        }
+      ]
+    }
+  ]
+})
+```
+
+- 简化跳转：
+  - `router-link`标签的属性`to`为对象时才可根据`name`进行跳转
+
+```html
+<!-- 简化前：需写完整的路径 -->
+<router-link to="/home/message/details">跳转</router-link>
+<!-- 简化后：直接使用路由的命名跳转 -->
+<router-link :to="{ name: 'hello' }">跳转</router-link>
+<!-- 简化写法配合 query 传参 -->
+<router-link :to="{
+  name: 'hello',
+  query: {
+    id: 1,
+    name: 'world'
+  }
+}">跳转</router-link>
+```
+
+### 路由的props配置
+
+> 作用：让路由组件更方便的接收到参数
+
+#### router配置props
+
+> 共有三种写法：
+
+- 第一种写法：`props`值为对象，该对象中所有的`key: value`键值对的组合都可以在组件中通过`props`接收
+  - 备注：
+
+```javascript
+{
+  name: 'index',
+  path: '/home',
+  component: Home,
+  props: {
+    id: '001',
+    name: 'Hello World'
+  }
+}
+```
+
+- 第二种写法：`props`值为布尔值，当布尔值为真时，此组件收到的所有`params`参数都可以在组件中通过`props`接收
+  - 注意：只有`params`跳转传参时可以接收，`query`传参无法接收
+
+```javascript
+{
+  name: 'index',
+  path: '/home',
+  component: Home,
+  props: true
+}
+```
+
+- 第三种写法：`props`值为函数，函数形参中会携带当前的`route`数据，该函数返回一个对象，对象中的`key: value`都可以在组件中通过`props`接收
+  - 备注：可通过解构赋值简写
+
+```javascript
+{
+  name: 'index',
+  path: '/home',
+  component: Home,
+  props($route) {
+    return {
+      id: $route.query.id,
+      name: $route.query.name
+    }
+  }
+  // 简写1：解构
+  props({query}) {
+    return {
+      id: query.id,
+      name: query.name
+    }
+  }
+  // 简写2：连续解构
+  props({query: {id, name}}) {
+    return {
+      id,
+      name
+    }
+  }
+}
+```
+
+#### 组件接收router配置的props
+
+- 跟组件通信的`props`接收方法相同
+
+```javascript
+export default {
+  props: ['id', 'name'],
+  mounted() {
+    console.log(this.id)
+    console.log(this.name)
+  }
+}
+```
+
+### router-link的replace属性
+
+- 作用：控制路由跳转时操作浏览器历史记录的模式
+- 浏览器的历史记录有两种写入方式：
+  - `push`：追加历史记录，默认为`push`方式，浏览器中可以后退
+  - `replace`：替换当前记录
+- 开启`replace`模式
+
+```html
+<route-link :replace="true" to="/home/message/details">跳转</route-link>
+<route-link replace to="/home/message/details">跳转</route-link>
+```
