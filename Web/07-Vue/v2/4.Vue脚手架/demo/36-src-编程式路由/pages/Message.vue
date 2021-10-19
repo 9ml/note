@@ -40,13 +40,10 @@
         ]
       }
     },
-    beforeDestroy() {
-      console.log('Message即将销毁')
-    },
     methods: {
       pushShow(m) {
         this.$router.push({
-          name: 'detailsName',
+          name: 'hello',
           query: {
             id: m.id,
             title: m.title
@@ -55,7 +52,7 @@
       },
       replaceShow(m) {
         this.$router.replace({
-          name: 'detailsName',
+          name: 'hello',
           query: {
             id: m.id,
             title: m.title

@@ -1764,3 +1764,151 @@ export default {
 <route-link :replace="true" to="/home/message/details">跳转</route-link>
 <route-link replace to="/home/message/details">跳转</route-link>
 ```
+
+### 编程式路由
+
+- 作用：不借助`<router-link>`实现路由跳转，让路由跳转更加灵活
+- 示例：
+
+```javascript
+this.$router.push({
+  name: 'hello',
+  query: {
+    id: m.id,
+    title: m.title
+  }
+})
+
+this.$router.replace({
+  name: 'hello',
+  query: {
+    id: m.id,
+    title: m.title
+  }
+})
+```
+
+- 前进：`this.$router.back()`
+- 后退：`this.$router.forward()`
+- 指定页面栈数量前进或后退：`this.$router.go(-2)`表示后退两个页面
+
+### 缓存路由组件keep-alive
+
+- 作用：让不展示的路由组件保持挂载，不被销毁
+- 使用：使用`<keep-alive></keep-alive>`包裹要缓存路由组件的`router-view`标签
+  - `include`：指定要缓存的路由组件，填写的是**组件名称**，不配置将缓存该`router-view`的所有组件，指定缓存多个时写成数组
+- 具体编码：
+
+```html
+<!-- 指定缓存单个组件 -->
+<keep-alive include="News">
+  <router-view></router-view>
+</keep-alive>
+<!-- 指定缓存多个组件 -->
+<keep-alive :include="['News', 'Hello', 'Home']">
+  <router-view></router-view>
+</keep-alive>
+```
+
+### 两个新的生命周期函数-路由组件
+
+- 作用：路由组件所独有的两个钩子，用于捕获路由组件的激活状态
+- 理解：当路由组件被`keep-alive`缓存时，`mounted`、`beforeDestroy`等生命周期便无法监视到，如果需要在组件不展示的时候清除定时器等一系列操作时，可使用这两个生命周期出来相关业务逻辑
+- `activated`：路由组件被激活时触发
+- `deactivated`：路由组件失活时触发
+
+### 路由守卫
+
+- 作用：对路由进行权限限制，保护路由的安全
+- 分类：
+  - 全局守卫
+  - 独享守卫
+  - 组件内守卫
+
+#### 全局守卫
+
+- 全局路由守卫共有两个方法：
+  - `beforeEach(to, from, next)`：全局前置路由守卫，初始化时及每次路由切换之前被调用
+    - `to`：将要跳转的路由信息
+    - `from`：上一个路由信息
+    - `next`：是否放行
+  - `afterEach(to, from)`：全局后置路由守卫，初始化时及每次路由切换之后被调用
+    - `to`：跳转的路由信息
+    - `from`：上一个路由信息
+
+```javascript
+// 全局前置路由守卫 => 初始化时 及 每次路由切换之前被调用
+router.beforeEach((to, from, next) => {
+  console.log('全局前置路由守卫', to, from)
+  to.meta.isAuth ? localStorage.getItem('user') === '9ml' ? next() : alert('当前账户无权限') : next()
+})
+
+// 全局后置路由守卫 => 初始化时 及 每次路由切换之后被调用
+router.afterEach((to, from) => {
+  console.log('全局后置路由守卫', to, from)
+  // 前置路由守卫放行后修改页面的标题
+  document.title = to.meta.title || 'test'
+})
+```
+
+#### 独享守卫
+
+- 某一个路由所独享的路由守卫，只有一个方法：
+  - `beforeEnter(to, from, next)`
+  - 注意，没有`afterEnter`方法
+  - `meta`是路由元信息
+
+```javascript
+{
+  name: 'homeName',
+  path: '/home',
+  component: Home,
+  meta: {
+    title: '主页'
+  },
+  beforeEnter: (to, from, next) => {
+    to.meta.isAuth ? localStorage.getItem('user') === '9ml' ? next() : alert('当前账户无权限') : next()
+  }
+}
+```
+
+#### 组件内守卫
+
+- 组件内部的路由守卫，共有两个方法：
+  - `beforeRouterEnter(to, from, next)`：通过路由规则，进入该组件时调用
+  - `beforeRouterLeave(to, from, next)`：通过路由规则，离开该组件时调用
+
+```javascript
+export default {
+  name: 'Demo',
+  // 通过路由规则，进入该组件时调用
+  beforeRouteEnter (to, from, next) {
+    console.log('About----beforeRouteEnter', to, from)
+    to.meta.isAuth ? localStorage.getItem('user') === '9ml' ? next() : alert('当前账户无权限') : next()
+  },
+  // 通过路由规则，离开该组件时调用
+  beforeRouteLeave (to, from, next) {
+    console.log('About----beforeRouteLeave', to, from)
+    next()
+  }
+}
+```
+
+### hash模式与history模式
+
+> 路由器的两种工作模式
+
+- 哈希值：网页地址`#`及其后面的内容就是`hash`值，`hash`值不会包含在`HTTP`请求中，即：`hash`值不会带给服务器
+
+#### hash模式
+
+- 地址中永远带着`#`，不美观
+- 若以后将地址通过第三方手机`App`分享，若`app`校验严格，则地址会被标记为不合法
+- 兼容性好
+
+#### history模式
+
+- 地址干净，美观
+- 兼容性和`hash`模式相比略差
+- 应用部署上线时需要后端人员支持，解决刷新页面服务器`404`的问题
+- `node`中借助[connect-history-api-fallback](https://www.npmjs.com/package/connect-history-api-fallback)解决`history`模式页面刷新请求服务器问题

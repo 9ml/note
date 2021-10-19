@@ -12,7 +12,6 @@ import Details from '../pages/Details.vue'
 
 // 创建路由并导出
 const router = new VueRouter({
-  mode: 'history',
   routes: [
     // 一级路由
     {
@@ -20,7 +19,6 @@ const router = new VueRouter({
       path: '/about',
       component: About,
       meta: {
-        isAuth: true,
         title: '关于'
       }
     },
@@ -39,6 +37,11 @@ const router = new VueRouter({
           meta: {
             isAuth: true,
             title: '新闻'
+          },
+          // 独享路由守卫
+          beforeEnter: (to, from, next) => {
+            // console.log(to, from)
+            to.meta.isAuth ? localStorage.getItem('user') === '9ml' ? next() : alert('当前账户无权限') : next()
           }
         },
         {
