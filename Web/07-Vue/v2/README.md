@@ -1912,3 +1912,17 @@ export default {
 - 兼容性和`hash`模式相比略差
 - 应用部署上线时需要后端人员支持，解决刷新页面服务器`404`的问题
 - `node`中借助[connect-history-api-fallback](https://www.npmjs.com/package/connect-history-api-fallback)解决`history`模式页面刷新请求服务器问题
+
+## Vue UI组件库
+
+### 移动端常用UI组件库
+
+- [Vant](https://youzan.github.io/vant)
+- [Cube UI](https://didi.github.io/cube-ui)
+- [Mint UI](https://mint-ui.github.io)
+- [Nut ui](https://nutui.jd.com/#/)
+
+### PC端常用UI组件库
+
+- [Element UI](https://element.eleme.cn)
+- [IView UI](https://www.iviewui.com)
