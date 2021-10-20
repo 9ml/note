@@ -43,7 +43,7 @@
   - 移除`keyCode`支持作为`v-on`的修饰符
   - ...
 
-## 创建Vue工程
+## 创建Vue3工程
 
 - 创建`Vue3`项目工程共有两种方式
 
@@ -55,9 +55,10 @@ vue --version
 # 安装或升级 @vue/cli
 npm install -g @vue/cli
 # 创建工程
-vue create vue_test
+vue create <project-name>
+# 进入工程目录
+cd <project-name>
 # 启动
-cd vue_test
 npm run serve
 ```
 
@@ -72,4 +73,41 @@ npm run serve
   - 真正的按需编译，不再等待整个应用编译完成
 - 传统构建与`vite`构建的对比：
 
-![传统构建与vite构建的对比]()
+![传统构建](https://cn.vitejs.dev/assets/bundler.37740380.png)
+![vite构建](https://cn.vitejs.dev/assets/esm.3070012d.png)
+
+- 构建项目
+
+```shell
+# 创建工程
+npm init vite-app <project-name>
+# 进入工程目录
+cd <project-name>
+# 安装依赖
+npm install
+# 运行
+npm run dev
+```
+
+## 常用Composition API
+
+- [常用组合式API](https://v3.cn.vuejs.org/api/composition-api.html)
+
+### 拉开序幕的Setup
+
+#### 理解Setup
+
+- `setup`是`Vue3.0`中一个新的配置项，值为一个函数
+- `setup`是所有`Composition API`**表演的舞台**
+- 组件中所用到的数据、方法等等均要写在`setup`中
+- `setup`函数的两种返回值：
+  - 若返回一个对象，则对象中的属性、方法在模板中均可以直接使用 - 重点关注
+  - 若返回一个渲染函数，则可以自定义渲染内容 - 了解
+
+#### Setup注意点
+
+- 尽量不要与`Vue2.x`配置混用
+  - `Vue2.x`配置`data`、`methods`、`computed`等属性中可以方法到`setup`中的属性和方法
+  - 但是`setup`中无法访问到`Vue2.x`配置的`data`、`methods`、`computed`等属性
+  - 如果属性和方法重名，优先获取`setup`中的数据
+- `setup`不能是一个`async`函数，因为返回值不再是`return`的对象，而是`promise`，模板看不到`return`对象中的属性
