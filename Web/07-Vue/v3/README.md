@@ -111,3 +111,62 @@ npm run dev
   - 但是`setup`中无法访问到`Vue2.x`配置的`data`、`methods`、`computed`等属性
   - 如果属性和方法重名，优先获取`setup`中的数据
 - `setup`不能是一个`async`函数，因为返回值不再是`return`的对象，而是`promise`，模板看不到`return`对象中的属性
+
+### ref函数
+
+- 作用：定义一个响应式的数据
+- 语法：
+
+```javascript
+import { ref } from 'vue'
+setup() {
+  // 创建一个包含响应式数据的引用对象（reference对象，简称：ref对象）
+  const xxx = ref(initValue)
+  // 操作数据
+  xxx.value = otherValue
+  // 返回
+  return {
+    xxx
+  }
+}
+// 模板中读取数据，不需要 .value
+<div>{{xxx}}</div>
+```
+
+- 注意：`ref`接收的数据可以是基本数据类型，也可以是对象（引用）数据类型
+  - 基本数据类型：响应式依然是使用`Object.defineProperty()`的`getter`和`setter`
+  - 对象数据类型：内部使用了`Vue3.0`中的新函数`reactive`函数
+
+### reactive函数
+
+- 作用：定义一个**对象类型**的响应式数据 => 基本数据类型不要使用`reactive`函数，使用`ref`函数
+- 语法：`const 代理对象 = reactive(源对象)`，接收一个对象或数组，返回一个代理对象（`Proxy`的实例对象，简称`Proxy`对象）
+
+```javascript
+import { reactive } from 'vue'
+setup() {
+  // 创建代理对象数据
+  const person = reactive({
+    name: 'Tom',
+    age: 18,
+    job: {
+      type: 'WEB',
+      salary: '30k'
+    },
+    hobby: ['抽烟', '喝酒', '烫头']
+  })
+  // 操作数据
+  person.name = '9ml'
+  person.job.salary = '100k'
+  person.hobby[0] = '学习'
+  // 返回
+  return {
+    person
+  }
+}
+// 模板中读取数据
+<div>{{person.name}}，{{person.job.salary}}，{{person.hobby[0]}}</div>
+```
+
+- `reactive`定义的响应式数据是**深层次的**
+- 内部基于`ES6`的`Proxy`实现，通过**代理对象**操作**原对象**内部数据进行操作
