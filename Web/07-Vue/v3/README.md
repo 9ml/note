@@ -73,8 +73,8 @@ npm run serve
   - 真正的按需编译，不再等待整个应用编译完成
 - 传统构建与`vite`构建的对比：
 
-![传统构建](https://cn.vitejs.dev/assets/bundler.37740380.png)
-![vite构建](https://cn.vitejs.dev/assets/esm.3070012d.png)
+![传统构建](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/build-webpack.png)
+![vite构建](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/build-vite.png)
 
 - 构建项目
 
@@ -196,7 +196,7 @@ Object.defineProperty(data, 'count', {
 
 - 通过`Proxy`代理：拦截对象中任意属性的变化，包括：属性值的读写、添加、删除等操作
   - [Proxy](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
-- 通过`Reflect`反射：对被代理对象的属性进行操作，不会影响后续代码代码运行，对封装框架更加友好
+- 通过`Reflect`反射：对被代理（源）对象的属性进行操作，不会影响后续代码代码运行，对封装框架更加友好
   - [Reflect](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect)
 
 ```javascript
@@ -215,3 +215,58 @@ new Proxy(data, {
   }
 })
 ```
+
+### reactive与ref对比
+
+- 从定义数据的角度对比：
+  - `ref`用于定义：基本类型数据
+  - `reactive`用于定义：对象或数组引用类型数据
+  - 备注：`ref`也可以用来定义对象或数组类型数据，它内部会自动通过`reactive`转为代理对象
+- 从原理角度对比：
+  - `ref`通过`Object.defineProperty()`的`getter`和`setter`数据劫持来实现响应式
+  - `reactive`通过使用`Proxy`数据劫持来实现响应式，并通过`Reflect`操作**源对象**内部的数据
+- 从使用角度对比：
+  - `ref`定义的数据操作时需要`.value`，读取时模板中直接读取，不需要`.value`
+  - `reactive`定义的数据操作或读取时都不需要`.value`
+
+### setup的注意点
+
+- `setup`执行的时机：
+  - 在`beforeCreate`之前执行一次，`this`是`undefined`
+- `setup`的参数：
+  - `props`：值为对象，包含组件外部传递过来的数据，且组件内部声明了接收的属性
+  - `context`：上下文对象
+    - `attrs`：值为对象，包含：组件外部传递过来的，但没有在`props`配置中声明的属性，相当于`this.$attrs`
+    - `slots`：收到的插槽内容，相当于`this.$slots`，`Vue3.0`定义命名插槽废弃了`slot="xxx"`，只能使用`v-slot:xxx`
+    - `emit`：分发自定义事件的函数，相当于`this.$emit`
+
+### 计算属性computed函数
+
+- `Vue3.0`中的`computed`函数与`Vue2.x`中`computed`配置功能一样
+- 示例：
+
+```javascript
+import { reactive, computed } from 'vue'
+setup() {
+  const person = reactive({
+    firstName: '9'
+    lastName: 'ml'
+  })
+  // 计算属性简写
+  let fullName = computed(() => {
+    return `${person.firstName}-${person.lastName}`
+  })
+  // 计算属性完整写法
+  let fullName = computed({
+    get() {
+      return `${person.firstName}-${person.lastName}`
+    },
+    set(value) {
+      person.firstName = value.split('-')[0]
+      person.lastName = value.split('-')[1]
+    }
+  })
+}
+```
+
+### watch函数
