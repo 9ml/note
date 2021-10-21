@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue3中的响应式原理</title>
+</head>
+<body>
+  <script>
+    // 源数据
+    let person = {
+      name: 'Tom',
+      age: 18
+    }
+
+    // 模拟Vue2.x实现响应式 借助 Object.defineProperty
+    //#region 
+    /*
+    let p = {}
+    Object.defineProperty(p, 'name', {
+      configurable: true, // 是否允许删除
+      get() { // 读取 name 属性时调用
+        return person.name
+      },
+      set(value) { // 修改 name 属性时调用
+        console.log('update name')
+        person.name = value
+      }
+    })
+    p.name = '9ml'
+
+    // 问题
+    p.sex = '男' // 无法监听
+    delete p.name // 无法监听
+    */
+    //#endregion
+
+    // 模拟Vue3.0实现响应式 借助 Proxy 代理对象 Reflect 反射对象
+  //  const p = new Proxy(person, {})
+  //  p.name = '9ml'
+  //  p.sex = '男'
+  //  delete p.age
+  //  console.log(person) // 都可实现数据更改
+
+  // 捕获修改
+  //#region 
+  const p = new Proxy(person, {
+    // 有人读取 p 中的属性调用
+    get(target, propName) {
+      console.log('读取了p的属性', target, propName)
+      // return target[propName]
+      return Reflect.get(target, propName)
+    },
+    // 有人修改或新增 p 中的属性调用
+    set(target, propName, value) {
+      console.log('修改了p的属性', target, propName, value)
+      // target[propName] = value
+      Reflect.set(target, propName, value)
+    },
+    // 有人删除 p 中的属性调用
+    deleteProperty(target, propName) {
+      console.log('删除了p的属性', target, propName)
+      // return delete target[propName]
+      return Reflect.deleteProperty(target, propName)
+    }
+  })
+  // 测试读取数据
+  console.log(p.name)
+  // 测试修改数据
+  p.age = 24
+  // 测试删除
+  delete p.age
+  console.log(person)
+  //#endregion
+
+  // Reflect
+  //#region 
+  /*
+  let obj = { a: 1, b: 2 }
+
+  // 通过 Object.defineProperty 操作
+  try {
+    Object.defineProperty(obj, 'c', {
+      get() {
+        return 3
+      }
+    })
+    Object.defineProperty(obj, 'c', { // 报错，不使用 try catch 捕获异常会影响后续代码运行
+      get() {
+        return 4
+      }
+    })
+  } catch (error) {
+    console.log(error)
+  }
+
+  // 通过 Reflect.defineProperty 反射对象操作
+  let x1 = Reflect.defineProperty(obj, 'c', { // 返回 布尔值 true
+    get() {
+      return 3
+    }
+  })
+  let x2 = Reflect.defineProperty(obj, 'c', { // 返回 布尔值 false 不会影响后续代码运行
+    get() {
+      return 4
+    }
+  })
+  console.log(x1)
+  console.log(x2)
+
+  // 对于封装框架而言，Reflect 相对较友好，更好的捕获异常
+  console.log('@@@')
+  */
+  //#endregion
+
+  
+
+  </script>
+</body>
+</html>

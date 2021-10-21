@@ -3,20 +3,13 @@
     <h1>
       User Info
     </h1>
-    <h2 v-show="person.name">name: {{person.name}}</h2>
-    <h2>age: {{person.age}}</h2>
-    <h2 v-show="person.sex">sex: {{person.sex}}</h2>
+    <h2>name: {{person.name}}</h2>
+    <h2>age: {person.{age}}</h2>
     <h2>job.type: {{person.job.type}}</h2>
     <h2>job.salary: {{person.job.salary}}</h2>
     <h2>job.test: {{person.job.a.b.c}}</h2>
     <h2>hobby: {{person.hobby}}</h2>
     <button @click="changeInfo">Change</button>
-    <br>
-    <br>
-    <button @click="addSex">Add Sex</button>
-    <br>
-    <br>
-    <button @click="delName">Delete Name</button>
   </div>
 </template>
 
@@ -41,7 +34,6 @@
         hobby: ['抽烟', '喝酒', '烫头']
       })
 
-      // 方法
       let changeInfo = () => {
         console.log(person)
         person.name = '9ml'
@@ -51,18 +43,10 @@
         person.a.b.c = 999
         person.hobby[0] = '学习'
       }
-      let addSex = () => {
-        person.sex = '男'
-      }
-      let delName = () => {
-        delete person.name
-      }
 
       return {
         person,
-        changeInfo,
-        addSex,
-        delName
+        changeInfo
       }
     }
   }

@@ -170,3 +170,48 @@ setup() {
 
 - `reactive`定义的响应式数据是**深层次的**
 - 内部基于`ES6`的`Proxy`实现，通过**代理对象**操作**原对象**内部数据进行操作
+
+### Vue3.0中的响应式原理
+
+#### Vue2.x的响应式原理
+
+- 对象类型：通过`Object.defineProperty()`对属性的读取、修改进行拦截，叫做**数据劫持**
+- 数组类型：通过重写更新数组的一系列方法来实现拦截，对数组的变更方法进行了包裹，如：`push`、`unshift`等`API`
+
+```javascript
+Object.defineProperty(data, 'count', {
+  get() { ... },
+  set() { ... }
+})
+```
+
+- 存在问题：
+  - 新增、删除属性界面不会更新
+  - 直接通过下标修改数组，界面不会更新
+- 解决问题：
+  - 新增属性：`this.$set()`
+  - 删除属性：`this.$delete()`
+
+#### Vue3.0的响应式原理
+
+- 通过`Proxy`代理：拦截对象中任意属性的变化，包括：属性值的读写、添加、删除等操作
+  - [Proxy](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+- 通过`Reflect`反射：对被代理对象的属性进行操作，不会影响后续代码代码运行，对封装框架更加友好
+  - [Reflect](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect)
+
+```javascript
+new Proxy(data, {
+  // 拦截读取属性值
+  get(target, propName) {
+    return Reflect.get(target, propName)
+  },
+  // 拦截修改或添加属性值
+  set(target, propName, value) {
+    Reflect.set(target, propName, value)
+  },
+  // 拦截删除属性值
+  deleteProperty(target, propName) {
+    return Reflect.deleteProperty(target, propName)
+  }
+})
+```
