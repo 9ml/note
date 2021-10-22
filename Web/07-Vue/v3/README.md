@@ -270,3 +270,248 @@ setup() {
 ```
 
 ### watch函数
+
+- `Vue3.0 watch`函数与`Vue2.x watch`配置功能相同
+- 两个小坑：
+  - 监视`reactive`定义的响应式数据时：`oldValue`无法正确获取，强制开启了**深度监视**且`deep`配置无效
+  - 监视`reactive`定义的响应式数据中对象的某个属性时：`deep`有效且需配置`deep: true`才可监视
+- 共有`6`中情况
+
+#### watch函数监视`ref`定义的一个响应式数据
+
+```javascript
+import { ref, watch } from 'vue'
+setup() {
+  let sum = ref(0)
+  watch(sum, (newValue, oldValue) => {
+    console.log('sum changed:', newValue, oldValue)
+  })
+  return {
+    sum
+  }
+}
+```
+
+#### watch函数监视`ref`定义的多个响应式数据
+
+- `immediate: true`表示初始化自动监视
+
+```javascript
+import { ref, watch } from 'vue'
+setup() {
+  let sum = ref(0)
+  let msg = ref('Hello World')
+  watch([sum, msg], (newValue, oldValue) => {
+    console.log('sum or msg changed:', newValue, oldValue)
+  }, {immediate: true})
+  return {
+    sum,
+    msg
+  }
+}
+```
+
+#### watch函数监视`reactive`定义的响应式数据-全部属性
+
+- 注意：
+  - 此处无法获得正确的`oldValue`
+  - 强制开启了深度监视且`deep`配置无效
+
+```javascript
+import { reactive, watch } from 'vue'
+setup() {
+  let person = {
+    name: 'Tom',
+    age: 18,
+    job: {
+      j1: {
+        salary: 30
+      }
+    }
+  }
+  watch(person, (newValue, oldValue) => {
+    console.log('person changed:', newVal, oldVal)
+  })
+  return {
+    person
+  }
+}
+```
+
+#### watch函数监视`reactive`定义的响应式数据-某个属性
+
+- 注意：
+  - 此处可以获得正确的`oldValue`
+  - 强制开启了深度监视且`deep`配置无效
+
+```javascript
+import { reactive, watch } from 'vue'
+setup() {
+  let person = {
+    name: 'Tom',
+    age: 18,
+    job: {
+      j1: {
+        salary: 30
+      }
+    }
+  }
+  watch(() => person.age, (newValue, oldValue) => {
+    console.log('person.age changed:', newVal, oldVal)
+  })
+  return {
+    person
+  }
+}
+```
+
+#### watch函数监视`reactive`定义的响应式数据-多个属性
+
+- 注意：
+  - 此处可以获得正确的`oldValue`
+  - 强制开启了深度监视且`deep`配置无效
+
+```javascript
+import { reactive, watch } from 'vue'
+setup() {
+  let person = {
+    name: 'Tom',
+    age: 18,
+    job: {
+      j1: {
+        salary: 30
+      }
+    }
+  }
+  watch([() => person.name, () => person.age], (newValue, oldValue) => {
+    console.log('person.name or person.age changed:', newVal, oldVal)
+  })
+  // 或
+  watch(() => [person.name, person.age], (newValue, oldValue) => {
+    console.log('person.name or person.age changed:', newVal, oldVal)
+  })
+  return {
+    person
+  }
+}
+```
+
+#### watch函数监视`reactive`定义的响应式数据-对象中的某个属性
+
+- 注意：
+  - 此处可以获得正确的`oldValue`
+  - 强制开启了深度监视且`deep`配置有效，且不配置`deep: true`无法监视
+
+```javascript
+import { reactive, watch } from 'vue'
+setup() {
+  let person = {
+    name: 'Tom',
+    age: 18,
+    job: {
+      j1: {
+        salary: 30
+      }
+    }
+  }
+  watch(() => person.job, (newValue, oldValue) => {
+    console.log('person.job changed:', newVal, oldVal)
+  }, {immediate: true, deep: true})
+  return {
+    person
+  }
+}
+```
+
+#### watch函数监视`ref`定义的基本类型与对象类型响应式数据时`.value`的问题
+
+- `ref`定义的基本类型数据发生改变时是`.value`属性的变化，`watch`函数可以直接监视到，且`.value`表示具体的值，所以监视时不要使用`.value`
+- `ref`定义的对象类型数据发生变化时是`.value`中的`Proxy`中的属性变化，`watch`函数监视不到，所以需要加上`.value`表示监视`Proxy`中的属性，或不使用`.value`直接开启`deep: true`深度监视
+
+```javascript
+import { ref, watch } from 'vue'
+setup() {
+  let sum = ref(0)
+  let person = ref({
+    name: 'Tom',
+    age: 18
+  })
+  // ref 基本类型的数据 不需要 .value
+  watch(sum, (newValue, oldValue) => {
+    console.log('sum changed:', newValue, oldValue)
+  })
+  // ref 对象类型的数据 需要 .value
+  watch(person.value, (newValue, oldValue) => {
+    console.log('person changed:', newValue, oldValue)
+  })
+  // ref 对象类型的数据 需要开启深度监视
+  watch(person, (newValue, oldValue) => {
+    console.log('person changed:', newValue, oldValue)
+  }, { deep: true })
+
+  return {
+    sum,
+    person
+  }
+}
+```
+
+### watchEffect函数
+
+- `watch`：既要指定监视的属性，也要指定监视的回调
+- `watchEffect`：不用指定监视的属性，监视的回调中用到了哪个属性就监视哪个属性
+- `watchEffect`类似于`computed`，不同点：
+  - `computed`注重计算出来的值，即回调函数的返回值，所有必须写返回值
+  - `watchEffect`注重的是过程，即回调函数的函数体，所以不用写返回值
+- 示例：
+
+```javascript
+import { ref, reactive, watchEffect } from 'vue'
+setup() {
+  let sum = ref(0)
+  let person = reactive({
+    name: 'Tom',
+    age: 18
+  })
+  // watchEffect 所指定的回调中用到的数据只要发生变化，则重新执行回调
+  watchEffect(() => {
+    const test1 = sum.value
+    const test2 = person.name
+    console.log('watchEffect配置的回调执行了')
+  })
+  return {
+    sum,
+    person
+  }
+}
+```
+
+### 生命周期
+
+- `Vue3`生命周期图示：
+
+![Vue3生命周期](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/lifecycle-Vue3.svg)
+
+#### 配置项的形式使用生命周期
+
+- `Vue3.0`中可以继续使用`Vue2.x`中的生命周期钩子，但有两个被更名：
+  - 销毁前：`beforeDestroy` => 卸载前：`beforeUnmount`
+  - 销毁后：`destroyed` => 卸载后：`unmounted`
+- 示例：
+
+```javascript
+export default {
+  name: 'Demo',
+  setup() {},
+  beforeCreate() {},
+  created() {},
+  beforeMount() {},
+  mounted() {},
+  beforeUpdate() {},
+  updated() {},
+  beforeUnmount() {},
+  unmounted() {}
+}
+```
+
+#### 组合式API的形式使用生命周期

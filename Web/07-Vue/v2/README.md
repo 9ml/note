@@ -403,7 +403,7 @@ Vue.directive('xxx', function(element, binding) {
 > 生命周期函数的名字不可更改，但函数的具体内容是开发者根据需求编写的
 > 生命周期函数中的`this`指向的是`Vue`实例对象
 
-[生命周期图解](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/lifecycle.png)
+![生命周期图解](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/lifecycle-Vue2.png)
 
 ### 生命周期各个阶段
 
