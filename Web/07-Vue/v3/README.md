@@ -514,4 +514,135 @@ export default {
 }
 ```
 
-#### 组合式API的形式使用生命周期1111
+#### 组合式API的形式使用生命周期
+
+- `Vue3`也提供了`Composition API`形式的生命周期钩子，与`Vue2.x`中钩子对应关系如下：
+  - `beforeCreate` => `setup()`
+  - `created` => `setup()`
+  - `beforeMount` => `onBeforeMount`
+  - `mounted` => `onMounted`
+  - `beforeUpdate` => `onBeforeUpdate`
+  - `updated` => `onUpdated`
+  - `beforeUnmount` => `onBeforeUnmount`
+  - `unmounted` => `onUnmounted`
+- 注意：`Composition API`形式的生命周期钩子比配置项形式的执行时机更早，优先级更高
+- 示例：
+
+```javascript
+import { onBeforeMount, onMounted, onBeforeUpdate, onUpdated, onBeforeUnmount, onUnmounted } from 'vue'
+export default {
+  setup() {
+    onBeforeMount(() => { ... })
+    onMounted(() => { ... })
+    onBeforeUpdate(() => { ... })
+    onUpdated(() => { ... })
+    onBeforeUnmount(() => { ... })
+    onUnmounted(() => { ... })
+  }
+}
+```
+
+### 自定义hook函数
+
+- `hook`：本质上是一个函数，把`setup`函数中使用的`Composition API`进行了封装，类似于`Vue2.x`中的`mixin`
+- 优势：复用代码，让`setup`中的逻辑更清晰易懂
+- 示例：
+
+```javascript
+// hooks/usePoint.js
+import { reactive, onMounted, onBeforeUnmount } from 'vue'
+export default function() {
+  // 数据
+  let point = reactive({
+    x: 0,
+    y: 0
+  })
+  // 方法
+  let savePoint = (e) => {
+    point.x = e.pageX
+    point.y = e.pageY
+  }
+  // 生命周期
+  onMounted(() => {
+    window.addEventListener('click', savePoint)
+  })
+  onBeforeUnmount(() => {
+    window.removeEventListener('click', savePoint)
+  })
+  return point
+}
+
+// Demo.vue
+import { ref } from 'vue'
+import usePoint from '../hooks/usePoint'
+export default {
+  name: 'Demo',
+  setup() {
+    // 数据
+    let sum = ref(0)
+    let point = usePoint()
+    return {
+      sum,
+      point
+    }
+  }
+}
+```
+
+### toRef
+
+- 作用：创建一个`ref`对象，其`value`值指向另一个对象中的某个属性
+- 语法：`const name = toRef(person, 'name')`
+- 应用：要将响应式对象中的某个属性单独提供给外部使用
+- 扩展：`toRefs`与`toRef`功能一致，`toRefs`可以批量创建多个`ref`对象
+- 示例：
+
+```javascript
+import { reactive, toRef, toRefs } from 'vue'
+export default {
+  setup() {
+    let person = reactive({
+      name: 'Tom',
+      age: 18,
+      job: { j1: { salary: 20 } }
+    })
+    ...
+    return {
+      name: toRef(person, 'name'),
+      age: toRef(person, 'age'),
+      salary: toRef(person.job.j1, 'salary')
+
+      ...toRefs(person)
+    }
+  }
+}
+```
+
+## 其他Composition API
+
+### shallRef与shallReactive
+
+- `shallRef`：只处理基本数据类型的响应式，不进行对象的响应式处理
+- `shallReactive`：只处理对象最外层属性的响应式，浅响应式
+- 使用时机：
+  - 如果有一个对象数据，后续功能不会修改该对象中的属性，而是生成新的对象来替换时，使用`shallRef`
+  - 如果有一个对象数据，结构比较深但变化时只是外层属性变化时，使用`shallReactive`
+
+### readonly与shallReadonly
+
+- `readonly`：让一个响应式数据变为只读的，数据中的任何属性都不能更改，深只读
+- `shallReadonly`：让一个响应式数据变为只读的，数据中多次对象可以更改，浅只读
+- 应用场景：不希望数据被修改时使用
+
+### toRaw与markRaw
+
+- `toRaw`：将一个由`reactive`生成的**响应式对象**转为普通对象
+  - 使用场景：用于读取响应式对象对应的普通对象，对这个普通对象的所有操作，不会引起页面更新
+  - 注意：由`ref`生成的基本类型数据无法转换
+- `markRaw`：标记一个对象，使其永远不会再成为响应式对象
+  - 有些值不应该被设置为响应式的，如复杂的第三方类库等
+  - 当渲染具有不可变数据源的大列表时，跳过响应式转换可以提高性能
+
+### customRef自定义ref
+
+- 作用：创建一个自定义的`ref`，并对其依赖项跟踪和更新触发进行显式控制

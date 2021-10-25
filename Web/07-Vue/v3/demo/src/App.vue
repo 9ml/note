@@ -1,22 +1,34 @@
 <template>
   <div>
-    <Demo v-if="isShowDemo"></Demo>
-    <button @click="isShowDemo = !isShowDemo">切换隐藏显示</button>
+    <input type="text" v-model="keywords" />
+    <h3>{{keywords}}</h3>
   </div>
 </template>
 
 <script>
-  import { ref } from 'vue'
-  import Demo from './components/Demo'
+  import { ref, customRef } from 'vue'
   export default {
     name: 'App',
-    components: {
-      Demo
-    },
     setup() {
-      let isShowDemo = ref(true)
+      // 自定义 ref
+      const myRef = (value) => {
+        return customRef(() => {
+          return {
+            get() {
+
+            },
+            set() {
+              
+            }
+          }
+        })
+      }
+
+      let keywords = ref('Hello') // 使用 Vue 提供的 ref
+      let keywords = myRef('Hello') // 使用 Vue 提供的 ref
+
       return {
-        isShowDemo
+        keywords
       }
     }
   }
