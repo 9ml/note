@@ -111,6 +111,7 @@ npm run dev
   - 但是`setup`中无法访问到`Vue2.x`配置的`data`、`methods`、`computed`等属性
   - 如果属性和方法重名，优先获取`setup`中的数据
 - `setup`不能是一个`async`函数，因为返回值不再是`return`的对象，而是`promise`，模板看不到`return`对象中的属性
+  - 注意：可以配合`Suspense`和异步引入使用`Promise`
 
 ### ref函数
 
@@ -646,3 +647,259 @@ export default {
 ### customRef自定义ref
 
 - 作用：创建一个自定义的`ref`，并对其依赖项跟踪和更新触发进行显式控制
+- 实例：
+
+```javascript
+import { ref, customRef } from 'vue'
+  export default {
+    name: 'App',
+    setup() {
+      // 自定义 ref
+      const myRef = (value, delay) => {
+        let timer
+        return customRef((track, trigger) => {
+          return {
+            get() {
+              console.log(`监听到从myRef中读取了数据，返回了${value}`)
+              track() // 通知 Vue 追踪数据的变化（在 return 之前提前告知 getter 这个 value 是有用的）
+              return value
+            },
+            set(newValue) {
+              console.log(`监听到从myRef中修改了数据，值为${newValue}`)
+              clearTimeout(timer)
+              timer = setTimeout(() => {
+                value = newValue
+                trigger() // 通知 Vue 去重新解析模板
+              }, delay)
+            }
+          }
+        })
+      }
+      // let keywords = ref('Hello') // 使用 Vue 提供的 ref
+      let keywords = myRef('Hello', 500) // 使用自定义的 ref
+      return {
+        keywords
+      }
+    }
+  }
+```
+
+### provide与inject
+
+- 作用：实现**祖孙/跨级组件间**通信
+- 方式：父组件有一个`provide`选项来提供数据，后代组件有一个`inject`选项来开始使用这些数据
+- 图示：
+
+![provide与inject](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/components_provide.png)
+
+- 示例：
+
+```javascript
+// 父组件
+import { provide, reactive, toRefs } from 'vue'
+import Child from './components/Child'
+export default {
+  name: 'App',
+  components: {
+    Child
+  },
+  setup() {
+    let car = reactive({ name: '奔驰', price: '50W' })
+    provide('car', car) // 给自己的后代组件传递数据
+    return { ...toRefs(car) }
+  }
+}
+
+// 后代组件
+import { inject } from 'vue'
+export default {
+  name: 'Son',
+  setup() {
+    let car = inject('car')
+    return { car }
+  }
+}
+```
+
+### 响应式数据的判断
+
+- `isRef`：检查一个值是否为一个`ref`对象
+- `isReactive`：检查一个对象是否是由`reactive`创建的响应式代理
+- `isReadonly`：检查一个对象是否是由`readonly`创建的只读代理
+- `isProxy`：检查一个对象是否是由`reactive`或者`readonly`方法创建的代理
+
+## Composition API的优势
+
+### Options API存在的问题
+
+- 使用传统`Options API`配置项`API`时，新增或者修改一个需求，就需要分别在`data/methods/computed`等配置项里修改
+- 图示：
+
+![Options API存在的问题](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/Vue-options-api-1.image)
+![Options API存在的问题](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/Vue-options-api-2.image)
+
+### Composition API的优点
+
+- 使用`Composition API`组合式`API`可以更加优雅的组织我们的代码、函数等，让相关功能的代码更加有序的组织在一起
+- 图示：
+
+![Composition API的优势](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/Vue-composition-api-1.image)
+![Composition API的优势](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/Vue-composition-api-2.image)
+
+## Vue3.0新组件
+
+### Fragment
+
+- 在`Vue2.x`中：组件必须有一个根标签
+- 在`Vue3.0`中：组件可以没有根标签，内部会将多个标签包含在一个`Fragment`虚拟元素中，是不参与渲染的
+- 好处：减少标签层级，减少内存占用
+
+### Teleport
+
+- 作用：`Teleport`是一种能够将我们的组件`HTML`结构移动到指定位置的技术
+- 位置：
+  - `body`
+  - `html`
+  - `class`选择器：需要用`.xxx`指定
+  - `id`选择器：需要用`#xxx`指定
+
+```html
+<!-- 将弹窗移动到 body 上 -->
+<teleport to="body">
+  <div v-if="isShow" class="mask">
+    <div class="dialog">
+      <h3>弹窗</h3>
+      <h4>Lorem ipsum dolor sit.</h4>
+      <button @click="isShow = false">关闭弹窗</button>
+    </div>
+  </div>
+</teleport>
+```
+
+### Suspense
+
+- 等待异步组件时渲染一些额外的内容，让应用有更好的用户体验
+
+#### Suspense使用步骤
+
+- 异步引入组件：
+
+```javascript
+// 静态引入
+// import Child from './components/Child'
+// 引入定义异步组件的 API
+import { defineAsyncComponent } from 'vue'
+// 异步引入 动态引入
+const Child = defineAsyncComponent(() => import('./components/Child'))
+export default {
+  name: 'App',
+  components: {
+    Child
+  }
+}
+```
+
+- 使用`Suspense`包裹组件并配置好`default`与`fallback`
+
+```html
+<template>
+  <div class="app">
+    <h2>App组件</h2>
+    <Suspense>
+      <!-- 异步组件引入完成展示 -->
+      <template v-slot:default>
+        <Child />
+      </template>
+      <!-- 异步组件未引入完成时展示 -->
+      <template v-slot:fallback>
+        <h3>加载中...</h3>
+      </template>
+    </Suspense>
+  </div>
+</template>
+```
+
+## 其他
+
+### 全局API的转移
+
+- `Vue2.x`有许多全局`API`和配置，如：
+
+```javascript
+// 全局注册组件
+Vue.component('MyButton', {
+  data: () => ({
+    cont: 0
+  }),
+  template: '<button @click="count ++">{{count}}</button>'
+})
+// 全局注册指定
+Vue.directive('focus', {
+  inserted: el => el.focus()
+})
+```
+
+- 在`Vue3.0`中对这些`API`做出了调整：
+  - 将全局的`API`，即：`Vue.xxx`调整到了应用实例`app`上：
+
+|   Vue2.x全局API：`Vue`   |    Vue3.x实例API：`app`     |     备注      |
+| :----------------------: | :-------------------------: | :-----------: |
+|      Vue.config.xxx      |       app.config.xxx        | 添加默认配置  |
+| Vue.config.productionTip |            移除             | 关闭生产提示  |
+|      Vue.component       |        app.component        | 注册全局组件  |
+|      Vue.directive       |        app.directive        | 注册全局指令  |
+|        Vue.mixin         |          app.mixin          | 注册全局mixin |
+|         Vue.use          |           app.use           |  全局使用API  |
+|      Vue.prototype       | app.config.globalProperties | 原型添加方法  |
+
+### 其他改变
+
+- `data`选项应始终被声明为一个函数
+- 过渡类名的更改：
+
+```css
+/* Vue2.x */
+.v-enter,
+.v-leave-to {
+  opacity: 0;
+}
+.v-leave,
+.v-enter-to {
+  opacity: 1;
+}
+
+/* Vue3.x */
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+.v-leave-from,
+.v-enter-to {
+  opacity: 1;
+}
+```
+
+- **移除**`keyCode`作为`v-on`的修饰符，同时也不再支持`config.keyCodes`
+- **移除**`v-no:native`修饰符
+  - 父组件中绑定事件：
+
+```javascript
+<my-component
+  v-on:close="handleComponentEvent"
+  v-on:click="handleNativeClickEvent"
+/>
+```
+
+-
+  - 子组件中声明自定义事件
+
+```javascript
+<script>
+  export default {
+    emits: ['close']
+  }
+</script>
+```
+
+- 移除过滤器：
+  - 过滤器虽然看起来很方便，但它需要一个自定义语法，打破大括号内**只是`JavaScript`表达式**的假设，这不仅有学习成本，而且有实现成本，建议用方法调用或计算属性去替换过滤器
