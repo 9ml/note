@@ -5,6 +5,7 @@
     "eval",
     "excutor",
     "IIFE",
+    "Mbps",
     "mousemove",
     "MVVM",
     "niubility",
@@ -21,6 +22,7 @@
     "USONB",
     "Vant",
     "vite",
-    "Vuex"
+    "Vuex",
+    "Wirth"
   ]
 }

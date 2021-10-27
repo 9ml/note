@@ -66,6 +66,103 @@
     - `DVD`的容量可达`4.7GB`
   - `USB`闪存驱动器：`Universal Serial Bus`，通用串行总线，可以使用`USB`将打印机、数码相机、鼠标、外部硬盘驱动器等连接到计算机上，`USB`闪存驱动器很小，可用于存储和传输数据的设备
 
-### 内存
+### 内存单位
 
 - `bit`比特和`byte`字节
+- 计算机就是一系列的电路开关，每个开关存在两种状态：
+  - `on`开：值为`1`
+  - `off`关：值为`0`
+- 一个`0`或者一个`1`存储为一个`bit`比特，是计算机中最小的存储单位
+- 计算机最基本的存储单元是`byte`字节，每个字节由`8`个比特构成
+- 计算机的存储能力是以字节和多字节来衡量的，如：
+  - `kilobyte, KB`千字节 = `1024B`
+  - `megabyte, MB`兆字节 = `1024KB`
+  - `gigabyte, GB`千兆字节 = `1024MB`
+  - `terabyte, TB`万亿字节 = `1024GB`
+  - 较高级的存储单位如`petabyte, PB` = `1024TB`，其上还有`EB,ZB,YB`等单位
+
+### 内存
+
+- 内存也叫`Random-Access Memory, RAM`：由一个有序的字节序列组成，用于存储程序及程序需要的数据
+- 一个程序和它的数据在被`CPU`执行前必须移到计算机的内存中
+- 每个字节都有一个唯一的地址：堆和栈，使用这个地址确定字节的位置，以便于存储和获取数据
+- 一个计算机具有的`RAM`越多，它的运行速度越快，但是此规律是有限制的
+- 内存与`CPU`一样，也构建在表面嵌有数百万晶体管的硅半导体芯片上，但是内存芯片更简单、更低速、更便宜
+- 图示：
+
+![运行图示](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/java/hard-ram-cpu.png)
+
+- 实测发现：内存存取数据的速度比硬盘的存取速度快`10`倍，在某些环境中，硬盘和内存之间的速度差距可能会更大，而`CPU`的速度比内存不知道要快多少倍，当我们把程序从硬盘放到内存以后，`CPU`就直接在内存中运行程序，这样比`CPU`直接在硬盘运行程序要快很多
+- 内存解决了一部分`CPU`运行过快而硬盘数据存取太慢的问题，提高了我们的电脑运行速度，内存就如同一条高速车道一般，数据由传输速度较慢的硬盘通过这条高速车道传送至`CPU`进行处理
+- 但内存是带点存储的，一旦断电数据就会消失，而且容量有限，所有要长时间储存程序或数据就需要使用硬盘
+- 内存在这里起了两个作用：
+  - 保存从硬盘读取的数据，提供给`CPU`使用
+  - 保存`CPU`的一些临时执行结果，以便`CPU`下次使用或保存到硬盘
+- 图示：
+
+![内存图示](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/java/rad-rom.png)
+
+### 输入与输出设备
+
+- 常见的输入设备：`keyboard`键盘和`mouse`鼠标
+- 常见的输出设备：`monitor`显示器和`printer`打印机
+- 显示器屏幕分辨率：是指显示设备水平和垂直方向上显示的`px`像素数
+  - 分辨率可以手动设置
+  - 分辨率越高，图形越锐化、越清晰
+
+![显示器](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/java/output-monitor.png)
+
+### 通信设备
+
+- 拨号调制器：使用的是电话线，传输速度可达`56000bps`（`bps`每秒比特）
+- `DSL`数字用户线：使用的也是电话线，但传输速度比拨号调制器快`20倍`
+- 电缆调制解调器：利用有线电视电缆进行数据传输，通常比`DSL`快
+- `NIC`网络接口卡：将计算机接入`LAN`局域网的设备，通常用于大学、商业组织和政府组织，速度可达`1000Mbps`
+- 无线网络：在家庭、商业和学校中极其常见，计算机可通过无线适配器连接到局域网或`internet`上
+
+## 计算机发展史上的鼻祖
+
+- [阿兰·图灵](https://baike.baidu.com/item/%E8%89%BE%E4%BC%A6%C2%B7%E9%BA%A6%E5%B8%AD%E6%A3%AE%C2%B7%E5%9B%BE%E7%81%B5?fromtitle=%E9%98%BF%E5%85%B0%C2%B7%E5%9B%BE%E7%81%B5&fromid=10961384)
+
+- [冯·诺依曼](https://baike.baidu.com/item/%E7%BA%A6%E7%BF%B0%C2%B7%E5%86%AF%C2%B7%E8%AF%BA%E4%BE%9D%E6%9B%BC/986797?fromtitle=%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC&fromid=842273&fr=aladdin)
+
+## 操作系统
+
+- 操作系统`Operating System`是运行在计算机上最重要的程序，它可以管理和控制计算机的活动
+- 硬件、操作系统、应用程序和用户之间的关系：
+
+![硬件、操作系统、应用程序和用户](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/java/user-system-computer.png)
+
+- 操作系统的主要任务：
+  - 控制和监视系统的活动
+  - 分配和调配系统资源
+  - 调度操作
+
+## 万维网
+
+- 万维网：`World Wide Web, www`环球信息网，常简称为`Web`，发明者是蒂姆·伯纳斯·李，分为`Web`客户端和`Web`服务端
+- 软件架构：
+  - `B/S`架构：`browser server`通过浏览器访问网络资源访问
+  - `C/S`架构：`client server`通过客户端访问网络资源访问
+- [万维网](https://baike.baidu.com/item/www/109924?fromtitle=%E4%B8%87%E7%BB%B4%E7%BD%91&fromid=215515&fr=aladdin)
+- 图示：
+
+![互联网、因特网、万维网](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/java/net-internet-www.png)
+
+## 职业发展与提升
+
+![提升原则](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/java/job-grow.png)
+
+## 学习经验探讨
+
+- 锻炼双核处理，边听讲思考边做笔记
+- 纸上得来终觉浅，绝知此事要躬行
+  - 第一层：看得懂
+  - 第二层：练的熟
+  - 总结：三分看，七分练
+- 建立行之有效的学习方法：
+  - 学习编程的捷径：敲，狂敲
+  - 模仿好的编程习惯
+  - 整理、回顾
+
+![遗忘曲线](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/java/forget-line.png)
