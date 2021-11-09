@@ -250,7 +250,7 @@ exports.c = function(a, b) {
 ```javascript
 module.exports = 123
 module.exports = function(a + b) {
-  return a +b
+  return a + b
 }
 // 后者会覆盖前者，若需导出多个成员：
 module.exports = {
