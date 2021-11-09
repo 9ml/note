@@ -5,7 +5,7 @@
 > `Node.js`是一个基于`Chrome V8 引擎`的`JavaScript`**运行时环境**。
 >
 > - `Node.js`不是一门语言，也不是库或者框架，是一个`JavaScript`运行时环境，可以解析和执行`JavaScript`代码。
-> - `Node.js`可以是`JavaScript`代码完全脱离浏览器运行。
+> - `Node.js`可以使`JavaScript`代码完全脱离浏览器运行。
 > - `Node.js`使用*事件驱动*、*非阻塞`IO`模型（异步）*来变得轻量和高效。
 > - `npm`是世界上最大的开源库生态系统。
 >
