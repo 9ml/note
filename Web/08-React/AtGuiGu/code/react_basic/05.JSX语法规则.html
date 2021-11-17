@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSX语法规则</title>
+  <style>
+    .title {
+      color: #f00;
+    }
+  </style>
+</head>
+<body>
+  <!-- 准备好一个容器 -->
+  <div id="test"></div>
+  <!-- 引入React核心库 -->
+  <script src="../js/old/react.development.js"></script>
+  <!-- 引入React-dom  用于支持react操作dom -->
+  <script src="../js/old/react-dom.development.js"></script>
+  <!-- 引入babel  用于将jsx转为js -->
+  <script src="../js/old/babel.min.js"></script>
+  <!-- type 要写为 babel -->
+  <script type="text/babel">
+    const mId = '9ml'
+    const mData = 'Hello React'
+    // 1. 创建虚拟DOM
+    const VDOM = (
+      <div>
+        <h1 className="title" id={mId}>
+          <span style={{ background: 'orange', fontSize: '30px' }}>{mData}</span>
+        </h1>
+        <input type="text" />
+        <good></good>
+        <Good></Good>
+      </div>
+    )
+    // 2. 渲染虚拟DOM到页面
+    ReactDOM.render(VDOM, document.getElementById('test'))
+  </script>
+</body>
+</html>

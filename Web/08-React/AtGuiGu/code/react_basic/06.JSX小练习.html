@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSX小练习</title>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="../js/old/react.development.js"></script>
+  <script src="../js/old/react-dom.development.js"></script>
+  <script src="../js/old/babel.min.js"></script>
+  <script type="text/babel">
+    // 模拟数据
+    const data = [
+      'Vue',
+      'React',
+      'Angular'
+    ]
+    // 创建虚拟DOM
+    const VDOM = (
+      <div>
+        <h1>前端框架列表</h1>
+        <ul>
+          {
+            data.map((item, index) => <li key={index}>{item}</li>)
+          }
+        </ul>
+      </div>
+    )
+    // 渲染DOM
+    ReactDOM.render(VDOM, document.getElementById('app'))
+  </script>
+</body>
+</html>
