@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>原生事件绑定</title>
+</head>
+<body>
+  <button id="btn1">按钮1</button>
+  <button id="btn2">按钮2</button>
+  <button onclick="demo()">按钮3</button>
+  <script>
+    document.getElementById('btn1').addEventListener('click', function() {
+      alert('按钮1被点击了')
+    })
+
+    document.getElementById('btn2').onclick = function() {
+      alert('按钮2被点击了')
+    }
+
+    function demo() {
+      alert('按钮3被点击了')
+    }
+  </script>
+</body>
+</html>

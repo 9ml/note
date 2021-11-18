@@ -7,6 +7,45 @@
   <title>类的基本知识</title>
 </head>
 <body>
-  
+  <script>
+    // 创建一个 Person 类
+    class Person {
+      // 构造器方法，this 是 类的实例对象
+      constructor(name, age) {
+        this.name = name
+        this.age = age
+      }
+      // 一般方法，在类的原型对象中，供实例使用
+      // 通过 Person 实例调用 this 时，this 就是 Person 实例
+      speak() {
+        console.log(`我是${this.name}，年龄是${this.age}`)
+      }
+    }
+    // 创建一个 Person 实例对象
+    const p1 = new Person('9ml', 18)
+    const p2 = new Person('Tom', 20)
+    p1.speak()
+    p2.speak()
+
+    // 创建一个 Student 类，继承 Person
+    class Student extends Person {
+      constructor(name, age, grade) {
+        super(name, age)
+        this.grade = grade
+      }
+      // 重写从父类继承过来的方法
+      speak() {
+        console.log(`我是${this.name}，年龄是${this.age}，在读${this.grade}`)
+      }
+      study() {
+        console.log('学习学习学习')
+      }
+    }
+
+    const s1 = new Student('张三', 22, '大二')
+    console.log(s1)
+    s1.speak()
+
+  </script>
 </body>
 </html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>类式组件</title>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="../js/old/react.development.js"></script>
+  <script src="../js/old/react-dom.development.js"></script>
+  <script src="../js/old/babel.min.js"></script>
+  <script type="text/babel">
+    // 创建一个类式组件
+    class MyComponent extends React.Component {
+      // render 方法放在 MyComponent 的原型对象上，供实例使用
+      render() {
+        // render 中的 this 是 MyComponent 的实例对象
+        console.log(this)
+        return <h1>我是函数定义的组件，适用于简单组件的定义</h1>
+      }
+    }
+    // 渲染组件到页面
+    ReactDOM.render(<MyComponent />, document.getElementById('app'))
+  </script>
+</body>
+</html>
