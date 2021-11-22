@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>组件实例三大核心属性-state 简写</title>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="app1"></div>
+  <div id="app2"></div>
+  <script src="../js/old/react.development.js"></script>
+  <script src="../js/old/react-dom.development.js"></script>
+  <script src="../js/old/babel.min.js"></script>
+  <script type="text/babel">
+    class Person extends React.Component {
+      render() {
+        const { name, sex, age } = this.props
+        return (
+          <ul>
+            <li>姓名：{name}</li>
+            <li>性别：{sex}</li>
+            <li>年龄：{age}</li>
+          </ul>
+        )
+      }
+    }
+
+    ReactDOM.render(<Person name="Tom" sex="男" age="18" />, document.getElementById('app'))
+    ReactDOM.render(<Person name="Jun" sex="女" age="17" />, document.getElementById('app1'))
+    ReactDOM.render(<Person name="Sun" sex="女" age="28" />, document.getElementById('app2'))
+  </script>
+</body>
+</html>

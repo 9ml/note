@@ -15,17 +15,23 @@
     // let _self;
     // 1. 创建组件
     class Weather extends React.Component {
+      // 构造器只执行一次
       constructor(props) {
+        console.log('constructor')
         super(props)
         // 初始化状态
         this.state = {
           isHot: true
         }
-        this.changeWeather = this.changeWeather.bind(this)
         // _self = this
+
+        // 解决 changeWeather 中 this 指向问题
+        this.changeWeather = this.changeWeather.bind(this)
       }
 
       render() {
+        // render 执行 1 + n 次，1 是初始化更新一次，n 是状态更新的次数
+        console.log('render')
         // 读取状态
         const { isHot } = this.state
         return <h2 id="title" onClick={this.changeWeather}>今天天气很{ isHot ? '炎热' : '凉爽' }</h2>
@@ -35,8 +41,15 @@
       // 通过 Weather 的实例调用 changeWeather 时，changeWeather 中的 this 就是 Weather 的实例对象
       // 由于 changeWeather 是作为 onClick 的回调，所有不是实例对象调用的，是直接调用
       // 类中的方法默认开启了局部的严格模式，所有 changeWeather 中的 this 为 undefined
-      changeWeather() {
-        console.log(this)
+      changeWeather() { // 点击几次执行几次
+        console.log(this, 'changeWeather')
+        // 获取原来的值
+        const isHot = this.state.isHot
+        // this.state.isHot = !isHot
+        // 注意：状态 state 不可直接更改，要借助一个内置的 API 更改，且更新是合并，不是替换
+        this.setState({
+          isHot: !isHot
+        })
       }
     }
     // 渲染组件到页面

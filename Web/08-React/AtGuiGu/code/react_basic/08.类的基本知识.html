@@ -47,6 +47,18 @@
     console.log(s1)
     s1.speak()
 
+    class Car {
+      constructor(name, price) {
+        this.name = name
+        this.price = price
+      }
+      // 类中可以直接写赋值语句，表示给 Car 的实例对象添加一个默认属性，值为 4
+      wheel = 4
+    }
+
+    const c = new Car('BWM', 128)
+    console.log(c)
+
   </script>
 </body>
 </html>
