@@ -41,21 +41,14 @@ videoBtn.forEach(i => {
   })
 })
 
-
-
-
-
-
 // 页面滑动关闭弹窗
 window.onscroll = () => {
-  console.log(111)
   searchBtn.classList.remove('fa-times')
   searchBar.classList.remove('active')
   menuBtn.classList.remove('fa-times')
   navBar.classList.remove('active')
   loginForm.classList.remove('active')
 }
-
 
 // swiper js
 var swiper = new Swiper('.review-slider', {
