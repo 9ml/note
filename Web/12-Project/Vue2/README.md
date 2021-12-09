@@ -80,4 +80,4 @@ module.exports = {
 - 使用`vue-router`实现路由
 - 前端路由：`key: value`键值对
   - `key`：url，地址栏中的路径
-  - `value`：相应的路由组件999
+  - `value`：相应的路由组件1
