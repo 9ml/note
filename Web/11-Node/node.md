@@ -662,7 +662,7 @@ app.use(function(err, req, res, next) {
 
 - 启动
 
-> `mongodb`默认使用执行 mongod 命令所处盘符根目录下的`/data/db`作为自己的数据存储目录。
+> `mongodb`默认使用执行`mongod`命令所处盘符根目录下的`/data/db`作为自己的数据存储目录。
 > 所以第一次执行启动命令之前在根目录手动新建一个`/data/db`文件夹。
 
 ```shell
