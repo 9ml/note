@@ -102,3 +102,17 @@ module.exports = {
   - 完成相应的动态业务逻辑
 - 注意：
   - 创建组件时，组件结构 + 组件样式 + 图片资源
+  - 项目采用的是`Less`语法样式，需要通过`less`及`less-loader`将`less`样式编译为`css`样式，`style`标签添加`lang="less"`属性
+
+```shell
+#安装less less-load 为 5.x 版本
+npm i --save less less-loader@5
+```
+
+### 使用组件的步骤
+
+- 非路由组件：
+  - 创建或者定义组件
+  - 引入
+  - 注册
+  - 使用
