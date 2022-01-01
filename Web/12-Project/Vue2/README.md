@@ -115,4 +115,4 @@ npm i --save less less-loader@5
   - 创建或者定义组件
   - 引入
   - 注册
-  - 使用
+  - 使用1
