@@ -9,5 +9,3 @@
 ![百度一下](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/life/baidu.png)
 
 那使用体验就跟其他浏览器差不多，想用哪个您随意。
-
-但是
