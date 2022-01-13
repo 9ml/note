@@ -1,0 +1,29 @@
+.chunk {
+  /*
+    display
+    块级元素：block (默认值)
+    行内元素：inline (不能设置宽高)
+    行内元素可设置宽高：inline-block
+    弹性盒子：flex
+  */
+  /* display: inline-block; */
+  width: 100px; height: 100px;
+}
+
+.colorA {
+  background-color: brown;
+}
+
+.colorB {
+  background-color: aqua;
+}
+
+.colorC {
+  background-color: blue;
+}
+
+/* 容器样式 */
+.container {
+  display: flex;
+  flex-direction: column-reverse;
+}

@@ -1,0 +1,9 @@
+<view class="chunk colorA" />
+<view class="chunk colorB" />
+<view class="chunk colorC" />
+
+<view class="container" hover-class="none" hover-stop-propagation="false">
+  <view class="chunk colorA" />
+  <view class="chunk colorB" />
+  <view class="chunk colorC" />
+</view>
