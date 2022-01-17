@@ -24,10 +24,10 @@
 
 > 指定元素的排列方式：水平/垂直排列
 
-- `row`：水平排列
-- `row-reverse`：水平反向排列
-- `column`：垂直排列
-- `column-reverse`：垂直反向排列
+- `row`：水平正序排列
+- `row-reverse`：水平倒序排列
+- `column`：垂直正序排列
+- `column-reverse`：垂直倒序排列
 
 ```css
 .container {

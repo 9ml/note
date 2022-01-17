@@ -1,3 +1,6 @@
+<text class="" selectable="false" space="false" decode="false">
+  display属性
+</text>
 <view class="chunk colorA" />
 <view class="chunk colorB" />
 <view class="chunk colorC" />
