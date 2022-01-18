@@ -1,12 +1,57 @@
-<text class="" selectable="false" space="false" decode="false">
+<view class="title" hover-class="none" hover-stop-propagation="false">
   display属性
-</text>
+</view>
+
 <view class="chunk colorA" />
 <view class="chunk colorB" />
 <view class="chunk colorC" />
 
-<view class="container" hover-class="none" hover-stop-propagation="false">
-  <view class="chunk colorA" />
-  <view class="chunk colorB" />
-  <view class="chunk colorC" />
+<view class="title" style="margin-top: 20rpx;" hover-class="none" hover-stop-propagation="false">
+  flex-direction属性
+</view>
+
+<view class="container flex-direction-row" hover-class="none" hover-stop-propagation="false">
+  <view class="chunk colorA">1</view>
+  <view class="chunk colorB">2</view>
+  <view class="chunk colorC">3</view>
+</view>
+
+<view class="container flex-direction-column" hover-class="none" hover-stop-propagation="false">
+  <view class="chunk colorA">1</view>
+  <view class="chunk colorB">2</view>
+  <view class="chunk colorC">3</view>
+</view>
+
+<view class="container flex-direction-row-reverse" hover-class="none" hover-stop-propagation="false">
+  <view class="chunk colorA">1</view>
+  <view class="chunk colorB">2</view>
+  <view class="chunk colorC">3</view>
+</view>
+
+<view class="container flex-direction-column-reverse" hover-class="none" hover-stop-propagation="false">
+  <view class="chunk colorA">1</view>
+  <view class="chunk colorB">2</view>
+  <view class="chunk colorC">3</view>
+</view>
+
+<view class="title" style="margin-top: 20rpx;" hover-class="none" hover-stop-propagation="false">
+  justify-content属性
+</view>
+
+<view class="container flex-direction-column-reverse justify-content-flex" hover-class="none" hover-stop-propagation="false">
+  <view class="chunk colorA">1</view>
+  <view class="chunk colorB">2</view>
+  <view class="chunk colorC">3</view>
+</view>
+
+<view class="container flex-direction-row-reverse justify-content-center" hover-class="none" hover-stop-propagation="false">
+  <view class="chunk colorA">1</view>
+  <view class="chunk colorB">2</view>
+  <view class="chunk colorC">3</view>
+</view>
+
+<view class="container flex-direction-row-reverse justify-content-space" hover-class="none" hover-stop-propagation="false">
+  <view class="chunk colorA">1</view>
+  <view class="chunk colorB">2</view>
+  <view class="chunk colorC">3</view>
 </view>

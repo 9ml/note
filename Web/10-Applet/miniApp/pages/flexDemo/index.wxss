@@ -1,3 +1,13 @@
+.title {
+  height: 60rpx;
+  text-align: center;
+  line-height: 60rpx;
+  font-size: 28rpx;
+  background-color: #000;
+  color: #fff;
+  margin-bottom: 20rpx;
+}
+
 .chunk {
   /*
     display
@@ -8,6 +18,9 @@
   */
   /* display: inline-block; */
   width: 100px; height: 100px;
+  text-align: center; line-height: 100px;
+  font-size: 40rpx;
+  color: #fff;
 }
 
 .colorA {
@@ -23,7 +36,58 @@
 }
 
 /* 容器样式 */
+
+
 .container {
   display: flex;
+  margin-bottom: 20rpx;
+}
+
+/*
+  flex-direction 属性：
+    row：水平排列
+    row-reverse：水平倒序排列
+    column：垂直排列
+    column-reverse：垂直倒序排列
+*/
+
+.flex-direction-row {
+  flex-direction: row;
+}
+
+.flex-direction-column {
+  flex-direction: column;
+}
+
+.flex-direction-row-reverse {
+  flex-direction: row-reverse;
+}
+
+.flex-direction-column-reverse {
   flex-direction: column-reverse;
+}
+
+/*
+  justify-content 属性：
+    flex-start：头部对齐
+    flex-end：尾部对齐
+    center：居中对齐
+    space-between：两边对齐
+    space-around：等距对齐
+*/
+
+.justify-content-flex {
+  height: 400px;
+  background: #eee;
+  justify-content: flex-end;
+}
+
+.justify-content-center {
+  background: #eee;
+  justify-content: center;
+}
+
+.justify-content-space {
+  background: #eee;
+  justify-content: space-between;
 }
