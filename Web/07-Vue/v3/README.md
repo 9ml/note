@@ -650,7 +650,7 @@ export default {
 - 实例：
 
 ```javascript
-import { ref, customRef } from 'vue'
+  import { ref, customRef } from 'vue'
   export default {
     name: 'App',
     setup() {
