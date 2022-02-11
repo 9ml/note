@@ -39,7 +39,18 @@
 }
 ```
 
+### 主轴与交叉轴
+
+> 二维平面中，分别有`X`轴与`Y`轴，而主轴与交叉轴的定义取决于`flex-direction`的取值。
+
+- `flex-direction: row;`时，内部元素水平排列，主轴为`X`轴，`Y`轴为交叉轴。
+  - `align-items`属性决定主轴上元素的排列方式，`justify-content`属性决定交叉轴。
+- `flex-direction: column;`时，内部元素垂直排列，主轴为`Y`轴，`X`轴为交叉轴。
+  - `justify-content`属性决定主轴上元素的排列方式，`align-items`属性决定交叉轴。
+
 ### justify-content属性
+
+> 水平方向`X`轴上元素的排列方式。
 
 - `flex-start`：头部对齐
 - `flex-end`：尾部对齐
@@ -57,10 +68,3 @@
   justify-content: space-around;
 }
 ```
-
-### 主轴与交叉轴
-
-> 二维平面中，分别有`X`轴与`Y`轴，而主轴与交叉轴的定义取决于`flex-direction`的取值。
-
-- `flex-direction: row;`时，内部元素水平排列，主轴为`X`轴，`Y`轴为交叉轴。
-- `flex-direction: column;`时，内部元素垂直排列，主轴为`Y`轴，`X`轴为交叉轴。
