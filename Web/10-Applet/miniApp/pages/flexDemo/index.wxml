@@ -55,3 +55,13 @@
   <view class="chunk colorB">2</view>
   <view class="chunk colorC">3</view>
 </view>
+
+<view class="title" style="margin-top: 20rpx;" hover-class="none" hover-stop-propagation="false">
+  align-items属性
+</view>
+
+<view class="container justify-content-flex flex-direction-column justify-content-center align-items-center" hover-class="none" hover-stop-propagation="false">
+  <view class="chunk colorA">1</view>
+  <view class="chunk colorB">2</view>
+  <view class="chunk colorC">3</view>
+</view>
