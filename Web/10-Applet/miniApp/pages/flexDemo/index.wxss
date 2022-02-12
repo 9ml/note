@@ -17,7 +17,8 @@
     弹性盒子：flex
   */
   /* display: inline-block; */
-  width: 100px; height: 100px;
+  width: 100px;
+  /* height: 100px; */
   text-align: center; line-height: 100px;
   font-size: 40rpx;
   color: #fff;
@@ -70,8 +71,8 @@
 /*
   justify-content 属性：
     flex-start：头部对齐
-    flex-end：尾部对齐
     center：居中对齐
+    flex-end：尾部对齐
     space-between：两边对齐
     space-around：等距对齐
 */
@@ -92,6 +93,43 @@
   justify-content: space-between;
 }
 
+/*
+  align-items 属性：
+    flex-start：头部对齐
+    center：居中对齐
+    flex-end：尾部对齐
+    stretch：当子元素没有设置高度时，子元素将继承父元素的高度
+    baseline：根据子元素中文字的基线对齐
+*/
+
 .align-items-center {
   align-items: center;
+}
+
+.align-items-stretch {
+  align-items: stretch;
+}
+
+.align-items-baseline {
+  align-items: baseline;
+}
+
+.fontA {
+  font-size: 20px;
+}
+
+.fontB {
+  font-size: 30px;
+}
+
+.fontC {
+  font-size: 40px;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-wrap-reverse {
+  flex-wrap: wrap-reverse;
 }

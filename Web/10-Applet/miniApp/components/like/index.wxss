@@ -1,0 +1,19 @@
+.container {
+  display: inline-flex;
+  flex-direction: row;
+  padding: 10rpx;
+}
+
+.container image {
+  width: 36rpx;
+  height: 36rpx;
+}
+
+.container text {
+  font-size: 24rpx;
+  color: #bbbbbb;
+  line-height: 24rpx;
+  position: relative;
+  bottom: 10rpx;
+  left: 6rpx;
+}
