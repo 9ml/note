@@ -1,7 +1,7 @@
 // import HTTP from '../../utils/http'
 // let http = new HTTP()
 
-import ClassicModel from '../../models/classic'
+import { ClassicModel } from '../../models/classic'
 let classic = new ClassicModel()
 
 Page({
