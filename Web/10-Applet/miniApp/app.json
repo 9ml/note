@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/classic/index",
     "pages/httpDemo/index",
     "pages/flexDemo/index"
   ],
