@@ -14,7 +14,7 @@ class HTTP {
       data: params.data,
       header: {
         'content-type': 'application/json',
-        'appkey': CONFIG.APP_KEY
+        'appKey': CONFIG.APP_KEY
       },
       success: res => {
         if (res.statusCode.toString().startsWith('2')) {
