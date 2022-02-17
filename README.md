@@ -1,6 +1,6 @@
 # Note
 
-> 学习笔记。
+> 前端学习笔记。
 
 ## WEB
 
@@ -17,5 +17,3 @@
 - [10-Applet](https://github.com/9ml/note/tree/main/Web/10-Applet)
 - [11-Node](https://github.com/9ml/note/tree/main/Web/11-Node)
 - [12-Project](https://github.com/9ml/note/tree/main/Web/12-Project)
-
-## Java
