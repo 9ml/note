@@ -126,8 +126,8 @@ new Vue({
       },
       set(value) {
         const arr = value.split('-')
-        this.cFirstName = arr[0]
-        this.cFirstName = arr[1]
+        this.firstName = arr[0]
+        this.lastName = arr[1]
       }
     }
   }
@@ -179,15 +179,53 @@ vm.$watch('isChange', {
     console.log('isChange change', newValue, oldValue)
   }
 })
+
+// 简写
+new Vue({
+  el: '#app',
+  data: {
+    isChange: true
+  },
+  watch: {
+    isChange(newValue, oldValue) {
+      console.log('isChange change', newValue, oldValue)
+    }
+  }
+})
 ```
 
 ### 深度监视
 
 - `Vue`中的`watch`默认不监视对象内部值的改变
 - 配置`deep: true`可以监视对象内部值改变
+- 配置`immediate: true`可以在初始化时执行`handle`函数
 - 备注：
   - `Vue`自身可以监视对象内部值的变化，但是`Vue`提供的`watch`默认不可以
   - 使用`watch`时根据数据的具体结构来决定是否采用深度监视
+
+- 深度监视：
+
+```javascript
+new Vue({
+  el: '#app',
+  data: {
+    numbers: {
+      a: 1,
+      b: 2
+    }
+  },
+  watch: {
+    numbers: {
+      immediate: true, // 初始化时立即执行 handler 函数
+      deep: true, // 开启深度监视，默认为 false
+      handler(newValue, oldValue) {
+        console.log('isChange change', newValue, oldValue)
+      }
+    }
+  }
+})
+// 深度监视不能使用简写方式！！！
+```
 
 ## 计算属性和监视属性的区别
 
