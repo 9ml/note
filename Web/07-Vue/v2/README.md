@@ -250,7 +250,7 @@ new Vue({
 
 ### 对比规则
 
-- 旧虚拟`DOM`中找到了与新虚拟`DOM`相同的`key`:
+- 旧虚拟`DOM`中找到了与新虚拟`DOM`相同的`key`：
   - 若虚拟`DOM`中内容没变，为了节省性能会直接使用之前的真实`DOM`，不会重新渲染
   - 若虚拟`DOM`中内部变了，则生成新的真实`DOM`，随后替换掉页面中之前的真实`DOM`
 - 旧虚拟`DOM`中未找到与新虚拟`DOM`相同的`key`：
@@ -260,7 +260,7 @@ new Vue({
 
 - 若对数据进行逆向添加、逆向删除等破坏顺序的操作时：
   - 会产生没有毕要的真实`DOM`更新，页面效果没问题但效率低
-- 若结构中包含输入类的`DOM`时:
+- 若结构中包含输入类的`DOM`时：
   - 会产生错误的`DOM`更新，页面会出问题
 
 ### 如何渲染key
@@ -301,7 +301,7 @@ vm.$set(target, key, value)
 
 ### 在Vue中修改数组
 
-- `API`:
+- `API`：
   - `push()`
   - `pop()`
   - `shift()`
@@ -319,7 +319,7 @@ vm.$set(target, key, value)
 ## 收集表单中的数据
 
 - `<input type="text" />`中`v-model`收集的是`value`的值，用户输入的就是`value`值
-- `<input type="radio" />`中`v-model`收集的是`value`的值，需要给标签配置`value`值
+- `<input type="radio" />`中`v-model`收集的是`value`的值，需要给标签配置`value`值21
 - `<input type="check" />`中
   - 若没有配置`input`的`value`属性，那么收集的就是`checked`勾选`true`，未勾选`false`
   - 配置`value`属性：
@@ -781,7 +781,7 @@ Vue.use(plugins)
 </script>
 ```
 
-- 第二种方式:
+- 第二种方式：
   - 在父组件中通过`ref`获取子组件的实例对象，并在`mounted`生命周期中通过`$on`绑定自定义事件触发函数
   - 子组件中通过`this.$emit('show', xxx)`向父组件中传参，参数可多个
 
@@ -1133,7 +1133,7 @@ getData() {
 
 ### 搭建Vuex
 
-- 安装`Vuex`:
+- 安装`Vuex`：
 
 ```shell
 npm i vuex
@@ -1230,7 +1230,7 @@ export default new Store({
 ### Getters
 
 - 概念：用来加工`state`中的数据，相似于组件中的`computed`计算属性，当`state`中的数据需要加工时使用
-- 在`store`中配置`getters`:
+- 在`store`中配置`getters`：
 
 ```javascript
 export default new Store({
