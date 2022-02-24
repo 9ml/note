@@ -319,7 +319,7 @@ vm.$set(target, key, value)
 ## 收集表单中的数据
 
 - `<input type="text" />`中`v-model`收集的是`value`的值，用户输入的就是`value`值
-- `<input type="radio" />`中`v-model`收集的是`value`的值，需要给标签配置`value`值21
+- `<input type="radio" />`中`v-model`收集的是`value`的值，需要给标签配置`value`值
 - `<input type="check" />`中
   - 若没有配置`input`的`value`属性，那么收集的就是`checked`勾选`true`，未勾选`false`
   - 配置`value`属性：
@@ -564,7 +564,7 @@ Vue.directive('xxx', function(element, binding) {
 VueComponent.prototype.__proto__ === Vue.prototype
 ```
 
-[图示](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/VueComponent.jpg)
+![图示](https://cdn.jsdelivr.net/gh/9ml/cdn@main/images/note/VueComponent.jpg)
 
 ## 脚手架
 
