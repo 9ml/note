@@ -39,3 +39,8 @@ list.innerHtml = htmlStr
 - 虚拟`DOM`+优秀的`Diff`算法，尽量复用`DOM`节点。
   - 数据 => 虚拟`DOM` => 页面真实`DOM`。
   - 数据变化 => 根据`Diff`算法对比新旧虚拟`DOM` => 复用重复的虚拟`DOM`
+
+## 目录
+
+- [Vue2.x](https://github.com/9ml/note/tree/main/Web/07-Vue/v2)
+- [Vue3.x](https://github.com/9ml/note/tree/main/Web/07-Vue/v3)
